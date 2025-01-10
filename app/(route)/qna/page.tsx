@@ -5,7 +5,7 @@ import {} from './qna.styled';
 const Login = () => {
     return(
         <main>
-            <h2>Q&A</h2>
+            <h2>Q&</h2>
         </main>
     )
 };
