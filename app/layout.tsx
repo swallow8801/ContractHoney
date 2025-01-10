@@ -25,7 +25,9 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
   <html lang="ko">
     <body>
       <Nav />
-      {children}
+      <div style={{ height: "94vh" }}>
+        {children}
+      </div>
     </body>
   </html>
   )

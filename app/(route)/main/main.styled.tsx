@@ -7,7 +7,7 @@ export const Group = styled.div<{ $backgroundImage: string }>`
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 94.6vh;
+  height: 94vh;
   scroll-snap-align: start;
   background-size: cover;
   background-position: center;
@@ -31,7 +31,7 @@ export const Group = styled.div<{ $backgroundImage: string }>`
 `;
 
 export const Container = styled.div`
-  height: 94.6vh;
+  height: 94vh;
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
   scroll-behavior: smooth;

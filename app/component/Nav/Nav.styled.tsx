@@ -11,6 +11,8 @@ export const NavContainer = styled.nav`
   position: sticky; /* 고정 위치 설정 */
   top: 0; /* 화면 최상단에 고정 */
   z-index: 1000; /* 다른 요소 위에 표시되도록 */
+  height: 6vh;
+  width: 100vw;
 `;
 
 // 로고 스타일

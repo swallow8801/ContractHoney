@@ -5,7 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding: 0;
-  height: 94.6vh;
+  height: 94vh;
   background: #ffffff;
 `;
 
@@ -17,8 +17,8 @@ export const MainContent = styled.main`
 `;
 
 export const Rectangle23 = styled.div`
-  width: 96vw;
-  height: 328px;
+  width: 100%;
+  height: 25vh;
   background: #d9d9d9;
   border-radius: 15px;
   margin-bottom: 24px;
