@@ -31,7 +31,6 @@ export const AnalysisSection = styled.section`
   width: 100%;
   
   h2 {
-    font-family: "Inter", sans-serif;
     font-size: 18px;
     margin-bottom: 16px;
   }
@@ -46,7 +45,6 @@ export const Table = styled.table`
     text-align: left;
     padding: 8px 16px;
     border-bottom: 1px solid #cac4d0;
-    font-family: "Inter", sans-serif;
     font-size: 14px;
   }
 
@@ -54,6 +52,5 @@ export const Table = styled.table`
     padding: 4px;
     border: 1px solid #cac4d0;
     border-radius: 4px;
-    font-family: "Inter", sans-serif;
   }
 `;
