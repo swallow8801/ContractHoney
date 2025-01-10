@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useRouter, useParams } from "next/navigation";
-import Navigation from "../../component/nav"; // 네비게이션 컴포넌트
 import {
   Container,
   Rectangle,
@@ -13,7 +12,7 @@ import {
   Navigation as NavSection,
   NavLink,
   BackButton,
-} from "../../styled/[notice_index].styled";
+} from "./[notice_index].styled";
 
 const NoticeDetailPage = () => {
   const router = useRouter();
@@ -46,7 +45,6 @@ const NoticeDetailPage = () => {
 
   return (
     <>
-      <Navigation />
       <Container>
         <Rectangle />
         <Header>
