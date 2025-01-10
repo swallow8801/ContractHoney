@@ -3,11 +3,17 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 0;
-  width: 1640px;
-  height: 1161px;
+  width: 80vw;
+  height: 94vh;
   background: #ffffff;
+
+  /* 화면 가운데 정렬 */
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const Main = styled.main`
@@ -18,7 +24,6 @@ export const Main = styled.main`
 `;
 
 export const Title = styled.h1`
-  font-family: "Nunito", sans-serif;
   font-size: 36px;
   font-weight: 400;
   line-height: 49px;
@@ -28,11 +33,10 @@ export const Title = styled.h1`
 
 export const BoardContainer = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin-top: 50px;
 `;
 
 export const BoardTitle = styled.h2`
-  font-family: "Inter", sans-serif;
   font-size: 30px;
   font-weight: 400;
   color: #2d2d2d;
@@ -48,7 +52,6 @@ export const BoardTable = styled.table`
     border-bottom: 1px solid #cac4d0;
     text-align: left;
     padding: 10px 16px;
-    font-family: "Inter", sans-serif;
     font-size: 14px;
     color: #737373;
   }
