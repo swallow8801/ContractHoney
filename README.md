@@ -13,3 +13,5 @@ npm install dotenv
 npm install styled-components
 
 npm i --save @fortawesome/fontawesome-svg-core
+
+npm install lucide-react
