@@ -45,6 +45,7 @@ export const Sidebar = styled.aside`
 export const Main = styled.main`
     flex: 1;
     padding: 40px;
+    width: 80%;
     display: flex;
     flex-direction: column; /* 세로로 배치 */
     gap: 20px;
@@ -58,4 +59,96 @@ export const Title = styled.h1`
     font-weight: 600;
     color: rgb(75, 75, 75);
     text-align: center; /* 제목 중앙 정렬 */
+`;
+
+export const NoticeTitle = styled.div`
+    font-size: 27px;
+    color: #2d2d2d;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1.6px solid rgb(190, 190, 190);
+`;
+
+export const NoticeBox = styled.div`
+  width: 80%;
+  background-color: #e0e0e0;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto 20px auto; /* 가로 중앙 정렬 */
+  text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+
+  p {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  span {
+    font-size: 16px;
+    color: #555;
+  }
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80%; /* Main의 80%로 설정 */
+  margin: 0 auto; /* 가로 중앙 정렬 */
+  text-align: left; /* 텍스트는 왼쪽 정렬 */
+`;
+
+export const FormLabel = styled.label`
+  font-size: 19px;
+  font-weight: 600;
+  color: #737373;
+  text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+`;
+
+export const FormInput = styled.input`
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 30px;
+`;
+
+export const FormTextarea = styled.textarea`
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  height: 200px; /* 기본 높이 설정 */
+  resize: vertical; /* 사용자가 수직 방향으로 크기 조정 가능 */
+  margin-bottom: 30px;
+  overflow-y: auto; /* 텍스트가 많아질 경우 스크롤 표시 */
+`;
+
+
+export const FormFileInput = styled.input`
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+export const SubmitButton = styled.button`
+  padding: 10px 20px;
+align-self: flex-end;
+  background-color: rgb(169, 169, 169);
+  color: white;
+  font-size: 17px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 50px auto; /* 가로 중앙 정렬 */
+
+  &:hover {
+    background-color: rgb(141, 141, 141);
+  }
 `;

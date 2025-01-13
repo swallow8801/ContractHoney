@@ -72,9 +72,9 @@ export const QNATitle = styled.h2`
 
 
 export const Table = styled.table`
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
-
+    margin: 0 auto;
     tbody tr:hover {
         background: #f1f1f1; /* 행 hover 시 배경색 변경 */
     }
