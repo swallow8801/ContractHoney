@@ -79,16 +79,18 @@ export const SearchButton = styled.button`
   }
 `;
 
-export const ArchiveTable = styled.table`
+export const LawTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   border-top: 2px solid #333;
+  margin-top: 20px;
 
   th, td {
     padding: 15px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
+    color: #666;
   }
 
   th {
@@ -97,26 +99,30 @@ export const ArchiveTable = styled.table`
     color: #333;
   }
 
-  td {
-    color: #666;
+  th:first-child {
+    width: 15%;
   }
 
-  tr:hover td {
-    background: #f8fbff;
+  th:last-child {
+    width: 20%;
   }
 
   td:nth-child(2) {
     text-align: left;
   }
+
+  tr:hover td {
+    background: #f8fbff;
+  }
 `;
 
 export const AttachmentIcon = styled.span`
   cursor: pointer;
-  color: #666;
+  color: #4a90e2;
   margin-left: 5px;
 
   &:hover {
-    color: #333;
+    color: #3a80d2;
   }
 `;
 
@@ -175,40 +181,60 @@ export const MenuItem = styled.li<{ $active?: boolean }>`
   }
 `;
 
-// Add new styled components for the explanation section
-export const ExplanationSection = styled.div`
+export const InfoSection = styled.div`
   display: flex;
-  align-items: center;
-  gap: 24px;
+  flex-direction: column;
+  gap: 12px;
   padding: 20px;
   background: white;
   border-radius: 8px;
   margin: 20px 0;
+  border: 1px solid #e0e0e0;
 `;
 
-export const LogoImage = styled.img`
-  width: 200px;
-  height: 40px;
-  object-fit: contain;
-`;
-
-export const ExplanationText = styled.div`
-  flex: 1;
+export const InfoItem = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: #555;
   font-size: 14px;
   line-height: 1.6;
-  color: #555;
 
-  a {
-    color: #0066cc;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
+  svg {
+    color: #F2B024;
+    flex-shrink: 0;
+    margin-top: 3px;
   }
 `;
 
-export const PhoneNumber = styled.div`
-  color: #666;
-  margin-top: 5px;
+export const CategoryButtons = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+`;
+
+export const CategoryButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: ${props => props.$active ? '#FFF7E5' : '#f5f5f5'};
+  color: ${props => props.$active ? '#F2B024' : '#666'};
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.$active ? '#FFF7E5' : '#eee'};
+  }
+`;
+
+export const LawLink = styled.a`
+  color: #333;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
