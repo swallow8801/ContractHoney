@@ -42,6 +42,35 @@ export const Sidebar = styled.aside`
     }
 `;
 
+export const MenuList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0 0;
+  width: 70%;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const MenuItem = styled.li<{ $active?: boolean }>`
+  font-size: 16px;
+  padding: 15px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  color: ${props => props.$active ? 'rgb(206, 161, 0)' : '#666'};
+  background: ${props => props.$active ? '#f1f1f1' : 'transparent'};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    color: rgb(206, 161, 0);
+    background: #f1f1f1;
+  }
+`;
+
 export const Main = styled.main`
     flex: 1;
     padding: 40px;
