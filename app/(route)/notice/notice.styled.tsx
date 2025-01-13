@@ -1,66 +1,94 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  width: 80vw;
-  height: 94vh;
+  width: 100vw;
+  height: 92vh;
   background: #ffffff;
+`;
 
-  /* 화면 가운데 정렬 */
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+export const Sidebar = styled.div`
+  width: 20%; /* 사이드바 너비 */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 0;
 `;
 
 export const Main = styled.main`
   flex: 1;
-  width: 100%;
   padding: 40px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Title = styled.h1`
-  font-size: 36px;
-  font-weight: 400;
-  line-height: 49px;
-  color: #000000;
-  margin-bottom: 20px;
+  font-size: 30px;
+  font-weight: 600;
+  color:rgb(75, 75, 75);
 `;
 
 export const BoardContainer = styled.div`
   width: 100%;
-  margin-top: 50px;
 `;
 
 export const BoardTitle = styled.h2`
-  font-size: 30px;
-  font-weight: 400;
+  font-size: 27px;
   color: #2d2d2d;
-  margin-bottom: 10px;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1.6px solid rgb(190, 190, 190);
 `;
 
 export const BoardTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  margin-top: 30px;
+
+  tbody tr:hover {
+    background: #f1f1f1; /* 행 hover 시 배경색 변경 */
+  }
 
   th,
   td {
     border-bottom: 1px solid #cac4d0;
     text-align: left;
     padding: 10px 16px;
-    font-size: 14px;
+    font-size: 16px;
     color: #737373;
   }
 
   th {
-    font-weight: bold;
+    font-weight: 600;
   }
 
   td {
     font-weight: normal;
+  }
+
+  /* 순서별 너비 지정 */
+  td:nth-child(1), th:nth-child(1) {
+    width: 10%; /* 첫 번째 열 */
+    text-align: center;
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    width: 60%; /* 두 번째 열 */
+  }
+
+  th:nth-child(2) {
+    text-align: center;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 13%; /* 세 번째 열 */
+    text-align: center;
+  }
+
+  td:nth-child(4), th:nth-child(4) {
+    width: 17%; /* 네 번째 열 */
+    text-align: center;
   }
 `;

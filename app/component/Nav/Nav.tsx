@@ -37,7 +37,7 @@ const Nav = () => {
         <Link href="/notice">공지사항</Link>
         </NavItem>
         <NavItem active={activeTab === 'qna'} onClick={() => setActiveTab('qna')}>
-        <Link href="/qna">Q&A</Link>
+        <Link href="/faq">Q&A</Link>
         </NavItem>
     </NavItemsContainer>
     {/* 로그인 / 유저 정보 */}

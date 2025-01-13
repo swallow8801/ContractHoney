@@ -60,7 +60,7 @@ export const Title = styled.h1`
   text-align: center; /* 제목 중앙 정렬 */
 `;
 
-export const QNATitle = styled.h2`
+export const FAQTitle = styled.h2`
   font-size: 27px;
   color: #2d2d2d;
   font-weight: 500;
@@ -68,51 +68,4 @@ export const QNATitle = styled.h2`
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 1.6px solid rgb(190, 190, 190);
-`;
-
-
-export const Table = styled.table`
-  width: 85%;
-  border-collapse: collapse;
-
-  tbody tr:hover {
-    background: #f1f1f1; /* 행 hover 시 배경색 변경 */
-  }
-
-  th,
-  td {
-    border-bottom: 1px solid #cac4d0;
-    text-align: left;
-    padding: 10px 16px;
-    font-size: 16px;
-    color: #737373;
-  }
-
-  th {
-    font-weight: 600;
-  }
-
-  td {
-    font-weight: normal;
-  }
-
-  /* 순서별 너비 지정 */
-  td:nth-child(1), th:nth-child(1) {
-    width: 10%; /* 첫 번째 열 */
-    text-align: center;
-  }
-
-  td:nth-child(2), th:nth-child(2) {
-    width: 72%; /* 두 번째 열 */
-  }
-
-  th:nth-child(2) {
-    text-align: center;
-  }
-
-  td:nth-child(3), th:nth-child(3) {
-    width: 13%; /* 세 번째 열 */
-    text-align: center;
-  }
-
 `;

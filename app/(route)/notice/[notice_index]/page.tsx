@@ -1,68 +1,89 @@
 'use client';
 
-import React from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import {
   Container,
-  Rectangle,
-  Header,
-  Logo,
+  Sidebar,
+  Main,
   Title,
-  NoticeContent,
-  Navigation as NavSection,
-  NavLink,
+  NoticeTitle,
+  NoticeInfo,
+  Content,
+  NavigationTable,
+  NavigationRow,
   BackButton,
-} from "./[notice_index].styled";
+} from './[notice_index].styled';
 
-const NoticeDetailPage = () => {
+const NoticeDetailPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const { notice_index: rawNoticeIndex } = useParams();
+  const currentId = parseInt(params.id, 10);
 
-  // notice_index가 배열일 경우 첫 번째 값 사용
-  const notice_index = Array.isArray(rawNoticeIndex) ? rawNoticeIndex[0] : rawNoticeIndex || "";
-
+  // 예시 데이터
   const notices = [
-    { notice_index: "1", title: "공지사항1", content: "모코코", date: "2024-11-28" },
-    { notice_index: "2", title: "공지사항2", content: "내용2", date: "2024-11-29" },
+    { id: 1, title: '공지사항1' },
+    { id: 2, title: '공지사항2' },
+    { id: 3, title: '공지사항3' },
   ];
 
-  const currentNotice = notices.find((n) => n.notice_index === notice_index);
+  // 현재 글
+  const currentNotice = notices.find((notice) => notice.id === currentId);
 
-  if (!currentNotice) {
-    return (
-      <Container>
-        <Header>
-          <Logo onClick={() => router.push("/")}>🐝</Logo>
-        </Header>
-        <Title>공지사항을 찾을 수 없습니다.</Title>
-        <BackButton onClick={() => router.push("/notice")}>목록으로 돌아가기</BackButton>
-      </Container>
-    );
-  }
-
-  const previousNotice = notices.find((n) => n.notice_index === `${parseInt(notice_index) - 1}`);
-  const nextNotice = notices.find((n) => n.notice_index === `${parseInt(notice_index) + 1}`);
+  // 이전 글 및 다음 글
+  const prevNotice = notices.find((notice) => notice.id === currentId - 1);
+  const nextNotice = notices.find((notice) => notice.id === currentId + 1);
 
   return (
-    <>
-      <Container>
-        <Rectangle />
-        <Header>
-          <Logo onClick={() => router.push("/")}>🐝</Logo>
-        </Header>
-        <Title>{currentNotice.title}</Title>
-        <NoticeContent>{currentNotice.content}</NoticeContent>
-        <NavSection>
-          <NavLink onClick={() => previousNotice && router.push(`/notice/${previousNotice.notice_index}`)}>
-            {previousNotice ? `이전글: ${previousNotice.title}` : "이전글이 없습니다."}
-          </NavLink>
-          <NavLink onClick={() => nextNotice && router.push(`/notice/${nextNotice.notice_index}`)}>
-            {nextNotice ? `다음글: ${nextNotice.title}` : "다음글이 없습니다."}
-          </NavLink>
-        </NavSection>
-        <BackButton onClick={() => router.push("/notice")}>목록</BackButton>
-      </Container>
-    </>
+    <Container>
+      <Sidebar>
+        <Title>공지사항</Title>
+      </Sidebar>
+      <Main>
+        <NoticeTitle>공지사항1</NoticeTitle>
+        <NoticeInfo>
+          작성일: 2024-11-28
+        </NoticeInfo>
+        <Content>모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코</Content>
+
+        <NavigationTable>
+          <tbody>
+            <NavigationRow></NavigationRow>
+            <NavigationRow>
+              <td>이전글</td>
+              <td>
+                {prevNotice ? (
+                  <span
+                    style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                    onClick={() => router.push(`/notice/${prevNotice.id}`)}
+                  >
+                    {prevNotice.title}
+                  </span>
+                ) : (
+                  '이전글이 없습니다.'
+                )}
+              </td>
+            </NavigationRow>
+            <NavigationRow>
+              <td>다음글</td>
+              <td>
+                {nextNotice ? (
+                  <span
+                    style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                    onClick={() => router.push(`/notice/${nextNotice.id}`)}
+                  >
+                    {nextNotice.title}
+                  </span>
+                ) : (
+                  '다음글이 없습니다.'
+                )}
+              </td>
+            </NavigationRow>
+          </tbody>
+        </NavigationTable>
+
+        <BackButton onClick={() => router.push('/notice')}>목록</BackButton>
+      </Main>
+    </Container>
   );
 };
 
