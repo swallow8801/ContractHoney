@@ -108,6 +108,16 @@ export const ArchiveTable = styled.table`
   td:nth-child(2) {
     text-align: left;
   }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 13%;
+    text-align: center;
+  }
+
+  td:nth-child(4), th:nth-child(4) {
+    width: 15%;
+    text-align: center;
+  }
 `;
 
 export const AttachmentIcon = styled.span`
