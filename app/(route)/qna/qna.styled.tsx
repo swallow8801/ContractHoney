@@ -95,9 +95,20 @@ export const Table = styled.table`
     background: #f8fbff;
   }
 
+  td:nth-child(1), th:nth-child(1) {
+    width: 10%;
+    text-align: center;
+  }
+    
   td:nth-child(2) {
     text-align: left;
   }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 15%;
+    text-align: center;
+  }
+
 `;
 
 export const WriteButton = styled.button`
