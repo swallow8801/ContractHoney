@@ -54,6 +54,7 @@ const MainPage = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
+      console.log('Selected file:', file);
     }
   };
 
@@ -74,6 +75,7 @@ const MainPage = () => {
       const file = event.dataTransfer.files?.[0];
       if (file) {
         setSelectedFile(file);
+        console.log('Dropped file:', file);
       }
     }
   };
@@ -92,10 +94,16 @@ const MainPage = () => {
     }
   };
 
-  const handleReview = () => {
+  const handleReview = async () => {
     if (isLoggedIn && selectedFile) {
-      // Implement your file review logic here
-      console.log("Reviewing file:", selectedFile.name);
+      // Simulate sending file to server
+      const fileInfo = {
+        name: selectedFile.name,
+        type: selectedFile.type,
+      };
+      
+      // Redirect to result page with file info
+      router.push(`/result?file=${encodeURIComponent(JSON.stringify(fileInfo))}`);
     }
   };
 
@@ -130,7 +138,7 @@ const MainPage = () => {
               type="file"
               ref={fileInputRef}
               onChange={handleFileSelect}
-              accept=".pdf,.doc,.docx,.hwp"
+              accept=".pdf,.doc,.docx,.hwp,.txt"
               disabled={!isLoggedIn}
             />
           </FileUploadContainer>
