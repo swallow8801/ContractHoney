@@ -2,6 +2,7 @@
 
 import { Share, ChevronUp, ChevronDown } from 'lucide-react'
 import { useState, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Container,
   MainContent,
@@ -28,147 +29,63 @@ import {
   PaginationInfo,
 } from './manage_cont.styled'
 
-interface Document {
-  id: string
-  name: string
-  format: string
-  size: string
-  date: string
-  versions: number
-  summary?: {
-    parties: string
-    duration: string
-    unfairClauses: number
-    toxicClauses: number
-  }
+interface Contract {
+  con_id: number;
+  con_title: string;
+  con_type: string;
+  con_updatetime: string;
+  con_summary: string | null;
+  con_toxic: string | null;
+  con_toxic_level: string | null;
+  con_unfair: string | null;
+  con_unfair_level: string | null;
+  con_law: string | null;
+  con_version: number;
+  user_id: number;
 }
 
-const documents: Document[] = [
-  {
-    id: '1',
-    name: '재엽계약서',
-    format: '.hwp',
-    size: '3.71MB',
-    date: '2025. 01. 03',
-    versions: 1,
-    summary: {
-      parties: '갑: 주식회사 A / 을: 주식회사 B',
-      duration: '2025.01.03 ~ 2026.01.02',
-      unfairClauses: 2,
-      toxicClauses: 1,
-    }
-  },
-  {
-    id: '2',
-    name: '미소계약서',
-    format: '.hwp',
-    size: '4.61MB',
-    date: '2025. 01. 04',
-    versions: 3,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '3',
-    name: '종환계약서',
-    format: '.hwp',
-    size: '2.89MB',
-    date: '2025. 01. 05',
-    versions: 1,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '4',
-    name: '광훈계약서',
-    format: '.pdf',
-    size: '2.83MB',
-    date: '2025. 01. 06',
-    versions: 1,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '5',
-    name: '팡훈계약서',
-    format: '.pdf',
-    size: '6.48MB',
-    date: '2025. 01. 07',
-    versions: 1,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '6',
-    name: '명재계약서',
-    format: '.hwp',
-    size: '3.92MB',
-    date: '2025. 01. 08',
-    versions: 2,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '7',
-    name: '진석계약서',
-    format: '.pdf',
-    size: '5.17MB',
-    date: '2025. 01. 09',
-    versions: 1,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-  {
-    id: '8',
-    name: '계승계약서',
-    format: '.hwp',
-    size: '4.23MB',
-    date: '2025. 01. 10',
-    versions: 2,
-    summary: {
-      parties: '-',
-      duration: '-',
-      unfairClauses: 0,
-      toxicClauses: 0,
-    }
-  },
-]
-
-type SortField = 'name' | 'date'
-type SortOrder = 'asc' | 'desc'
-
 export default function ManageContracts() {
-  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null)
+  const router = useRouter()
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [selectedDoc, setSelectedDoc] = useState<Contract | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<SortField>('date')
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortField, setSortField] = useState<'con_title' | 'con_updatetime'>('con_updatetime')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [currentPage, setCurrentPage] = useState(1)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0)
   const itemsPerPage = 5
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    const fetchContracts = async () => {
+      try {
+        const response = await fetch('/api/contracts', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          router.push('/login');
+          return;
+        }
+        if (!response.ok) {
+          throw new Error('Failed to fetch contracts');
+        }
+        const data = await response.json();
+        setContracts(data);
+      } catch (error) {
+        console.error('Error fetching contracts:', error);
+      }
+    };
+
+    fetchContracts();
+  }, [router]);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -176,27 +93,27 @@ export default function ManageContracts() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const filteredAndSortedDocuments = useMemo(() => {
-    return documents
-      .filter(doc => 
-        doc.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAndSortedContracts = useMemo(() => {
+    return contracts
+      .filter(contract => 
+        contract.con_title.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .sort((a, b) => {
-        if (sortField === 'name') {
+        if (sortField === 'con_title') {
           return sortOrder === 'asc' 
-            ? a.name.localeCompare(b.name)
-            : b.name.localeCompare(a.name)
-        } else if (sortField === 'date') {
+            ? a.con_title.localeCompare(b.con_title)
+            : b.con_title.localeCompare(a.con_title)
+        } else if (sortField === 'con_updatetime') {
           return sortOrder === 'asc'
-            ? new Date(a.date).getTime() - new Date(b.date).getTime()
-            : new Date(b.date).getTime() - new Date(a.date).getTime()
+            ? new Date(a.con_updatetime).getTime() - new Date(b.con_updatetime).getTime()
+            : new Date(b.con_updatetime).getTime() - new Date(a.con_updatetime).getTime()
         }
         return 0
       })
-  }, [searchTerm, sortField, sortOrder])
+  }, [contracts, searchTerm, sortField, sortOrder])
 
-  const pageCount = Math.ceil(filteredAndSortedDocuments.length / itemsPerPage)
-  const currentItems = filteredAndSortedDocuments.slice(
+  const pageCount = Math.ceil(filteredAndSortedContracts.length / itemsPerPage)
+  const currentItems = filteredAndSortedContracts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
@@ -206,7 +123,7 @@ export default function ManageContracts() {
     setCurrentPage(1)
   }
 
-  const handleSort = (field: SortField) => {
+  const handleSort = (field: 'con_title' | 'con_updatetime') => {
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
     } else {
@@ -220,13 +137,28 @@ export default function ManageContracts() {
     setCurrentPage(newPage)
   }
 
+  if (contracts.length === 0) {
+    return (
+      <Container>
+        <MainContent>
+          <HeaderContainer>
+            <TitleContainer>
+              <Title>계약서 분석 기록</Title>
+            </TitleContainer>
+          </HeaderContainer>
+          <p>분석된 계약서가 없습니다.</p>
+        </MainContent>
+      </Container>
+    )
+  }
+
   return (
     <Container>
       <MainContent>
         <HeaderContainer>
           <TitleContainer>
             <Title>계약서 분석 기록</Title>
-            <TotalCount>총 {filteredAndSortedDocuments.length}건</TotalCount>
+            <TotalCount>총 {filteredAndSortedContracts.length}건</TotalCount>
           </TitleContainer>
           <SearchContainer>
             <SearchInput
@@ -242,23 +174,23 @@ export default function ManageContracts() {
           <tbody>
             <tr>
               <SummaryTh>계약서 이름</SummaryTh>
-              <SummaryTd>{selectedDoc?.name || '-'}</SummaryTd>
+              <SummaryTd>{selectedDoc?.con_title || '-'}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 당사자</SummaryTh>
-              <SummaryTd>{selectedDoc?.summary?.parties || '-'}</SummaryTd>
+              <SummaryTh>계약 종류</SummaryTh>
+              <SummaryTd>{selectedDoc?.con_type || '-'}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 기간</SummaryTh>
-              <SummaryTd>{selectedDoc?.summary?.duration || '-'}</SummaryTd>
+              <SummaryTh>계약 요약</SummaryTh>
+              <SummaryTd>{selectedDoc?.con_summary || '-'}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>판별된 불공정조항 수</SummaryTh>
-              <SummaryTd>{selectedDoc?.summary?.unfairClauses || '0'}</SummaryTd>
+              <SummaryTh>독소조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.con_toxic || '-'} (레벨: {selectedDoc?.con_toxic_level || '-'})</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>판별된 독소조항 수</SummaryTh>
-              <SummaryTd>{selectedDoc?.summary?.toxicClauses || '0'}</SummaryTd>
+              <SummaryTh>불공정조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.con_unfair || '-'} (레벨: {selectedDoc?.con_unfair_level || '-'})</SummaryTd>
             </tr>
           </tbody>
         </SummaryBox>
@@ -266,19 +198,18 @@ export default function ManageContracts() {
         <Table>
           <thead>
             <tr>
-              <Th $sortable onClick={() => handleSort('name')}>
+              <Th $sortable onClick={() => handleSort('con_title')}>
                 계약서 이름
-                {sortField === 'name' && (
+                {sortField === 'con_title' && (
                   <SortIcon>
                     {sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                   </SortIcon>
                 )}
               </Th>
-              <Th>파일 포맷</Th>
-              <Th>파일 크기</Th>
-              <Th $sortable onClick={() => handleSort('date')}>
+              <Th>계약 종류</Th>
+              <Th $sortable onClick={() => handleSort('con_updatetime')}>
                 분석날짜
-                {sortField === 'date' && (
+                {sortField === 'con_updatetime' && (
                   <SortIcon>
                     {sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                   </SortIcon>
@@ -289,61 +220,31 @@ export default function ManageContracts() {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((doc) => (
-              <tr key={doc.id}>
-                {windowWidth <= 768 && (
-                  <>
-                    <Td>{doc.name}</Td>
-                    <Td>{doc.format}</Td>
-                    <Td>
-                      <FileDate>{doc.date}</FileDate>
-                    </Td>
-                    <Td>
-                      <VersionSelect defaultValue="1">
-                        {Array.from({ length: doc.versions }, (_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            ver {i + 1}
-                          </option>
-                        ))}
-                      </VersionSelect>
-                    </Td>
-                    <Td>
-                      <ActionButton>
-                        <Share size={20} />
-                      </ActionButton>
-                    </Td>
-                  </>
-                )}
-                {windowWidth > 768 && (
-                  <>
-                    <Td>
-                      <DocumentName onClick={() => setSelectedDoc(doc)}>
-                        {doc.name}
-                      </DocumentName>
-                    </Td>
-                    <Td>{doc.format}</Td>
-                    <Td>
-                      <FileSize>{doc.size}</FileSize>
-                    </Td>
-                    <Td>
-                      <FileDate>{doc.date}</FileDate>
-                    </Td>
-                    <Td>
-                      <VersionSelect defaultValue="1">
-                        {Array.from({ length: doc.versions }, (_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            ver {i + 1}
-                          </option>
-                        ))}
-                      </VersionSelect>
-                    </Td>
-                    <Td>
-                      <ActionButton>
-                        <Share size={20} />
-                      </ActionButton>
-                    </Td>
-                  </>
-                )}
+            {currentItems.map((contract) => (
+              <tr key={contract.con_id}>
+                <Td className="title">
+                  <DocumentName onClick={() => setSelectedDoc(contract)}>
+                    {contract.con_title}
+                  </DocumentName>
+                </Td>
+                <Td className="type">{contract.con_type}</Td>
+                <Td className="date">
+                  <FileDate>{new Date(contract.con_updatetime).toLocaleDateString()}</FileDate>
+                </Td>
+                <Td className="version">
+                  <VersionSelect defaultValue={contract.con_version}>
+                    {Array.from({ length: contract.con_version }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        ver {i + 1}
+                      </option>
+                    ))}
+                  </VersionSelect>
+                </Td>
+                <Td>
+                  <ActionButton>
+                    <Share size={20} />
+                  </ActionButton>
+                </Td>
               </tr>
             ))}
           </tbody>

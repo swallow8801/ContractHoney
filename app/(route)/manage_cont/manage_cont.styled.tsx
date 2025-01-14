@@ -114,7 +114,24 @@ export const Td = styled.td`
   height: auto;
   min-height: 40px;
   font-size: 0.8rem;
-`
+
+  &.title {
+    max-width: 200px;
+    text-align: left;
+  }
+
+  &.type {
+    max-width: 100px;
+  }
+
+  &.date {
+    min-width: 100px;
+  }
+
+  &.version {
+    min-width: 80px;
+  }
+`;
 
 export const VersionSelect = styled.select`
   padding: 0.25rem;
