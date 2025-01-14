@@ -162,3 +162,14 @@ export const SignUpButton = styled.button`
   cursor: pointer;
   color: #111111;
 `;
+
+export const SignInButton = styled.button`
+  padding: 16px;
+  width: 100%;
+  background: none;
+  border: 1px solid #111111;
+  border-radius: 40px;
+  cursor: pointer;
+  color: #111111;
+  margin-top: 16px;
+`;

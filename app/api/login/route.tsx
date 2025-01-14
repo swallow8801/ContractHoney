@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import mysql from 'mysql2/promise'; // MySQL2 라이브러리 사용
+import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 // 환경 변수 로드
 dotenv.config();
@@ -17,6 +18,7 @@ const pool = mysql.createPool({
 // POST 요청 처리
 export async function POST(request: NextRequest) {
   const { user_email, user_password }: { user_email: string; user_password: string } = await request.json();
+  console.log('입력된 이메일:', user_email);
 
   try {
     // 데이터베이스에서 사용자 정보 가져오기
@@ -28,7 +30,6 @@ export async function POST(request: NextRequest) {
     }
 
     const user = rows[0]; // 사용자 데이터
-
     console.log('사용자 데이터:', user);
 
     // 비밀번호 확인
@@ -39,8 +40,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '비밀번호가 일치하지 않습니다.' }, { status: 401 });
     }
 
-    // 로그인 성공 시 응답
-    return NextResponse.json({ message: '로그인 성공!' });
+    // JWT 토큰 생성 (유효기간은 1시간)
+    const token = jwt.sign(
+      { userId: user.user_id, userEmail: user.user_email },  // 페이로드
+      process.env.JWT_SECRET_KEY!,  // 비밀 키
+      { expiresIn: '1h' }           // 토큰 만료 시간
+    );
+
+    // 로그인 성공 시 토큰을 반환
+    return NextResponse.json({ message: '로그인 성공!', token });
 
   } catch (error) {
     console.error('로그인 중 오류 발생:', error);
