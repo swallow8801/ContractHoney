@@ -29,12 +29,13 @@ import {
   LoginMessage,
 } from './main.styled';
 
-// Assuming you have a notices array. If not, you'll need to create one or fetch from an API.
-const notices = [
-  { id: 1, title: "공지사항 1", author: "관리자", datetime: "2025-01-10" },
-  { id: 2, title: "공지사항 2", author: "관리자", datetime: "2025-01-09" },
-  { id: 3, title: "공지사항 3", author: "관리자", datetime: "2025-01-08" },
-];
+// 공지사항 데이터 타입 정의
+interface NoticeType {
+  post_id: number;
+  post_title: string;
+  author: string;
+  post_datetime: string;
+}
 
 const MainPage = () => {
   const router = useRouter();
@@ -43,12 +44,32 @@ const MainPage = () => {
   const [searchType, setSearchType] = useState('법령');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [notices, setNotices] = useState<NoticeType[]>([]); // 타입 적용
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     setIsLoggedIn(!!token);
+
+    // Fetch notices from API
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch('/api/mainpage_notices');
+        if (!response.ok) {
+          throw new Error('Failed to fetch notices');
+        }
+        const data: NoticeType[] = await response.json(); // 타입 선언
+        setNotices(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNotices();
   }, []);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +96,6 @@ const MainPage = () => {
       const file = event.dataTransfer.files?.[0];
       if (file) {
         setSelectedFile(file);
-        console.log('Dropped file:', file);
       }
     }
   };
@@ -206,16 +226,19 @@ const MainPage = () => {
       <Group $backgroundImage="/images/공지사항.png">
         <Title>공지사항</Title>
         <Notice>
-          {notices.slice(0, 3).map((notice) => (
-            <NoticeItem
-              key={notice.id}
-              onClick={() => handleNoticeClick(notice.id)}
-            >
-              <NoticeItemTitle>{notice.title}</NoticeItemTitle>
-              <NoticeItemAuthor>{notice.author}</NoticeItemAuthor>
-              <NoticeItemDate>{notice.datetime}</NoticeItemDate>
-            </NoticeItem>
-          ))}
+          {isLoading ? (
+            <LoadingText>로딩 중...</LoadingText>
+          ) : error ? (
+            <p>공지사항을 불러오는 중 오류가 발생했습니다: {error}</p>
+          ) : (
+            notices.map((notice) => (
+              <NoticeItem key={notice.post_id} onClick={() => handleNoticeClick(notice.post_id)}>
+                <NoticeItemTitle>{notice.post_title}</NoticeItemTitle>
+                <NoticeItemAuthor>{notice.author}</NoticeItemAuthor>
+                <NoticeItemDate>{new Date(notice.post_datetime).toLocaleDateString()}</NoticeItemDate>
+              </NoticeItem>
+            ))
+          )}
           <ViewAll onClick={() => router.push('/notice')}>전체보기</ViewAll>
         </Notice>
       </Group>
@@ -224,4 +247,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
