@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation'; // useRouter 추가
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,8 +9,8 @@ import { NavContainer, NavItemsContainer, LoginContainer, NavItem, Logo, LoginBu
 import Image from 'next/image';
 
 const Nav = () => {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState('home'); // 현재 활성화된 탭
+  const router = useRouter(); // router 추가
+  const pathname = usePathname(); // 현재 경로 가져오기
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
 
   // 로그인 상태 확인 (로컬 스토리지에서 확인)
@@ -37,19 +37,19 @@ const Nav = () => {
 
       {/* 네비게이션 아이템 */}
       <NavItemsContainer>
-        <NavItem $active={activeTab === 'home'} onClick={() => setActiveTab('home')}>
+        <NavItem $active={pathname === '/'}>
           <Link href="/">홈</Link>
         </NavItem>
-        <NavItem $active={activeTab === 'contract'} onClick={() => setActiveTab('contract')}>
+        <NavItem $active={pathname === '/manage_cont'}>
           <Link href="/manage_cont">계약서 관리</Link>
         </NavItem>
-        <NavItem $active={activeTab === 'archive'} onClick={() => setActiveTab('archive')}>
+        <NavItem $active={pathname === '/archive' || pathname === '/law'}>
           <Link href="/archive">자료실</Link>
         </NavItem>
-        <NavItem $active={activeTab === 'notice'} onClick={() => setActiveTab('notice')}>
+        <NavItem $active={pathname === '/notice'}>
           <Link href="/notice">공지사항</Link>
         </NavItem>
-        <NavItem $active={activeTab === 'qna'} onClick={() => setActiveTab('qna')}>
+        <NavItem $active={pathname === '/faq' || pathname === '/qna'}>
           <Link href="/faq">Q&A</Link>
         </NavItem>
       </NavItemsContainer>
@@ -67,16 +67,14 @@ const Nav = () => {
         ) : (
           <UserInfo>
             {/* 아이콘 */}
-            <span 
+            <span
               onClick={() => router.push('/mypage')} 
               style={{ cursor: 'pointer', fontSize: '1.6em' }}
             >
               <FontAwesomeIcon icon={faCircleUser} size="lg" />
             </span>
             <LogoutButton
-              onClick={() => {
-                handleLogout(); // 로그아웃 처리
-              }}
+              onClick={handleLogout} // 로그아웃 처리
             >
               로그아웃
             </LogoutButton>
