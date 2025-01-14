@@ -28,6 +28,14 @@ body {
     overflow-x: hidden;
 }
 
+::-webkit-scrollbar {
+    width: 0; /* 스크롤바 너비를 없앰 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent; /* 투명 */
+}
+
 /* 모든 텍스트 요소에 상속 */
 *, *::before, *::after {
     font-family: inherit; /* body의 폰트 상속 */

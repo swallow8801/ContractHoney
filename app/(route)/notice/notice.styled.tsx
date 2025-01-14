@@ -48,6 +48,7 @@ export const BoardTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 30px;
+  border-top: 2px solid #333;
 
   tbody tr:hover {
     background: #f8fbff;
