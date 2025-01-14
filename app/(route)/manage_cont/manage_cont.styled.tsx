@@ -299,3 +299,50 @@ export const CheckResultsButton = styled.button`
   }
 `
 
+export const EmptyStateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 2rem;
+`;
+
+export const EmptyStateIcon = styled.div`
+  font-size: 4rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+`;
+
+export const EmptyStateTitle = styled.h3`
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+`;
+
+export const EmptyStateDescription = styled.p`
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+`;
+
+export const EmptyStateButton = styled.button`
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #333333;
+  }
+`;
+

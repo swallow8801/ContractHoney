@@ -1,6 +1,6 @@
 'use client'
 
-import { Share, ChevronUp, ChevronDown } from 'lucide-react'
+import { Share, ChevronUp, ChevronDown, FileText } from 'lucide-react'
 import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -27,6 +27,11 @@ import {
   PaginationContainer,
   PaginationButton,
   PaginationInfo,
+  EmptyStateContainer,
+  EmptyStateIcon,
+  EmptyStateTitle,
+  EmptyStateDescription,
+  EmptyStateButton,
 } from './manage_cont.styled'
 
 interface Contract {
@@ -146,10 +151,21 @@ export default function ManageContracts() {
               <Title>계약서 분석 기록</Title>
             </TitleContainer>
           </HeaderContainer>
-          <p>분석된 계약서가 없습니다.</p>
+          <EmptyStateContainer>
+            <EmptyStateIcon>
+              <FileText size={64} />
+            </EmptyStateIcon>
+            <EmptyStateTitle>분석된 계약서가 없습니다</EmptyStateTitle>
+            <EmptyStateDescription>
+              계약서를 업로드하고 분석을 시작해보세요. 분석된 계약서의 결과를 여기서 확인할 수 있습니다.
+            </EmptyStateDescription>
+            <EmptyStateButton onClick={() => router.push('/')}>
+              메인으로 돌아가기
+            </EmptyStateButton>
+          </EmptyStateContainer>
         </MainContent>
       </Container>
-    )
+    );
   }
 
   return (
