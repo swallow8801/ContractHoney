@@ -54,11 +54,10 @@ export const BoardTable = styled.table`
     background: #f8fbff;
   }
 
-  th,
-  td {
-    border-bottom: 1px solid #cac4d0;
+  th, td {
+    padding: 15px;
     text-align: left;
-    padding: 10px 16px;
+    border-bottom: 1px solid #ddd;
     font-size: 14px;
     color: #666;
   }
@@ -78,21 +77,17 @@ export const BoardTable = styled.table`
     text-align: center;
   }
 
-  td:nth-child(2), th:nth-child(2) {
-    width: 60%;
-  }
-
   th:nth-child(2) {
     text-align: center;
   }
 
   td:nth-child(3), th:nth-child(3) {
-    width: 13%;
+    width: 8%;
     text-align: center;
   }
 
   td:nth-child(4), th:nth-child(4) {
-    width: 17%;
+    width: 15%;
     text-align: center;
   }
 `;
