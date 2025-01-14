@@ -113,6 +113,12 @@ export const Button = styled.button`
         background-color: #444;
         transform: translateY(-2px);
     }
+
+    &:disabled {
+        background-color: #888;
+        cursor: not-allowed;
+        transform: none;
+    }
 `;
 
 export const Notice = styled.div`
@@ -283,5 +289,13 @@ export const LoadingText = styled.div`
   color: #333;
   font-size: 16px;
   margin-top: 10px;
+`;
+
+export const LoginMessage = styled.div`
+  color: white;
+  font-size: 18px;
+  margin-top: 20px;
+  text-align: center;
+  z-index: 2;
 `;
 
