@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/database';
 import jwt from 'jsonwebtoken';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const token = request.headers.get('Authorization')?.split(' ')[1];
 
   if (!token) {

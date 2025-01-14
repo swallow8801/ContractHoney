@@ -32,6 +32,9 @@ import {
   EmptyStateTitle,
   EmptyStateDescription,
   EmptyStateButton,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from './manage_cont.styled'
 
 interface Contract {
@@ -57,8 +60,18 @@ export default function ManageContracts() {
   const [sortField, setSortField] = useState<'con_title' | 'con_updatetime'>('con_updatetime')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [currentPage, setCurrentPage] = useState(1)
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0)
+  const [windowWidth, setWindowWidth] = useState(0)
+  const [isLoading, setIsLoading] = useState(true); // Added isLoading state
   const itemsPerPage = 5
+
+  useEffect(() => {
+    // Set window width after component mounts
+    setWindowWidth(window.innerWidth)
+    
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -68,6 +81,9 @@ export default function ManageContracts() {
     }
 
     const fetchContracts = async () => {
+      setIsLoading(true);
+      const startTime = Date.now();
+      
       try {
         const response = await fetch('/api/contracts', {
           headers: {
@@ -86,17 +102,19 @@ export default function ManageContracts() {
         setContracts(data);
       } catch (error) {
         console.error('Error fetching contracts:', error);
+      } finally {
+        const endTime = Date.now();
+        const loadingTime = endTime - startTime;
+        const remainingTime = Math.max(2000 - loadingTime, 0);
+        
+        setTimeout(() => {
+          setIsLoading(false);
+        }, remainingTime);
       }
     };
 
     fetchContracts();
   }, [router]);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   const filteredAndSortedContracts = useMemo(() => {
     return contracts
@@ -140,6 +158,24 @@ export default function ManageContracts() {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
+  }
+
+  if (isLoading) { // Added loading state check
+    return (
+      <Container>
+        <MainContent>
+          <HeaderContainer>
+            <TitleContainer>
+              <Title>계약서 분석 기록</Title>
+            </TitleContainer>
+          </HeaderContainer>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingText>계약서 목록을 불러오는 중입니다...</LoadingText>
+          </LoadingContainer>
+        </MainContent>
+      </Container>
+    );
   }
 
   if (contracts.length === 0) {
