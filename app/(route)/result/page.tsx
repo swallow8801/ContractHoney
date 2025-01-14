@@ -33,6 +33,20 @@ import {
   ClauseType,
 } from './result.styled';
 
+interface Contract {
+  con_id: number;
+  con_title: string;
+  con_type: string;
+  con_updatetime: string;
+  con_summary: string;
+  con_toxic: string;
+  con_toxic_level: string;
+  con_unfair: string;
+  con_unfair_level: string;
+  con_law: string;
+  con_version: number;
+}
+
 interface Clause {
   id: string;
   chapter: string;
@@ -44,55 +58,64 @@ interface Clause {
 
 const ResultPage = () => {
   const searchParams = useSearchParams();
-  const [fileInfo, setFileInfo] = useState<{ name: string; type: string } | null>(null);
+  const [contract, setContract] = useState<Contract | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages] = useState(27);
   const [activeTab, setActiveTab] = useState('요약');
-  const [unfairClauses, setUnfairClauses] = useState<Clause[]>([
-    {
-      id: '1',
-      chapter: '제 2장',
-      title: '어쩌구 저쩌구',
-      content: '머시기 머시기한 내용',
-      type: 'unfair',
-      checked: false,
-    },
-    {
-      id: '2',
-      chapter: '제 3장',
-      title: '이러쿵 저러쿵',
-      content: '이러저러한 내용',
-      type: 'unfair',
-      checked: false,
-    },
-    // Add more clauses as needed
-  ]);
-  const [toxicClauses, setToxicClauses] = useState<Clause[]>([
-    {
-      id: '3',
-      chapter: '제 4장',
-      title: '독소조항 1',
-      content: '독소조항 내용',
-      type: 'toxic',
-      checked: false,
-    },
-    // Add more toxic clauses
-  ]);
-
+  const [unfairClauses, setUnfairClauses] = useState<Clause[]>([]);
+  const [toxicClauses, setToxicClauses] = useState<Clause[]>([]);
   const [currentClausePage, setCurrentClausePage] = useState(1);
   const clausesPerPage = 5;
 
   useEffect(() => {
-    const fileParam = searchParams.get('file');
-    if (fileParam) {
-      try {
-        const parsedFileInfo = JSON.parse(decodeURIComponent(fileParam));
-        setFileInfo(parsedFileInfo);
-      } catch (error) {
-        console.error('Error parsing file info:', error);
-      }
+    const contractId = searchParams.get('contractId');
+    if (contractId) {
+      fetchContractData(contractId);
     }
   }, [searchParams]);
+
+  const fetchContractData = async (contractId: string) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/contracts/${contractId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch contract data');
+      }
+      const data = await response.json();
+      setContract(data);
+      // Here you would typically set the unfairClauses and toxicClauses based on the fetched data
+      // For now, we'll just use some dummy data
+      setUnfairClauses([
+        {
+          id: '1',
+          chapter: '제 2장',
+          title: '어쩌구 저쩌구',
+          content: '머시기 머시기한 내용',
+          type: 'unfair',
+          checked: false,
+        },
+        // ... add more unfair clauses
+      ]);
+      setToxicClauses([
+        {
+          id: '3',
+          chapter: '제 4장',
+          title: '독소조항 1',
+          content: '독소조항 내용',
+          type: 'toxic',
+          checked: false,
+        },
+        // ... add more toxic clauses
+      ]);
+    } catch (error) {
+      console.error('Error fetching contract data:', error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
 
   const handlePrevPage = () => {
     setCurrentPage(prev => Math.max(prev - 1, 1));
@@ -119,58 +142,48 @@ const ResultPage = () => {
   };
 
   const renderPreview = () => {
-    if (!fileInfo) return null;
+    if (!contract) return null;
 
-    switch (fileInfo.type) {
-      case 'application/pdf':
-        return <embed src={URL.createObjectURL(new Blob([fileInfo]))} type="application/pdf" width="100%" height="100%" />;
-      case 'application/haansofthwp':
-      case 'application/x-hwp':
-        return (
-          <HancomPlaceholder>
-            <FileText size={48} />
-            <p>{fileInfo.name}</p>
-            <p>한컴 오피스 파일은 미리보기를 지원하지 않습니다.</p>
-            <ActionButton className="download">
-              <Download size={16} />
-              파일 다운로드
-            </ActionButton>
-          </HancomPlaceholder>
-        );
-      default:
-        return <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CAjJQckns1CPDnI9XT9KII54vQpw3W.png" alt="Contract Preview" />;
-    }
+    // For now, we'll just show a placeholder. In a real application, you'd render the actual contract content here.
+    return (
+      <HancomPlaceholder>
+        <FileText size={48} />
+        <p>{contract.con_title}</p>
+        <p>계약서 미리보기는 현재 지원되지 않습니다.</p>
+        <ActionButton className="download">
+          <Download size={16} />
+          파일 다운로드
+        </ActionButton>
+      </HancomPlaceholder>
+    );
   };
 
   const renderContent = () => {
+    if (!contract) return null;
+
     switch (activeTab) {
       case '요약':
         return (
           <>
             <AnalysisItem>
               <ItemLabel>계약 종류</ItemLabel>
-              <ItemContent>공급계약서</ItemContent>
+              <ItemContent>{contract.con_type}</ItemContent>
             </AnalysisItem>
             <AnalysisItem>
-              <ItemLabel>계약 당사자</ItemLabel>
-              <ItemContent>
-                갑: 주식회사 A (공급자)<br />
-                을: 주식회사 B (구매자)
-              </ItemContent>
+              <ItemLabel>계약 요약</ItemLabel>
+              <ItemContent>{contract.con_summary}</ItemContent>
             </AnalysisItem>
             <AnalysisItem>
-              <ItemLabel>계약 기간</ItemLabel>
-              <ItemContent>2025년 1월 1일 ~ 2025년 12월 31일 (12개월)</ItemContent>
+              <ItemLabel>독소조항</ItemLabel>
+              <ItemContent>{contract.con_toxic} (레벨: {contract.con_toxic_level})</ItemContent>
             </AnalysisItem>
             <AnalysisItem>
-              <ItemLabel>주요 계약 내용</ItemLabel>
-              <ItemContent>
-                1. 물품 공급 범위 및 수량<br />
-                2. 공급가격 및 대금지급 조건<br />
-                3. 납품 일정 및 방법<br />
-                4. 품질보증 및 하자담보책임<br />
-                5. 기밀유지 의무
-              </ItemContent>
+              <ItemLabel>불공정조항</ItemLabel>
+              <ItemContent>{contract.con_unfair} (레벨: {contract.con_unfair_level})</ItemContent>
+            </AnalysisItem>
+            <AnalysisItem>
+              <ItemLabel>관련 법령</ItemLabel>
+              <ItemContent>{contract.con_law}</ItemContent>
             </AnalysisItem>
           </>
         );
@@ -230,11 +243,15 @@ const ResultPage = () => {
   const getUnfairCount = () => unfairClauses.filter(c => !c.checked).length;
   const getToxicCount = () => toxicClauses.filter(c => !c.checked).length;
 
+  if (!contract) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <ReviewContainer>
       <PreviewSection>
         <NavigationBar>
-          <DocumentTitle>{fileInfo?.name || '문서 제목'}</DocumentTitle>
+          <DocumentTitle>{contract.con_title}</DocumentTitle>
           <PageNavigation>
             <NavButton onClick={handlePrevPage} disabled={currentPage === 1}>
               <ChevronLeft size={20} />

@@ -43,6 +43,7 @@ const MainPage = () => {
   const [searchType, setSearchType] = useState('법령');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -54,7 +55,6 @@ const MainPage = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      console.log('Selected file:', file);
     }
   };
 
@@ -96,14 +96,38 @@ const MainPage = () => {
 
   const handleReview = async () => {
     if (isLoggedIn && selectedFile) {
-      // Simulate sending file to server
-      const fileInfo = {
-        name: selectedFile.name,
-        type: selectedFile.type,
-      };
-      
-      // Redirect to result page with file info
-      router.push(`/result?file=${encodeURIComponent(JSON.stringify(fileInfo))}`);
+      setIsLoading(true);
+      const fileName = selectedFile.name;
+      const fileExtension = fileName.split('.').pop() || '';
+      const fileNameWithoutExtension = fileName.replace(`.${fileExtension}`, '');
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('fileName', fileNameWithoutExtension);
+      formData.append('fileType', fileExtension);
+
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch('/api/upload-contract', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to upload contract');
+        }
+
+        const data = await response.json();
+        router.push(`/result?contractId=${data.contractId}`);
+      } catch (error) {
+        console.error('Error uploading contract:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -113,6 +137,12 @@ const MainPage = () => {
 
   return (
     <Container>
+      {isLoading && (
+        <LoadingOverlay>
+          <LoadingSpinner />
+          <LoadingText>계약서를 분석 중입니다...</LoadingText>
+        </LoadingOverlay>
+      )}
       <Group $backgroundImage="/images/메인.png">
         <Title>계약서 검토 AI 어시스턴트</Title>
         <InputContainer>
@@ -142,7 +172,7 @@ const MainPage = () => {
               disabled={!isLoggedIn}
             />
           </FileUploadContainer>
-          <Button onClick={handleReview} disabled={!isLoggedIn || !selectedFile}>
+          <Button onClick={handleReview} disabled={!isLoggedIn || !selectedFile || isLoading}>
             검토하기
           </Button>
           {!isLoggedIn && (
