@@ -17,6 +17,27 @@
     }
 }
 
+/* 기본 스타일 설정 */
+html {
+    overflow-y: overlay; /* 스크롤바를 콘텐츠에 오버레이 */
+}
+
+/* 웹킷 기반 브라우저 스크롤바 커스터마이징 */
+::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 설정 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5); /* 스크롤바 색상 */
+    border-radius: 4px; /* 둥근 모서리 */
+    border: 2px solid transparent; /* 스크롤바 가장자리 투명 처리 */
+    background-clip: content-box; /* 안쪽으로 패딩 적용 */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* 배경 투명 */
+}
+
 /* 전역 글꼴 설정 */
 body {
     color: var(--foreground);
