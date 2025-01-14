@@ -128,16 +128,32 @@ export const Notice = styled.div`
 `;
 
 export const NoticeItem = styled.div`
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 16px;
-    color: #333;
-    transition: transform 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px; /* 전체 아이템에 패딩 추가 */
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+`;
 
-    &:hover {
-        transform: translateX(10px);
-    }
+export const NoticeItemTitle = styled.span`
+  text-align: left;
+  flex: 1;
+  padding-right: 20px; /* 제목 오른쪽에 패딩 추가 */
+`;
+
+export const NoticeItemAuthor = styled.span`
+  text-align: right;
+  margin-right: 10px; /* 글쓴이와 날짜 사이 간격 추가 */
+  color: #555; /* 글쓴이 색상 */
+`;
+
+export const NoticeItemDate = styled.span`
+  text-align: right;
+  color: #888; /* 날짜 색상 */
 `;
 
 export const ViewAll = styled.button`

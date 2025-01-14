@@ -10,6 +10,9 @@ import {
   Button,
   Notice,
   NoticeItem,
+  NoticeItemTitle,
+  NoticeItemAuthor,
+  NoticeItemDate,
   ViewAll,
   FileUploadContainer,
   FileUploadArea,
@@ -24,28 +27,30 @@ import {
   LoadingSpinner,
   LoadingText,
 } from './main.styled';
+import { notices } from '../notice_data/notices'; // 공통 데이터 import
 
 const MainPage = () => {
   const router = useRouter();
+
+  // 첫 번째 그룹 관련 상태 및 함수
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedContract, setSelectedContract] = useState('새 업로드');
-  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const contracts = ['새 업로드', '계약서 1', '계약서 2', '계약서 3'];
+  // 두 번째 그룹 상태 및 함수
+  const [searchType, setSearchType] = useState('법령');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredContracts = contracts.filter(contract => 
-    contract.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // 세 번째 그룹 관련 함수
+  const handleNoticeClick = (id: number) => {
+    router.push(`/notice/${id}`);
+  };
 
+  // 첫 번째 그룹: 파일 업로드 핸들링
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setSelectedContract('새 업로드');
     }
   };
 
@@ -62,11 +67,9 @@ const MainPage = () => {
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
     setIsDragging(false);
-    
     const file = event.dataTransfer.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setSelectedContract('새 업로드');
     }
   };
 
@@ -74,124 +77,82 @@ const MainPage = () => {
     fileInputRef.current?.click();
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    setIsDropdownOpen(true);
-  };
-
-  const handleContractSelect = (contract: string) => {
-    setSelectedContract(contract);
-    setSearchTerm('');
-    setIsDropdownOpen(false);
-    if (contract !== '새 업로드') {
-      setSelectedFile(null);
+  const handleSearch = () => {
+    if (searchType === '법령') {
+      router.push(`/archive/statute?query=${encodeURIComponent(searchQuery)}`);
+    } else if (searchType === '표준계약서') {
+      router.push(`/archive/standard_cont?query=${encodeURIComponent(searchQuery)}`);
     }
   };
-
-  const handleReview = async () => {
-    if (selectedFile || selectedContract !== '새 업로드') {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setIsLoading(false);
-      
-      // Pass file information to the result page
-      const fileInfo = selectedFile 
-        ? { name: selectedFile.name, type: selectedFile.type }
-        : { name: selectedContract, type: 'existing' };
-      
-      router.push(`/result?file=${encodeURIComponent(JSON.stringify(fileInfo))}`);
-    }
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target as Element).closest('.searchable-select')) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <>
-      {isLoading && (
-        <LoadingOverlay>
-          <LoadingSpinner />
-          <LoadingText>계약서를 분석하고 있습니다...</LoadingText>
-        </LoadingOverlay>
-      )}
       <Container>
+        {/* 첫 번째 그룹 */}
         <Group $backgroundImage="/images/메인.png">
           <Title>계약서 검토 AI 어시스턴트</Title>
           <InputContainer>
-            <SearchableSelect className="searchable-select">
-              <SearchInput
-                type="text"
-                placeholder="계약서 검색 또는 선택"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onClick={() => setIsDropdownOpen(true)}
+            <FileUploadContainer>
+              <FileUploadArea
+                $isDragging={isDragging}
+                onClick={handleUploadClick}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                {selectedFile ? (
+                  <FileName>{selectedFile.name}</FileName>
+                ) : (
+                  '클릭하거나 파일을 드래그하여 업로드하세요'
+                )}
+              </FileUploadArea>
+              <FileInput
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept=".pdf,.doc,.docx,.hwp"
               />
-              {isDropdownOpen && (
-                <DropdownList>
-                  {filteredContracts.map((contract, index) => (
-                    <DropdownItem key={index} onClick={() => handleContractSelect(contract)}>
-                      {contract}
-                    </DropdownItem>
-                  ))}
-                </DropdownList>
-              )}
-            </SearchableSelect>
-            {selectedContract === '새 업로드' && (
-              <FileUploadContainer>
-                <FileUploadArea
-                  $isDragging={isDragging}
-                  onClick={handleUploadClick}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
-                  {selectedFile ? (
-                    <FileName>{selectedFile.name}</FileName>
-                  ) : (
-                    '클릭하거나 파일을 드래그하여 업로드하세요'
-                  )}
-                </FileUploadArea>
-                <FileInput
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  accept=".pdf,.doc,.docx,.hwp"
-                />
-              </FileUploadContainer>
-            )}
-            <Button onClick={handleReview}>검토하기</Button>
+            </FileUploadContainer>
+            <Button>검토하기</Button>
           </InputContainer>
         </Group>
 
+        {/* 두 번째 그룹 */}
         <Group $backgroundImage="/images/자료실.png">
           <Title>법령 & 표준계약서 조회</Title>
           <InputContainer>
-            <Select>
+            <Select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
               <option>법령</option>
               <option>표준계약서</option>
             </Select>
-            <Button>검색</Button>
+            <SearchInput
+              type="text"
+              placeholder="검색어를 입력하세요"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button onClick={handleSearch}>검색</Button>
           </InputContainer>
         </Group>
 
+        {/* 세 번째 그룹 */}
         <Group $backgroundImage="/images/공지사항.png">
           <Title>공지사항</Title>
           <Notice>
-            <NoticeItem>공지사항 1</NoticeItem>
-            <NoticeItem>공지사항 2</NoticeItem>
-            <NoticeItem>공지사항 3</NoticeItem>
-            <ViewAll>전체보기</ViewAll>
+            {notices.slice(0, 3).map((notice) => (
+              <NoticeItem
+                key={notice.id}
+                onClick={() => handleNoticeClick(notice.id)}
+              >
+                <NoticeItemTitle>{notice.title}</NoticeItemTitle>
+                <NoticeItemAuthor>{notice.author}</NoticeItemAuthor>
+                <NoticeItemDate>{notice.datetime}</NoticeItemDate>
+              </NoticeItem>
+            ))}
+            <ViewAll onClick={() => router.push('/notice')}>전체보기</ViewAll>
           </Notice>
         </Group>
       </Container>
@@ -200,4 +161,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
