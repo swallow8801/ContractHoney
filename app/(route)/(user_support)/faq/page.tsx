@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation'; // 페이지 이동을 위한 useRouter 추가
-import Accordion from '../../component/Accodion/Accodion';
+import Accordion from '../../../component/Accodion/Accodion';
 import { Container, Sidebar, Main, Title, FAQTitle, MenuItem, MenuList } from './faq.styled';
 
 const FAQ = () => {
