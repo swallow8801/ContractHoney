@@ -32,7 +32,7 @@ const LoginPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      router.push('/main');
+      router.push('/main'); // 이미 로그인된 경우 메인 페이지로 이동
     }
   }, [router]);
 
@@ -57,9 +57,11 @@ const LoginPage = () => {
         localStorage.setItem('authToken', data.token);
         setAlertMessage('로그인에 성공했습니다.');
         setAlertType('success');
+        
         setTimeout(() => {
-          router.push('/main');
-        }, 2000); // 2초 후 메인 페이지로 이동
+          // 페이지를 새로 고침하고 메인 페이지로 이동
+          window.location.reload(); // 페이지 새로 고침
+        }, 2000); // 2초 후 새로고침
       } else {
         setAlertMessage(data.message || '로그인에 실패했습니다.');
         setAlertType('error');
@@ -68,6 +70,12 @@ const LoginPage = () => {
       setAlertMessage('서버와의 통신에 실패했습니다.');
       setAlertType('error');
     }
+  };
+
+  // 로그아웃 처리
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // 토큰 삭제
+    router.push('/login'); // 로그인 페이지로 리디렉션
   };
 
   return (
