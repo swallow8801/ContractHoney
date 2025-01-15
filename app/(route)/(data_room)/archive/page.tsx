@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
@@ -161,7 +161,7 @@ const StandardContractsPage = () => {
                     onClick={(e) => handleDownload(e, contract.id)}
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
                   >
-                    <Download size={16}/>
+                    <Download size={16} />
                   </AttachmentIcon>
                 </td>
               </tr>
