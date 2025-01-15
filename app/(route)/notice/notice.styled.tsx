@@ -81,14 +81,8 @@ export const BoardTable = styled.table`
   th:nth-child(2) {
     text-align: center;
   }
-
+    
   td:nth-child(3), th:nth-child(3) {
-    min-width: 80px;
-    width: 8%;
-    text-align: center;
-  }
-
-  td:nth-child(4), th:nth-child(4) {
     min-width: 120px;
     width: 15%;
     text-align: center;

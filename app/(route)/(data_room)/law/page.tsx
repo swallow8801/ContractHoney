@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Check } from 'lucide-react';
 import {
@@ -27,39 +27,45 @@ import {
 
 const categories = ['전체', '공정거래법', '약관법', '전자상거래법', '대규모유통업법', '기타'];
 
-const laws = [
-  { category: '공정거래법', title: '독점규제 및 공정거래에 관한 법률', department: '경쟁정책과', link: 'https://www.law.go.kr/법령/독점규제및공정거래에관한법률' },
-  { category: '공정거래법', title: '독점규제 및 공정거래에 관한 법률 시행령', department: '경쟁정책과', link: 'https://www.law.go.kr/법령/독점규제및공정거래에관한법률시행령' },
-  { category: '약관법', title: '약관의 규제에 관한 법률', department: '약관심사과', link: 'https://www.law.go.kr/법령/약관의규제에관한법률' },
-  { category: '전자상거래법', title: '전자상거래 등에서의 소비자보호에 관한 법률', department: '전자거래과', link: 'https://www.law.go.kr/법령/전자상거래등에서의소비자보호에관한법률' },
-  { category: '대규모유통업법', title: '대규모유통업에서의 거래 공정화에 관한 법률', department: '유통정책과', link: 'https://www.law.go.kr/법령/대규모유통업에서의거래공정화에관한법률' },
-];
+interface Law {
+  law_id: number;
+  law_category: string;
+  law_title: string;
+  law_part: string;
+  law_link: string;
+}
 
 const LawsAndRegulationsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [laws, setLaws] = useState<Law[]>([]);
   const [searchType, setSearchType] = useState('제목');
-  const [searchTerm, setSearchTerm] = useState(''); // 입력 필드의 값
-  const [searchKeyword, setSearchKeyword] = useState(''); // 검색 버튼 클릭 시 반영될 값
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
-  const infoItems = [
-    'http://www.law.go.kr에서도 위원회소관법령을 확인할 수 있습니다.',
-    '고시, 지침 등의 행정규칙은 제·개정 사항이 발령되는 대 일주일 정도 소요되는 경우가 있으므로 최근 제·개정 사항은 중앙행정기관 홈페이지 제·개정 공지에서도 확인해 주시기 바랍니다.',
-    '본 페이지의 다양한 법령정보는 국민생활의 편의를 위하여 권보 등에서 공포된 내용을 수집하여 제공됩니다.',
-    '본 페이지에서 제공되는 법령정보는 법적 효력이 없으므로, 참고자료로 활용하시기 바랍니다.',
-    '헌법, 법률, 조약, 대통령령, 행정규칙, 자치법규, 판례 등 대한민국 법령정보에 대한 포괄적 공보 등에 있습니다.',
-    '외국어번역 법령정보는 공식적 효력이 있는 법령들이 아니므로 참고로만 사용하시기 바랍니다.',
-    '국문 법령과 외국어번역 법령정보 간에 의미상 차이가 있는 경우에는 국문 법령정보가 우선함을 기억합니다.',
-  ];
+  useEffect(() => {
+    // API에서 데이터 가져오기
+    const fetchLaws = async () => {
+      try {
+        const response = await fetch('/api/law');
+        const data = await response.json();
+        setLaws(data);
+      } catch (error) {
+        console.error('Failed to fetch laws:', error);
+      }
+    };
 
-  const filteredLaws = laws.filter(law => {
-    const matchesCategory = selectedCategory === '전체' || law.category === selectedCategory;
+    fetchLaws();
+  }, []);
+
+  const filteredLaws = laws.filter((law) => {
+    const matchesCategory = selectedCategory === '전체' || law.law_category === selectedCategory;
     const matchesSearch =
-      searchKeyword === '' || // 버튼 클릭으로 설정된 값 사용
-      (searchType === '제목' && law.title.toLowerCase().includes(searchKeyword.toLowerCase())) ||
-      (searchType === '제목+내용' && law.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+      searchKeyword === '' ||
+      (searchType === '제목' && law.law_title.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+      (searchType === '제목+내용' && law.law_title.toLowerCase().includes(searchKeyword.toLowerCase()));
 
     return matchesCategory && matchesSearch;
   });
@@ -72,8 +78,8 @@ const LawsAndRegulationsPage = () => {
   );
 
   const handleSearch = () => {
-    setSearchKeyword(searchTerm); // 버튼 클릭 시에만 검색어 반영
-    setCurrentPage(1); // 검색 결과 첫 페이지로 이동
+    setSearchKeyword(searchTerm);
+    setCurrentPage(1);
   };
 
   return (
@@ -98,13 +104,39 @@ const LawsAndRegulationsPage = () => {
       <Main>
         <MainTitle>법령</MainTitle>
 
+
         <InfoSection>
-          {infoItems.map((item, index) => (
-            <InfoItem key={index}>
-              <Check size={16} />
-              <span>{item}</span>
-            </InfoItem>
-          ))}
+          <InfoItem>
+            <Check size={16} />
+            <span>http://www.law.go.kr에서도 위원회소관법령을 확인할 수 있습니다.</span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>
+              고시 · 지침 등의 행정규칙은 제 · 개정 사항이 반영되는 데 일주일 정도 소요되는 경우가 있으므로
+              최근 제 · 개정 사항은 '공정위뉴스 {'>'} 행정규칙 제 · 개정 공지'에서도 확인해 주시기 바랍니다.
+            </span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>본 페이지의 다양한 법령정보는 국민생활의 편의를 위하여 관보 등에서 공포된 내용을 수집하여 제공됩니다.</span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>본 페이지에서 제공되는 법령정보는 법적 효력이 없으므로, 참고자료로 활용하시기 바랍니다.</span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>헌법, 법률, 조약, 대통령령, 행정규칙, 자치법규, 판례 등 대한민국 법령정보에 대한 효력은 관보 등에 있습니다.</span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>외국어번역 법령정보는 공식적 효력이 있는 번역물이 아니므로 참고로만 사용하시기 바랍니다.</span>
+          </InfoItem>
+          <InfoItem>
+            <Check size={16} />
+            <span>국문 법령과 외국어번역 법령정보 간에 의미상 차이가 있는 경우에는 국문 법령정보가 우선권을 가집니다.</span>
+          </InfoItem>
         </InfoSection>
 
         <CategoryButtons>
@@ -128,7 +160,6 @@ const LawsAndRegulationsPage = () => {
             onChange={(e) => setSearchType(e.target.value)}
           >
             <option value="제목">제목</option>
-            <option value="내용">내용</option>
             <option value="제목+내용">제목+내용</option>
           </SearchSelect>
           <SearchInput
@@ -149,19 +180,19 @@ const LawsAndRegulationsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((law, index) => (
-              <tr key={index}>
-                <td>{law.category}</td>
+            {currentItems.map((law) => (
+              <tr key={law.law_id}>
+                <td>{law.law_category}</td>
                 <td>
                   <LawLink
-                    href={law.link}
+                    href={law.law_link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {law.title}
+                    {law.law_title}
                   </LawLink>
                 </td>
-                <td>{law.department}</td>
+                <td>{law.law_part}</td>
               </tr>
             ))}
           </tbody>
@@ -172,7 +203,7 @@ const LawsAndRegulationsPage = () => {
             {'<<'}
           </PageButton>
           <PageButton
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             {'<'}
@@ -187,7 +218,7 @@ const LawsAndRegulationsPage = () => {
             </PageButton>
           ))}
           <PageButton
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageCount))}
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
           >
             {'>'}
