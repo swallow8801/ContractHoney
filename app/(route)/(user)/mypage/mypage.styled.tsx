@@ -1,1 +1,190 @@
 import styled from 'styled-components';
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 92vh;
+  padding: 40px;
+  background: #ffffff;
+`;
+
+export const ProfileCard = styled.div`
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  background: #f8f8f8;
+  border-radius: 16px;
+`;
+
+export const ProfileHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+`;
+
+export const UserName = styled.h1`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+`;
+
+export const EditButton = styled.button`
+  padding: 4px 12px;
+  background: #e0e0e0;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+
+  &:hover {
+    background: #d0d0d0;
+  }
+`;
+
+export const UserEmail = styled.p`
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 32px 0;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+export const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const Label = styled.label`
+  font-size: 14px;
+  color: #333;
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #999;
+  }
+`;
+
+export const InputWithCheck = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const VerifiedCheck = styled.span`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2ecc71;
+`;
+
+export const StatsContainer = styled.div`
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #eee;
+`;
+
+export const StatItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  color: #666;
+  font-size: 14px;
+`;
+
+export const DeleteButton = styled.button`
+  width: 100%;
+  padding: 16px;
+  margin-top: 40px;
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+`;
+
+export const ModalTitle = styled.h2`
+  font-size: 20px;
+  color: #333;
+  margin: 0 0 16px 0;
+`;
+
+export const ModalText = styled.p`
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+`;
+
+export const ModalButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+`;
+
+export const ModalButton = styled.button<{ $danger?: boolean }>`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  background: ${props => props.$danger ? '#ff6b6b' : '#e0e0e0'};
+  color: ${props => props.$danger ? 'white' : '#333'};
+
+  &:hover {
+    background: ${props => props.$danger ? '#ff5252' : '#d0d0d0'};
+  }
+`;
+
+export const Alert = styled.div<{ type: 'success' | 'error' }>`
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background: ${props => props.type === 'success' ? '#e0f7e0' : '#ffe0e0'};
+  color: ${props => props.type === 'success' ? '#2e7d32' : '#c62828'};
+  font-size: 14px;
+`;
+
