@@ -73,6 +73,7 @@ export const BoardTable = styled.table`
   }
 
   td:nth-child(1), th:nth-child(1) {
+    min-width: 60px;
     width: 10%;
     text-align: center;
   }
@@ -82,15 +83,40 @@ export const BoardTable = styled.table`
   }
 
   td:nth-child(3), th:nth-child(3) {
+    min-width: 80px;
     width: 8%;
     text-align: center;
   }
 
   td:nth-child(4), th:nth-child(4) {
+    min-width: 120px;
     width: 15%;
     text-align: center;
   }
 `;
+
+export const WriteButton = styled.button`
+  padding: 8px 20px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+
+  &:hover {
+    background: #555;
+  }
+`;
+
+export const FooterContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  align-items: flex-end; /* 오른쪽 정렬 */
+  width: 100%;
+`;
+
 
 export const MenuList = styled.ul`
   list-style: none;
