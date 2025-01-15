@@ -166,33 +166,32 @@ export const NotificationOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const NotificationBox = styled.div<{ $type: 'success' | 'error' }>`
+export const NotificationBox = styled.div`
   width: 400px;
   padding: 20px 30px;
-  background-color: ${({ $type }) => ($type === 'success' ? '#4caf50' : '#f44336')};
-  color: #fff;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
 
   p {
     margin: 0 0 20px 0;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
   }
 `;
 
-export const ConfirmButton = styled.button`
-  background-color: #fff;
-  color: #000;
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
+  background-color: ${({ $type }) => ($type === 'success' ? '#f44336' : '#4caf50')};
+  color: #fff;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
+  padding: 10px 15px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: ${({ $type }) => ($type === 'success' ? '#e53935' : '#45a049')};
   }
 `;

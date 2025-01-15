@@ -48,7 +48,16 @@ export async function GET(req: NextRequest) {
     let rows: any[] = [];
     try {
       const [result]: [any[], any] = await pool.query(
-        'SELECT qna_title, qna_cont_date FROM qna WHERE user_id = ?',
+        `
+        SELECT 
+          qna_id,
+          qna_title,
+          qna_cont_date,
+          qna_answer,
+          qna_answ_date
+        FROM qna
+        WHERE user_id = ?
+        `,
         [userId]
       );
       rows = result;
