@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
 import {
   Container,
@@ -25,11 +25,12 @@ import {
   PhoneNumber,
 } from './archive.styled';
 
-interface Contract {
+interface Archive {
   id: number;
-  title: string;
-  department: string;
-  date: string;
+  ar_title: string;
+  ar_part: string;
+  ar_date: string;
+  ar_file_url: string;
 }
 
 const StandardContractsPage = () => {
@@ -38,59 +39,35 @@ const StandardContractsPage = () => {
   const [searchType, setSearchType] = useState('제목');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [contracts, setContracts] = useState<Archive[]>([]);
 
-  // 표준계약서 목록 데이터
-  const standardContracts: Contract[] = [
-    { 
-      id: 10, 
-      title: '(개정) 특약매입 표준거래계약서 (백화점, 대형마트)', 
-      department: '유통대리점정책과',
-      date: '2024-11-28',
-    },
-    { 
-      id: 9, 
-      title: '(개정) 특약매입 표준거래계약서 (면세점)', 
-      department: '유통대리점정책과',
-      date: '2024-11-28',
-    },
-    { 
-      id: 8, 
-      title: '(개정) 직매입 표준거래계약서 (편의점)', 
-      department: '유통대리점정책과',
-      date: '2024-11-28',
-    },
-    { 
-      id: 7, 
-      title: '(개정) 직매입 표준거래계약서(백화점, 대형마트)', 
-      department: '유통대리점정책과',
-      date: '2024-11-28',
-    },
-    { 
-      id: 6, 
-      title: '(개정) 직매입 표준거래계약서 (면세점)', 
-      department: '유통대리점정책과',
-      date: '2024-11-28',
-    },
-  ];
+  useEffect(() => {
+    // API 호출하여 계약서 목록을 가져옴
+    fetch('/api/archive')
+      .then((response) => response.json())
+      .then((data) => {
+        setContracts(data);  // API에서 받은 데이터를 contracts 상태에 저장
+      });
+  }, []);
 
-  const [filteredContracts, setFilteredContracts] = useState<Contract[]>(standardContracts);
+  const [filteredContracts, setFilteredContracts] = useState<Archive[]>(contracts);
+
+  useEffect(() => {
+    setFilteredContracts(contracts);
+  }, [contracts]);
 
   const handleSearch = () => {
-    const filtered = standardContracts.filter(contract => {
-      if (searchTerm === '') return true;
-      
-      switch (searchType) {
-        case '제목':
-          return contract.title.toLowerCase().includes(searchTerm.toLowerCase());
-        case '내용':
-          // Assuming 'content' is not available in the current data structure
-          return false;
-        case '제목+내용':
-          return contract.title.toLowerCase().includes(searchTerm.toLowerCase());
-        default:
-          return true;
+    const filtered = contracts.filter(contract => {
+      const searchValue = searchTerm.toLowerCase();
+      if (!searchValue) return true;
+
+      if (searchType === '제목' || searchType === '제목+내용') {
+        return contract.ar_title.toLowerCase().includes(searchValue);
       }
+
+      return false;
     });
+
     setFilteredContracts(filtered);
     setCurrentPage(1);
   };
@@ -106,6 +83,12 @@ const StandardContractsPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // 날짜 형식 변경 함수
+  const formatDate = (date: string) => {
+    const d = new Date(date);
+    return d.toLocaleDateString('ko-KR');  // '2024-11-27' 형식으로 변환
+  };
 
   return (
     <Container>
@@ -170,15 +153,15 @@ const StandardContractsPage = () => {
             {currentItems.map((contract) => (
               <tr key={contract.id}>
                 <td>{contract.id}</td>
-                <td>{contract.title}</td>
-                <td>{contract.department}</td>
-                <td>{contract.date}</td>
+                <td>{contract.ar_title}</td>
+                <td>{contract.ar_part}</td>
+                <td>{formatDate(contract.ar_date)}</td> {/* 개정일 포맷 적용 */}
                 <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                   <AttachmentIcon 
                     onClick={(e) => handleDownload(e, contract.id)}
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
                   >
-                    <Download size={16} />
+                    <Download size={16}/>
                   </AttachmentIcon>
                 </td>
               </tr>
@@ -207,4 +190,3 @@ const StandardContractsPage = () => {
 };
 
 export default StandardContractsPage;
-

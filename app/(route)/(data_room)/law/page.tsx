@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
 import React, { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { Check } from 'lucide-react';
 import {
   Container,
@@ -25,53 +25,22 @@ import {
   LawLink,
 } from './law.styled';
 
-interface Law {
-  category: string;
-  title: string;
-  department: string;
-  link: string;
-}
-
 const categories = ['전체', '공정거래법', '약관법', '전자상거래법', '대규모유통업법', '기타'];
 
-const laws: Law[] = [
-  { 
-    category: '공정거래법', 
-    title: '독점규제 및 공정거래에 관한 법률', 
-    department: '경쟁정책과',
-    link: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%8F%85%EC%A0%90%EA%B7%9C%EC%A0%9C%EB%B0%8F%EA%B3%B5%EC%A0%95%EA%B1%B0%EB%9E%98%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0'
-  },
-  { 
-    category: '공정거래법', 
-    title: '독점규제 및 공정거래에 관한 법률 시행령', 
-    department: '경쟁정책과',
-    link: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%8F%85%EC%A0%90%EA%B7%9C%EC%A0%9C%EB%B0%8F%EA%B3%B5%EC%A0%95%EA%B1%B0%EB%9E%98%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0%EC%8B%9C%ED%96%89%EB%A0%B9'
-  },
-  { 
-    category: '약관법', 
-    title: '약관의 규제에 관한 법률', 
-    department: '약관심사과',
-    link: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%95%BD%EA%B4%80%EC%9D%98%EA%B7%9C%EC%A0%9C%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0'
-  },
-  { 
-    category: '전자상거래법', 
-    title: '전자상거래 등에서의 소비자보호에 관한 법률', 
-    department: '전자거래과',
-    link: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0'
-  },
-  { 
-    category: '대규모유통업법', 
-    title: '대규모유통업에서의 거래 공정화에 관한 법률', 
-    department: '유통정책과',
-    link: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%8C%80%EA%B7%9C%EB%AA%A8%EC%9C%A0%ED%86%B5%EC%97%85%EC%97%90%EC%84%9C%EC%9D%98%EA%B1%B0%EB%9E%98%EA%B3%B5%EC%A0%95%ED%99%94%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0'
-  }
+const laws = [
+  { category: '공정거래법', title: '독점규제 및 공정거래에 관한 법률', department: '경쟁정책과', link: 'https://www.law.go.kr/법령/독점규제및공정거래에관한법률' },
+  { category: '공정거래법', title: '독점규제 및 공정거래에 관한 법률 시행령', department: '경쟁정책과', link: 'https://www.law.go.kr/법령/독점규제및공정거래에관한법률시행령' },
+  { category: '약관법', title: '약관의 규제에 관한 법률', department: '약관심사과', link: 'https://www.law.go.kr/법령/약관의규제에관한법률' },
+  { category: '전자상거래법', title: '전자상거래 등에서의 소비자보호에 관한 법률', department: '전자거래과', link: 'https://www.law.go.kr/법령/전자상거래등에서의소비자보호에관한법률' },
+  { category: '대규모유통업법', title: '대규모유통업에서의 거래 공정화에 관한 법률', department: '유통정책과', link: 'https://www.law.go.kr/법령/대규모유통업에서의거래공정화에관한법률' },
 ];
 
 const LawsAndRegulationsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [searchType, setSearchType] = useState('제목');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); // 입력 필드의 값
+  const [searchKeyword, setSearchKeyword] = useState(''); // 검색 버튼 클릭 시 반영될 값
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
@@ -87,10 +56,11 @@ const LawsAndRegulationsPage = () => {
 
   const filteredLaws = laws.filter(law => {
     const matchesCategory = selectedCategory === '전체' || law.category === selectedCategory;
-    const matchesSearch = searchTerm === '' || 
-      (searchType === '제목' && law.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (searchType === '제목+내용' && law.title.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+    const matchesSearch =
+      searchKeyword === '' || // 버튼 클릭으로 설정된 값 사용
+      (searchType === '제목' && law.title.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+      (searchType === '제목+내용' && law.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+
     return matchesCategory && matchesSearch;
   });
 
@@ -102,7 +72,8 @@ const LawsAndRegulationsPage = () => {
   );
 
   const handleSearch = () => {
-    setCurrentPage(1);
+    setSearchKeyword(searchTerm); // 버튼 클릭 시에만 검색어 반영
+    setCurrentPage(1); // 검색 결과 첫 페이지로 이동
   };
 
   return (
@@ -110,7 +81,7 @@ const LawsAndRegulationsPage = () => {
       <Sidebar>
         <Title>자료실</Title>
         <MenuList>
-          <MenuItem 
+          <MenuItem
             $active={pathname === '/archive'}
             onClick={() => router.push('/archive')}
           >
@@ -126,7 +97,7 @@ const LawsAndRegulationsPage = () => {
       </Sidebar>
       <Main>
         <MainTitle>법령</MainTitle>
-        
+
         <InfoSection>
           {infoItems.map((item, index) => (
             <InfoItem key={index}>
@@ -152,7 +123,7 @@ const LawsAndRegulationsPage = () => {
         </CategoryButtons>
 
         <SearchSection>
-          <SearchSelect 
+          <SearchSelect
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
           >
@@ -182,7 +153,7 @@ const LawsAndRegulationsPage = () => {
               <tr key={index}>
                 <td>{law.category}</td>
                 <td>
-                  <LawLink 
+                  <LawLink
                     href={law.link}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -197,8 +168,15 @@ const LawsAndRegulationsPage = () => {
         </LawTable>
 
         <Pagination>
-          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>{'<<'}</PageButton>
-          <PageButton onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>{'<'}</PageButton>
+          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+            {'<<'}
+          </PageButton>
+          <PageButton
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            {'<'}
+          </PageButton>
           {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
             <PageButton
               key={page}
@@ -208,8 +186,15 @@ const LawsAndRegulationsPage = () => {
               {page}
             </PageButton>
           ))}
-          <PageButton onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageCount))} disabled={currentPage === pageCount}>{'>'}</PageButton>
-          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>{'>>'}</PageButton>
+          <PageButton
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageCount))}
+            disabled={currentPage === pageCount}
+          >
+            {'>'}
+          </PageButton>
+          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>
+            {'>>'}
+          </PageButton>
         </Pagination>
       </Main>
     </Container>
@@ -217,4 +202,3 @@ const LawsAndRegulationsPage = () => {
 };
 
 export default LawsAndRegulationsPage;
-
