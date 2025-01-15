@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, FileText, AlertTriangle, Zap } from 'lucide-react';
 import {
   Container,
   ProfileCard,
@@ -18,6 +18,10 @@ import {
   VerifiedCheck,
   StatsContainer,
   StatItem,
+  StatIcon,
+  StatInfo,
+  StatLabel,
+  StatValue,
   DeleteButton,
   Modal,
   ModalContent,
@@ -26,6 +30,9 @@ import {
   ModalButtons,
   ModalButton,
   Alert,
+  StatGroup,
+  StatGroupLabel,
+  StatGroupItem,
 } from './mypage.styled';
 
 interface UserProfile {
@@ -55,7 +62,6 @@ export default function MyPage() {
   const [editedName, setEditedName] = useState('');
   const [editedPhone, setEditedPhone] = useState('');
 
-
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -79,7 +85,7 @@ export default function MyPage() {
             user_phone: data.userPhone
           });
           setEditedName(data.userName);
-          setEditedPhone(data.userPhone);
+          setEditedPhone(data.userPhone.replace(/-/g, ''));
 
           const statsResponse = await fetch('/api/contracts', {
             headers: {
@@ -163,13 +169,9 @@ export default function MyPage() {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^\d]/g, '');
-    const phoneNumber = value
-      .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
-      .slice(0, 13);
-    setEditedPhone(phoneNumber);
+    const value = e.target.value.replace(/[^\d]/g, '').slice(0, 11);
+    setEditedPhone(value);
   };
-
 
   if (!profile) {
     return <Container>Loading...</Container>;
@@ -217,10 +219,11 @@ export default function MyPage() {
             <Label>전화번호</Label>
             <Input
               type="tel"
-              value={isEditing ? editedPhone : profile.user_phone}
+              value={isEditing ? editedPhone : profile.user_phone.replace(/-/g, '')}
               disabled={!isEditing}
               onChange={handlePhoneChange}
-              placeholder="010-0000-0000"
+              placeholder="01012345678"
+              maxLength={11}
             />
           </FormGroup>
           {alert && (
@@ -231,16 +234,31 @@ export default function MyPage() {
 
           <StatsContainer>
             <StatItem>
-              <span>계약서 분석 횟수</span>
-              <span>{stats.analyzed_count} 회</span>
+              <StatIcon>
+                <FileText size={24} />
+              </StatIcon>
+              <StatInfo>
+                <StatLabel>계약서 분석 횟수</StatLabel>
+                <StatValue>{stats.analyzed_count}</StatValue>
+              </StatInfo>
             </StatItem>
             <StatItem>
-              <span>판별된 불공정 조항 수</span>
-              <span>{stats.unfair_count} 개</span>
-            </StatItem>
-            <StatItem>
-              <span>판별된 독소 조항 수</span>
-              <span>{stats.toxic_count} 개</span>
+              <StatIcon>
+                <AlertTriangle size={24} />
+              </StatIcon>
+              <StatInfo>
+                <StatGroupLabel>판별된 조항</StatGroupLabel>
+                <StatGroup>
+                  <StatGroupItem>
+                    <StatLabel>불공정 조항</StatLabel>
+                    <StatValue>{stats.unfair_count}</StatValue>
+                  </StatGroupItem>
+                  <StatGroupItem>
+                    <StatLabel>독소 조항</StatLabel>
+                    <StatValue>{stats.toxic_count}</StatValue>
+                  </StatGroupItem>
+                </StatGroup>
+              </StatInfo>
             </StatItem>
           </StatsContainer>
 

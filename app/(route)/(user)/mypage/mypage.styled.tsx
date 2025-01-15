@@ -6,8 +6,12 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   min-height: 92vh;
-  padding: 40px;
+  padding: 20px;
   background: #ffffff;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const ProfileCard = styled.div`
@@ -16,6 +20,7 @@ export const ProfileCard = styled.div`
   padding: 40px;
   background: #f8f8f8;
   border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 export const ProfileHeader = styled.div`
@@ -40,6 +45,7 @@ export const EditButton = styled.button`
   font-size: 12px;
   color: #666;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background: #d0d0d0;
@@ -55,7 +61,7 @@ export const UserEmail = styled.p`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 `;
 
 export const FormGroup = styled.div`
@@ -67,6 +73,7 @@ export const FormGroup = styled.div`
 export const Label = styled.label`
   font-size: 14px;
   color: #333;
+  font-weight: 500;
 `;
 
 export const InputWithCheck = styled.div`
@@ -80,38 +87,6 @@ export const VerifiedCheck = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #2ecc71;
-`;
-
-export const PasswordInputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-export const PasswordError = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #dc3545;
-  font-size: 14px;
-  margin-top: 4px;
-
-  svg {
-    flex-shrink: 0;
-  }
-`;
-
-export const PasswordSuccess = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #28a745;
-  font-size: 14px;
-  margin-top: 4px;
-
-  svg {
-    flex-shrink: 0;
-  }
 `;
 
 export const Input = styled.input<{ $error?: boolean }>`
@@ -137,31 +112,95 @@ export const Input = styled.input<{ $error?: boolean }>`
 
 export const StatsContainer = styled.div`
   margin-top: 40px;
-  padding-top: 32px;
-  border-top: 1px solid #eee;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export const StatItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  color: #666;
-  font-size: 14px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #333;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const StatInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const StatLabel = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+export const StatValue = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 10px;
+`;
+
+export const StatIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  margin-right: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+`;
+
+
+export const StatGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const StatGroupLabel = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+`;
+
+export const StatGroupItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const DeleteButton = styled.button`
   width: 100%;
   padding: 16px;
   margin-top: 40px;
-  background: none;
+  background: #ff6b6b;
   border: none;
-  color: #ff6b6b;
+  border-radius: 8px;
+  color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    text-decoration: underline;
+    background: #ff5252;
   }
 `;
 
@@ -212,6 +251,7 @@ export const ModalButton = styled.button<{ $danger?: boolean }>`
   font-size: 14px;
   background: ${props => props.$danger ? '#ff6b6b' : '#e0e0e0'};
   color: ${props => props.$danger ? 'white' : '#333'};
+  transition: background-color 0.3s ease;
 
   &:hover {
     background: ${props => props.$danger ? '#ff5252' : '#d0d0d0'};
@@ -225,20 +265,5 @@ export const Alert = styled.div<{ type: 'success' | 'error' }>`
   background: ${props => props.type === 'success' ? '#e0f7e0' : '#ffe0e0'};
   color: ${props => props.type === 'success' ? '#2e7d32' : '#c62828'};
   font-size: 14px;
-`;
-
-export const ChangePasswordButton = styled.button`
-  padding: 8px 16px;
-  background: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 8px;
-
-  &:hover {
-    background: #3a7bc8;
-  }
 `;
 
