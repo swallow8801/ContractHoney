@@ -1,174 +1,122 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReply } from '@fortawesome/free-solid-svg-icons';
-import { 
-  Container, 
-  Sidebar, 
-  Main, 
-  Title, 
-  QNATitle, 
-  Table, 
-  WriteButton, 
-  MenuItem, 
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Container,
+  Sidebar,
+  Main,
+  Title,
+  QNATitle,
   MenuList,
-  SearchSection,
-  SearchSelect,
-  SearchInput,
-  SearchButton,
+  MenuItem,
+  Table,
+  WriteButton,
   Pagination,
-  PageButton
+  PageButton,
 } from './qna.styled';
 
-interface QnAItem {
-  id: string;
-  type: 'question' | 'answer';
-  parentId?: string;
-  title: string;
-  content: string;
-  date: string;
+// Q&A 데이터 타입 정의
+interface QnaType {
+  qna_title: string;
+  qna_cont_date: string;
 }
 
-const QNA = () => {
+const MainPage = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const [searchType, setSearchType] = useState('제목');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [qnas, setQnas] = useState<QnaType[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const qna: QnAItem[] = [
-    { id: '1', type: 'question', title: 'Q&A1', content: 'Q&A1 질문 내용', date: '2025-01-10' },
-    { id: '1-A', type: 'answer', parentId: '1', title: 'Q&A1 답변', content: 'Q&A1 답변 내용', date: '2025-01-11' },
-    { id: '2', type: 'question', title: 'Q&A 제목 2', content: 'Q&A2 질문 내용', date: '2025-01-09' },
-    { id: '3', type: 'question', title: 'Q&A 제목 3', content: 'Q&A3 질문 내용', date: '2025-01-08' },
-    { id: '4', type: 'question', title: 'Q&A 제목 4', content: 'Q&A4 질문 내용', date: '2025-01-07' },
-    { id: '5', type: 'question', title: 'Q&A 제목 5', content: 'Q&A5 질문 내용', date: '2025-01-06' },
-    { id: '6', type: 'question', title: 'Q&A 제목 6', content: 'Q&A6 질문 내용', date: '2025-01-05' },
-  ];
+  useEffect(() => {
+    const fetchQnas = async () => {
+      try {
+        setIsLoading(true);
 
-  const filteredQnA = qna.filter(item => {
-    if (searchTerm === '') return true;
-    
-    switch (searchType) {
-      case '제목':
-        return item.title.toLowerCase().includes(searchTerm.toLowerCase());
-      case '내용':
-        return item.content.toLowerCase().includes(searchTerm.toLowerCase());
-      case '제목+내용':
-        return item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-               item.content.toLowerCase().includes(searchTerm.toLowerCase());
-      default:
-        return true;
-    }
-  });
+        // 로컬 스토리지에서 토큰 가져오기
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          throw new Error('로그인이 필요합니다.');
+        }
 
-  const itemsPerPage = 5;
-  const pageCount = Math.ceil(filteredQnA.length / itemsPerPage);
-  const currentItems = filteredQnA.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+        // API 호출
+        const response = await fetch('/api/qna/qna_admin', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-  };
+        if (!response.ok) {
+          if (response.status === 403) {
+            throw new Error('접근 권한이 없습니다.');
+          }
+          throw new Error('데이터를 불러오는 데 실패했습니다.');
+        }
 
-  const handleRowClick = (id: string) => {
-    const parentId = id.includes('-A') ? id.split('-')[0] : id;
-    router.push(`/qna/${parentId}`);
-  };
+        const { isAdmin: adminRole, data }: { isAdmin: boolean; data: QnaType[] } = await response.json();
+        setIsAdmin(adminRole); // 관리자인지 여부 설정
+        setQnas(data); // Q&A 데이터 설정
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQnas();
+  }, []);
 
   return (
     <Container>
       <Sidebar>
-        <Title>고객지원</Title>
+        <Title>내 Q&A</Title>
         <MenuList>
-          <MenuItem 
-            $active={pathname === '/faq'}
-            onClick={() => router.push('/faq')}
-          >
-            자주 묻는 질문
-          </MenuItem>
-          <MenuItem
-            $active={pathname === '/qna'}
-            onClick={() => router.push('/qna')}
-          >
-            Q&A
-          </MenuItem>
+          <MenuItem $active>홈</MenuItem>
+          <MenuItem>공지사항</MenuItem>
+          <MenuItem>문의하기</MenuItem>
         </MenuList>
       </Sidebar>
       <Main>
-        <QNATitle>Q&A</QNATitle>
-        <SearchSection>
-          <SearchSelect 
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="제목">제목</option>
-            <option value="내용">내용</option>
-            <option value="제목+내용">제목+내용</option>
-          </SearchSelect>
-          <SearchInput
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <SearchButton onClick={handleSearch}>검색</SearchButton>
-        </SearchSection>
-        <Table>
-          <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성일</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((item) => (
-              <tr key={item.id} onClick={() => handleRowClick(item.id)} style={{ cursor: 'pointer' }}>
-                <td>
-                  {item.type === 'answer' ? (
-                    <FontAwesomeIcon
-                      icon={faReply}
-                      style={{
-                        transform: 'rotate(180deg)',
-                        color: '#555',
-                        fontSize: '1.2rem',
-                      }}
-                    />
-                  ) : (
-                    item.id
-                  )}
-                </td>
-                <td>{item.title}</td>
-                <td>{item.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <Pagination>
-          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>{'<<'}</PageButton>
-          <PageButton onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>{'<'}</PageButton>
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
-            <PageButton
-              key={page}
-              $active={currentPage === page}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </PageButton>
-          ))}
-          <PageButton onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageCount))} disabled={currentPage === pageCount}>{'>'}</PageButton>
-          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>{'>>'}</PageButton>
-        </Pagination>
-        <WriteButton onClick={() => router.push('/qna/writeQnA')}>질문하기</WriteButton>
+        <QNATitle>{isAdmin ? '모든 사용자 Q&A' : '내 Q&A'}</QNATitle>
+        {isLoading ? (
+          <p>데이터를 불러오는 중입니다...</p>
+        ) : error ? (
+          <p style={{ color: 'red', fontWeight: 'bold' }}>{error}</p>
+        ) : qnas.length > 0 ? (
+          <>
+            <Table>
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>제목</th>
+                  <th>작성일</th>
+                </tr>
+              </thead>
+              <tbody>
+                {qnas.map((qna, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{qna.qna_title}</td>
+                    <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Pagination>
+              <PageButton disabled>이전</PageButton>
+              <PageButton $active>1</PageButton>
+              <PageButton>2</PageButton>
+              <PageButton>다음</PageButton>
+            </Pagination>
+          </>
+        ) : (
+          <p>등록된 Q&A가 없습니다.</p>
+        )}
+        {!isAdmin && <WriteButton onClick={() => router.push('/qna/write')}>문의하기</WriteButton>}
       </Main>
     </Container>
   );
 };
 
-export default QNA;
-
+export default MainPage;
