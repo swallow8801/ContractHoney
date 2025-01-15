@@ -14,13 +14,19 @@ import {
   WriteButton,
   Pagination,
   PageButton,
+  AnswerRow,
+  AnswerContent,
+  ToggleButton,
 } from './qna.styled';
 
 // Q&A 데이터 타입 정의
 interface QnaType {
+  qna_id: number;
   qna_title: string;
   qna_cont_date: string;
-  user_name?: string; // 작성자의 이름
+  user_name?: string; // 작성자의 이름 (관리자용)
+  qna_answer: string | null; // 답변 내용
+  qna_answ_date: string | null; // 답변 날짜
 }
 
 const MainPage = () => {
@@ -29,19 +35,18 @@ const MainPage = () => {
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openAnswers, setOpenAnswers] = useState<{ [key: number]: boolean }>({}); // 답변 표시 상태
 
   useEffect(() => {
     const fetchQnas = async () => {
       try {
         setIsLoading(true);
 
-        // 로컬 스토리지에서 토큰 가져오기
         const token = localStorage.getItem('authToken');
         if (!token) {
           throw new Error('로그인이 필요합니다.');
         }
 
-        // API 호출
         const response = await fetch('/api/qna/qna_admin', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,15 +54,12 @@ const MainPage = () => {
         });
 
         if (!response.ok) {
-          if (response.status === 403) {
-            throw new Error('접근 권한이 없습니다.');
-          }
           throw new Error('데이터를 불러오는 데 실패했습니다.');
         }
 
         const { isAdmin: adminRole, data }: { isAdmin: boolean; data: QnaType[] } = await response.json();
-        setIsAdmin(adminRole); // 관리자인지 여부 설정
-        setQnas(data); // Q&A 데이터 설정
+        setIsAdmin(adminRole);
+        setQnas(data);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -68,18 +70,22 @@ const MainPage = () => {
     fetchQnas();
   }, []);
 
+  const toggleAnswer = (qnaId: number) => {
+    setOpenAnswers((prev) => ({ ...prev, [qnaId]: !prev[qnaId] }));
+  };
+
   return (
     <Container>
       <Sidebar>
-        <Title>내 Q&A</Title>
+        <Title>Q&A</Title>
         <MenuList>
           <MenuItem $active>홈</MenuItem>
-          <MenuItem>공지사항</MenuItem>
-          <MenuItem>문의하기</MenuItem>
+          <MenuItem onClick={() => router.push('/notice')}>공지사항</MenuItem>
+          <MenuItem onClick={() => router.push('/faq')}>자주 묻는 질문</MenuItem>
         </MenuList>
       </Sidebar>
       <Main>
-        <QNATitle>{isAdmin ? '모든 사용자 Q&A' : '내 Q&A'}</QNATitle>
+        <QNATitle>Q&A</QNATitle>
         {isLoading ? (
           <p>데이터를 불러오는 중입니다...</p>
         ) : error ? (
@@ -91,18 +97,40 @@ const MainPage = () => {
                 <tr>
                   <th>번호</th>
                   <th>제목</th>
-                  {isAdmin && <th>작성자</th>} {/* 관리자일 경우 작성자 열 추가 */}
+                  {isAdmin && <th>작성자</th>}
                   <th>작성일</th>
+                  <th>답변 상태</th>
                 </tr>
               </thead>
               <tbody>
                 {qnas.map((qna, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{qna.qna_title}</td>
-                    {isAdmin && <td>{qna.user_name}</td>} {/* 관리자일 경우 작성자 이름 표시 */}
-                    <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
-                  </tr>
+                  <React.Fragment key={qna.qna_id}>
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>{qna.qna_title}</td>
+                      {isAdmin && <td>{qna.user_name || '알 수 없음'}</td>}
+                      <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
+                      <td>
+                        {qna.qna_answer ? (
+                          <ToggleButton onClick={() => toggleAnswer(qna.qna_id)}>
+                            {openAnswers[qna.qna_id] ? '닫기' : '답변 확인'}
+                          </ToggleButton>
+                        ) : (
+                          '답변 대기 중'
+                        )}
+                      </td>
+                    </tr>
+                    {openAnswers[qna.qna_id] && qna.qna_answer && (
+                      <AnswerRow>
+                        <td colSpan={isAdmin ? 5 : 4}>
+                          <AnswerContent>
+                            <p>{qna.qna_answer}</p>
+                            <p>답변 날짜: {new Date(qna.qna_answ_date!).toLocaleDateString()}</p>
+                          </AnswerContent>
+                        </td>
+                      </AnswerRow>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </Table>

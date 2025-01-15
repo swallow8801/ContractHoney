@@ -192,3 +192,78 @@ export const PageButton = styled.button<{ $active?: boolean }>`
   }
 `;
 
+export const ToggleButton = styled.button`
+  background: #3b3b3b; /* 기존보다 약간 밝은 색 */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #505050; /* Hover 시 더 밝은 회색 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background: #393939; /* Active 시 어두운 색 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: 2px solid #505050; /* Hover와 같은 색감으로 포커스 처리 */
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #a1a1a1; /* 비활성화 시 더 밝은 회색 */
+    color: #d1d1d1;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+`;
+
+export const AnswerRow = styled.tr`
+  background-color: #f9f9f9;
+  td {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+  }
+`;
+
+export const AnswerContent = styled.div`
+  background: #f8f8f8;
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #444;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.5;
+    color: #555;
+  }
+
+  span {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888;
+  }
+`;
