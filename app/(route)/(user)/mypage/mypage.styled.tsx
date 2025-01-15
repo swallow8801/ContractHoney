@@ -69,20 +69,6 @@ export const Label = styled.label`
   color: #333;
 `;
 
-export const Input = styled.input`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  background: white;
-
-  &:focus {
-    outline: none;
-    border-color: #999;
-  }
-`;
-
 export const InputWithCheck = styled.div`
   position: relative;
   width: 100%;
@@ -94,6 +80,59 @@ export const VerifiedCheck = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #2ecc71;
+`;
+
+export const PasswordInputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const PasswordError = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 4px;
+
+  svg {
+    flex-shrink: 0;
+  }
+`;
+
+export const PasswordSuccess = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #28a745;
+  font-size: 14px;
+  margin-top: 4px;
+
+  svg {
+    flex-shrink: 0;
+  }
+`;
+
+export const Input = styled.input<{ $error?: boolean }>`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid ${props => props.$error ? '#dc3545' : '#ddd'};
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.$error ? '#dc3545' : '#999'};
+  }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+  }
 `;
 
 export const StatsContainer = styled.div`
@@ -186,5 +225,20 @@ export const Alert = styled.div<{ type: 'success' | 'error' }>`
   background: ${props => props.type === 'success' ? '#e0f7e0' : '#ffe0e0'};
   color: ${props => props.type === 'success' ? '#2e7d32' : '#c62828'};
   font-size: 14px;
+`;
+
+export const ChangePasswordButton = styled.button`
+  padding: 8px 16px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+
+  &:hover {
+    background: #3a7bc8;
+  }
 `;
 

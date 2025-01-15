@@ -52,6 +52,9 @@ export default function MyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [editedName, setEditedName] = useState('');
+  const [editedPhone, setEditedPhone] = useState('');
+
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -60,7 +63,6 @@ export default function MyPage() {
       return;
     }
 
-    // Fetch user profile
     const fetchProfile = async () => {
       try {
         const response = await fetch('/api/user', {
@@ -70,15 +72,15 @@ export default function MyPage() {
         });
         if (response.ok) {
           const data = await response.json();
-          // Set the profile with the user data from the database
           setProfile({
             user_id: data.userId,
-            user_name: data.userName,  // Match the database field
+            user_name: data.userName,
             user_email: data.userEmail,
             user_phone: data.userPhone
           });
+          setEditedName(data.userName);
+          setEditedPhone(data.userPhone);
 
-          // Also fetch user stats
           const statsResponse = await fetch('/api/contracts', {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -124,6 +126,51 @@ export default function MyPage() {
     setShowDeleteModal(false);
   };
 
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/user/update', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_name: editedName,
+          user_phone: editedPhone,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAlert({ type: 'success', message: '정보가 성공적으로 업데이트되었습니다.' });
+        setIsEditing(false);
+        setProfile(prevProfile => ({
+          ...prevProfile,
+          user_name: editedName,
+          user_phone: editedPhone
+        }));
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000);
+      } else {
+        setAlert({ type: 'error', message: data.error || '정보 업데이트에 실패했습니다.' });
+      }
+    } catch (error) {
+      setAlert({ type: 'error', message: '서버 오류가 발생했습니다.' });
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^\d]/g, '');
+    const phoneNumber = value
+      .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+      .slice(0, 13);
+    setEditedPhone(phoneNumber);
+  };
+
+
   if (!profile) {
     return <Container>Loading...</Container>;
   }
@@ -133,26 +180,21 @@ export default function MyPage() {
       <ProfileCard>
         <ProfileHeader>
           <UserName>{profile.user_name} 님</UserName>
-          <EditButton onClick={() => setIsEditing(!isEditing)}>
-            {isEditing ? '취소' : 'EDIT'}
+          <EditButton onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}>
+            {isEditing ? '저장' : 'EDIT'}
           </EditButton>
         </ProfileHeader>
         <UserEmail>{profile.user_email}</UserEmail>
-
-        {alert && (
-          <Alert type={alert.type}>
-            {alert.message}
-          </Alert>
-        )}
 
         <Form>
           <FormGroup>
             <Label>이름</Label>
             <Input
               type="text"
-              value={profile.user_name}
+              value={isEditing ? editedName : profile.user_name}
               disabled={!isEditing}
-              onChange={(e) => setProfile({ ...profile, user_name: e.target.value })}
+              onChange={(e) => setEditedName(e.target.value.slice(0, 12))}
+              maxLength={12}
             />
           </FormGroup>
 
@@ -162,7 +204,8 @@ export default function MyPage() {
               <Input
                 type="email"
                 value={profile.user_email}
-                disabled
+                disabled={true}
+                style={{ backgroundColor: '#f0f0f0', color: '#666' }}
               />
               <VerifiedCheck>
                 <CheckCircle size={16} />
@@ -170,14 +213,20 @@ export default function MyPage() {
             </InputWithCheck>
           </FormGroup>
 
-          {isEditing && (
-            <FormGroup>
-              <Label>비밀번호</Label>
-              <Input
-                type="password"
-                placeholder="새 비밀번호를 입력하세요"
-              />
-            </FormGroup>
+          <FormGroup>
+            <Label>전화번호</Label>
+            <Input
+              type="tel"
+              value={isEditing ? editedPhone : profile.user_phone}
+              disabled={!isEditing}
+              onChange={handlePhoneChange}
+              placeholder="010-0000-0000"
+            />
+          </FormGroup>
+          {alert && (
+            <Alert type={alert.type}>
+              {alert.message}
+            </Alert>
           )}
 
           <StatsContainer>
@@ -186,7 +235,7 @@ export default function MyPage() {
               <span>{stats.analyzed_count} 회</span>
             </StatItem>
             <StatItem>
-              <span>판별된 불공정성 조항 수</span>
+              <span>판별된 불공정 조항 수</span>
               <span>{stats.unfair_count} 개</span>
             </StatItem>
             <StatItem>
