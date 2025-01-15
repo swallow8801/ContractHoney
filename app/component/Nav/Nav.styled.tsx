@@ -29,7 +29,7 @@ export const Logo = styled.div`
   margin-left: 50px;
 `;
 
-// 네���게이션 아이템 컨테이너
+// 네비게이션 아이템 컨테이너
 export const NavItemsContainer = styled.div`
   flex: 4; /* 네비게이션 아이템의 비율 */
   display: flex; /* 가로 정렬 */
