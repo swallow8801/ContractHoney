@@ -79,8 +79,7 @@ const MainPage = () => {
       <Sidebar>
         <Title>Q&A</Title>
         <MenuList>
-          <MenuItem $active>홈</MenuItem>
-          <MenuItem onClick={() => router.push('/notice')}>공지사항</MenuItem>
+          <MenuItem $active>Q&A</MenuItem>
           <MenuItem onClick={() => router.push('/faq')}>자주 묻는 질문</MenuItem>
         </MenuList>
       </Sidebar>
