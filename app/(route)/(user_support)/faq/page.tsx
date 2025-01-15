@@ -17,19 +17,19 @@ const FAQ = () => {
   return (
     <Container>
         <Sidebar>
-            <Title>고객지원</Title>
+            <Title>FAQ</Title>
             <MenuList>
-                <MenuItem 
-                $active={pathname === '/faq'}
-                onClick={() => router.push('/faq')}
-                >
-                자주 묻는 질문
-                </MenuItem>
                 <MenuItem
                 $active={pathname === '/qna'}
                 onClick={() => router.push('/qna')}
                 >
                 Q&A
+                </MenuItem>
+                <MenuItem 
+                $active={pathname === '/faq'}
+                onClick={() => router.push('/faq')}
+                >
+                자주 묻는 질문
                 </MenuItem>
             </MenuList>
         </Sidebar>
