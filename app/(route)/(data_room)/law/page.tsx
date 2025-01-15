@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Check } from 'lucide-react';
 import {
   Container,
@@ -38,6 +38,7 @@ interface Law {
 const LawsAndRegulationsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [laws, setLaws] = useState<Law[]>([]);
   const [searchType, setSearchType] = useState('제목');
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,6 +47,13 @@ const LawsAndRegulationsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
   useEffect(() => {
+    // URL에서 search 파라미터 가져오기
+    const searchQuery = searchParams.get('search');
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+      setSearchKeyword(searchQuery);
+    }
+
     // API에서 데이터 가져오기
     const fetchLaws = async () => {
       try {
@@ -58,15 +66,13 @@ const LawsAndRegulationsPage = () => {
     };
 
     fetchLaws();
-  }, []);
+  }, [searchParams]);
 
   const filteredLaws = laws.filter((law) => {
     const matchesCategory = selectedCategory === '전체' || law.law_category === selectedCategory;
     const matchesSearch =
       searchKeyword === '' ||
-      (searchType === '제목' && law.law_title.toLowerCase().includes(searchKeyword.toLowerCase())) ||
-      (searchType === '제목+내용' && law.law_title.toLowerCase().includes(searchKeyword.toLowerCase()));
-
+      (searchType === '제목' && law.law_title.toLowerCase().includes(searchKeyword.toLowerCase()))
     return matchesCategory && matchesSearch;
   });
 
@@ -80,6 +86,8 @@ const LawsAndRegulationsPage = () => {
   const handleSearch = () => {
     setSearchKeyword(searchTerm);
     setCurrentPage(1);
+    // URL에 검색어 추가
+    router.push(`/law?search=${searchTerm}`);
   };
 
   return (
@@ -103,7 +111,6 @@ const LawsAndRegulationsPage = () => {
       </Sidebar>
       <Main>
         <MainTitle>법령</MainTitle>
-
 
         <InfoSection>
           <InfoItem>
@@ -160,7 +167,6 @@ const LawsAndRegulationsPage = () => {
             onChange={(e) => setSearchType(e.target.value)}
           >
             <option value="제목">제목</option>
-            <option value="제목+내용">제목+내용</option>
           </SearchSelect>
           <SearchInput
             type="text"
