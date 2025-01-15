@@ -61,6 +61,7 @@ const LoginPage = () => {
         }
         setAlertMessage('로그인에 성공했습니다.');
         setAlertType('success');
+        window.dispatchEvent(new Event('authChange'));
         setTimeout(() => {
           router.push('/main');
         }, 2000); // 2초 후 메인 페이지로 이동

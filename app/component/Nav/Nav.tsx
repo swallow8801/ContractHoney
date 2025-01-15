@@ -32,6 +32,31 @@ const Nav = () => {
       })
       .catch(error => console.error('Error fetching user data:', error));
     }
+
+    const handleAuthChange = () => {
+      const token = localStorage.getItem('authToken');
+      setIsLoggedIn(!!token);
+      if (token) {
+        fetch('/api/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          setUserName(data.userName);
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+      } else {
+        setUserName('');
+      }
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('authChange', handleAuthChange);
+    };
   }, []); // 컴포넌트가 처음 마운트될 때 한 번만 실행
 
   // 로그아웃 기능
@@ -41,6 +66,7 @@ const Nav = () => {
     localStorage.removeItem('authToken'); // 토큰 제거
     localStorage.removeItem('admin'); // Remove the admin key
     router.push('/'); // 로그아웃 후 홈 페이지로 이동
+    window.dispatchEvent(new Event('authChange'));
   };
 
   return (
