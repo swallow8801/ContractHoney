@@ -53,7 +53,7 @@ export const NoticeInfo = styled.div`
 `;
 
 export const Content = styled.p`
-    min-height: auto; /* 높이를 자동으로 조정 */
+    min-height: 300px; /* 높이를 자동으로 조정 */
     width: 100%; /* 최대 너비 설정 */
     max-width: 100%;
     font-size: 17px;
@@ -93,11 +93,11 @@ export const BackButton = styled.button`
     align-self: flex-end; /* 오른쪽 정렬 */
     margin-top: 20px;
     margin-right: 25px;
-    padding: 10px 20px;
+    padding: 7px 10px;
     background: rgb(169, 169, 169);
     border: none;
     border-radius: 5px;
-    font-size: 17px;
+    font-size: 16px;
     color: #ffffff;
     cursor: pointer;
 

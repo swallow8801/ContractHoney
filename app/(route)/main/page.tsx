@@ -107,10 +107,13 @@ const MainPage = () => {
   };
 
   const handleSearch = () => {
-    if (searchType === '법령') {
-      router.push(`/archive/statute?query=${encodeURIComponent(searchQuery)}`);
-    } else if (searchType === '표준계약서') {
-      router.push(`/archive/standard_cont?query=${encodeURIComponent(searchQuery)}`);
+    // 검색어가 있을 경우 페이지로 이동
+    if (searchQuery.trim()) {
+      if (searchType === '법령') {
+        router.push(`/law?search=${searchQuery}`);
+      } else if (searchType === '표준계약서') {
+        router.push(`/archive?search=${searchQuery}`);
+      }
     }
   };
 

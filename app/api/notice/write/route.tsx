@@ -17,7 +17,9 @@ export async function POST(request: NextRequest) {
     const notice_title = formData.get('notice_title') as string;
     const notice_content = formData.get('notice_content') as string;
 
-    const notice_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const now = new Date();
+    const kstTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const notice_date = kstTime.toISOString().slice(0, 19).replace('T', ' ');
 
     const query = `
       INSERT INTO notice (notice_title, notice_content, notice_date) 

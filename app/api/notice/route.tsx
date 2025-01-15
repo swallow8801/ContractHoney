@@ -8,7 +8,9 @@ export async function GET(request: NextRequest) {
       SELECT 
         notice_id AS id, 
         notice_title AS title, 
-        DATE_FORMAT(notice_date, '%Y-%m-%d') AS date 
+        notice_content AS content,
+        DATE_FORMAT(notice_date, '%Y-%m-%d %H:%i:%s') AS date,
+        notice_flag AS flag
       FROM 
         notice 
       ORDER BY notice_id DESC
