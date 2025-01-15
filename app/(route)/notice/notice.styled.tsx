@@ -90,18 +90,23 @@ export const BoardTable = styled.table`
 `;
 
 export const WriteButton = styled.button`
-  padding: 8px 20px;
-  background: #666;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
+  width: 100px;
+  align-self: flex-end; /* 오른쪽 정렬 */
   margin-top: 20px;
+  margin-right: 25px;
+  margin-bottom: 40px;
+  padding: 7px 10px;
+  background: rgb(169, 169, 169);
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #ffffff;
+  cursor: pointer;
 
   &:hover {
-    background: #555;
+      background: rgb(141, 141, 141);
   }
+        
 `;
 
 export const FooterContainer = styled.div`
