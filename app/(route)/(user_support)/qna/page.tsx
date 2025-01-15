@@ -20,6 +20,7 @@ import {
 interface QnaType {
   qna_title: string;
   qna_cont_date: string;
+  user_name?: string; // 작성자의 이름
 }
 
 const MainPage = () => {
@@ -90,6 +91,7 @@ const MainPage = () => {
                 <tr>
                   <th>번호</th>
                   <th>제목</th>
+                  {isAdmin && <th>작성자</th>} {/* 관리자일 경우 작성자 열 추가 */}
                   <th>작성일</th>
                 </tr>
               </thead>
@@ -98,6 +100,7 @@ const MainPage = () => {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{qna.qna_title}</td>
+                    {isAdmin && <td>{qna.user_name}</td>} {/* 관리자일 경우 작성자 이름 표시 */}
                     <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
                   </tr>
                 ))}
@@ -113,7 +116,7 @@ const MainPage = () => {
         ) : (
           <p>등록된 Q&A가 없습니다.</p>
         )}
-        {!isAdmin && <WriteButton onClick={() => router.push('/qna/write')}>문의하기</WriteButton>}
+        {!isAdmin && <WriteButton onClick={() => router.push('/qna/writeQnA')}>문의하기</WriteButton>}
       </Main>
     </Container>
   );
