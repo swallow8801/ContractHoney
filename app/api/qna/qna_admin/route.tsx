@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     let rows;
     if (userAdmin === 1) {
       // 관리자: 모든 데이터 가져오기
-      [rows] = await pool.query('SELECT qna_title, qna_cont_date FROM qna');
+      [rows] = await pool.query('SELECT q.qna_title, q.qna_cont_date, u.user_name FROM qna q JOIN user u ON q.user_id = u.user_id');
     } else {
       // 일반 사용자: 자신의 데이터만 가져오기
       const userId = decodedToken.userId;
