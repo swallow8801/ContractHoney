@@ -47,7 +47,7 @@ const WriteNoti = () => {
         formData.append('file', file);
       }
 
-      const response = await fetch('/api/notice', {
+      const response = await fetch('/api/notice/write', {
         method: 'POST',
         body: formData,
       });
