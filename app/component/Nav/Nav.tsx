@@ -89,7 +89,7 @@ const Nav = () => {
         <NavItem $active={pathname === '/archive' || pathname === '/law'}>
           <Link href="/archive">자료실</Link>
         </NavItem>
-        <NavItem $active={pathname === '/notice'}>
+        <NavItem $active={pathname.startsWith('/notice')}>
           <Link href="/notice">공지사항</Link>
         </NavItem>
         <NavItem $active={pathname === '/faq' || pathname === '/qna'}>
