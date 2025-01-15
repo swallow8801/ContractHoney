@@ -42,16 +42,17 @@ export async function POST(request: NextRequest) {
 
     // JWT 토큰 생성 (유효기간은 1시간)
     const token = jwt.sign(
-      { userId: user.user_id, userEmail: user.user_email },  // 페이로드
-      process.env.JWT_SECRET_KEY!,  // 비밀 키
-      { expiresIn: '1h' }           // 토큰 만료 시간
+      { userId: user.user_id, userEmail: user.user_email, userAdmin: user.user_admin },
+      process.env.JWT_SECRET_KEY!,
+      { expiresIn: '1h' }
     );
 
     // 로그인 성공 시 토큰을 반환
-    return NextResponse.json({ message: '로그인 성공!', token });
+    return NextResponse.json({ message: '로그인 성공!', token, userAdmin: user.user_admin });
 
   } catch (error) {
     console.error('로그인 중 오류 발생:', error);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
+

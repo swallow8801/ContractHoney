@@ -120,3 +120,4 @@ export const LogoutButton = styled.button`
     background-color: #c0c0c0;
   }
 `;
+
