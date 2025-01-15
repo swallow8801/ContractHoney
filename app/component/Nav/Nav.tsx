@@ -109,7 +109,7 @@ const Nav = () => {
           </LoginButton>
         ) : (
           <UserInfo>
-            <span style={{ marginRight: '10px' }}>{userName} 님</span>
+            <span>{userName} 님</span>
             <span
               onClick={() => router.push('/mypage')} 
               style={{ cursor: 'pointer', fontSize: '1.6em' }}

@@ -88,13 +88,13 @@ export const UserInfo = styled.div`
   display: flex;
   align-items: center;
   white-space: nowrap; /* 줄바꿈 방지 */
-  gap: 25px;
   span {
-    margin-right: 10px;
+    margin-right: 15px;
   }
   button {
     width: 100px;
     padding: 5px 15px;
+    margin-left: 35px;
     background-color: #e0e0e0;
     border: none;
     border-radius: 5px;
