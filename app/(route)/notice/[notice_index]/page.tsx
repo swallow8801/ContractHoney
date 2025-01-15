@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
   Container,
   Sidebar,
@@ -15,60 +15,69 @@ import {
   BackButton,
 } from './[notice_index].styled';
 
-    const NoticeDetailPage = ({ params }: { params: { id: string } }) => {
-    const router = useRouter();
-    const currentId = parseInt(params.id, 10);
+interface Notice {
+  id: number;
+  title: string;
+  date: string;
+  content: string;
+}
 
-    // 예시 데이터
-    const notices = [
-        { id: 1, title: '공지사항1' },
-        { id: 2, title: '공지사항2' },
-        { id: 3, title: '공지사항3' },
-    ];
+const NoticeDetailPage = () => {
+  const router = useRouter();
+  const params = useParams(); // useParams로 params 가져오기
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [currentNotice, setCurrentNotice] = useState<Notice | null>(null);
+  const [prevNotice, setPrevNotice] = useState<Notice | null>(null);
+  const [nextNotice, setNextNotice] = useState<Notice | null>(null);
 
-    // 현재 글
-    const currentNotice = notices.find((notice) => notice.id === currentId);
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch('/api/notice');
+        const data = await response.json();
+        setNotices(data.notices);
 
-    // 이전 글 및 다음 글
-    const prevNotice = notices.find((notice) => notice.id === currentId - 1);
-    const nextNotice = notices.find((notice) => notice.id === currentId + 1);
+        const currentId = parseInt(params.notice_index, 10);
 
-    return (
-        <Container>
-        <Sidebar>
-            <Title>공지사항</Title>
-        </Sidebar>
-        <Main>
-            <NoticeTitle>공지사항1</NoticeTitle>
-            <NoticeInfo>
-            작성일: 2024-11-28
-            </NoticeInfo>
-            <Content>모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코<br/> 모코코</Content>
+        // 현재 공지사항, 이전 공지사항, 다음 공지사항 찾기
+        const current = data.notices.find((notice: Notice) => notice.id === currentId);
+        const prev = data.notices.find((notice: Notice) => notice.id === currentId - 1);
+        const next = data.notices.find((notice: Notice) => notice.id === currentId + 1);
 
-            <NavigationTable>
-            <tbody>
-                <NavigationRow></NavigationRow>
-                <NavigationRow>
-                <td>이전글</td>
-                <td>
-                    {prevNotice ? (
-                    <span
-                        style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
-                        onClick={() => router.push(`/notice/${prevNotice.id}`)}
-                    >
-                        {prevNotice.title}
-                    </span>
-                    ) : (
-                    '이전글이 없습니다.'
-                    )}
-                </td>
-                </NavigationRow>
-                <NavigationRow>
+        setCurrentNotice(current || null);
+        setPrevNotice(prev || null);
+        setNextNotice(next || null);
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      }
+    };
+
+    fetchNotices();
+  }, [params.notice_index]);
+
+  if (!currentNotice) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <Container>
+      <Sidebar>
+        <Title>공지사항</Title>
+      </Sidebar>
+      <Main>
+        <NoticeTitle>{currentNotice.title}</NoticeTitle>
+        <NoticeInfo>작성일: {currentNotice.date}</NoticeInfo>
+        <Content>{currentNotice.content}</Content>
+
+        <NavigationTable>
+          <tbody>
+            <NavigationRow></NavigationRow>
+            <NavigationRow>
                 <td>다음글</td>
                 <td>
                     {nextNotice ? (
                     <span
-                        style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                        style={{ cursor: 'pointer', color: '#202020'}}
                         onClick={() => router.push(`/notice/${nextNotice.id}`)}
                     >
                         {nextNotice.title}
@@ -77,13 +86,28 @@ import {
                     '다음글이 없습니다.'
                     )}
                 </td>
-                </NavigationRow>
-            </tbody>
-            </NavigationTable>
+            </NavigationRow>
+            <NavigationRow>
+                <td>이전글</td>
+                <td>
+                    {prevNotice ? (
+                    <span
+                        style={{ cursor: 'pointer', color: '#202020'}}
+                        onClick={() => router.push(`/notice/${prevNotice.id}`)}
+                    >
+                        {prevNotice.title}
+                    </span>
+                    ) : (
+                    '이전글이 없습니다.'
+                    )}
+                </td>
+            </NavigationRow>
+          </tbody>
+        </NavigationTable>
 
-            <BackButton onClick={() => router.push('/notice')}>목록</BackButton>
-        </Main>
-        </Container>
+        <BackButton onClick={() => router.push('/notice')}>목록</BackButton>
+      </Main>
+    </Container>
   );
 };
 

@@ -30,6 +30,7 @@ const NoticeListPage = () => {
   const router = useRouter();
   const [searchType, setSearchType] = useState('제목');
   const [searchTerm, setSearchTerm] = useState('');
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState(''); // 실제 검색에 사용할 값
   const [currentPage, setCurrentPage] = useState(1);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [isAdmin, setIsAdmin] = useState(false); // 관리자인지 확인하는 상태 추가
@@ -57,17 +58,13 @@ const NoticeListPage = () => {
     fetchNotices();
   }, []);
 
+  // 검색된 결과 필터링
   const filteredNotices = notices.filter((notice) => {
-    if (searchTerm === '') return true;
+    if (appliedSearchTerm === '') return true;
 
     switch (searchType) {
       case '제목':
-        return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
-      case '내용':
-        // Assuming we don't have content in our current data structure
-        return false;
-      case '제목+내용':
-        return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
+        return notice.title.toLowerCase().includes(appliedSearchTerm.toLowerCase());
       default:
         return true;
     }
@@ -80,9 +77,17 @@ const NoticeListPage = () => {
     currentPage * itemsPerPage
   );
 
+  // 검색 버튼 클릭 핸들러
   const handleSearch = () => {
-    setCurrentPage(1);
+    setAppliedSearchTerm(searchTerm); // 현재 입력값을 실제 검색어로 적용
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter'){
+        handleSearch();
+    }
+  }
 
   const handleRowClick = (id: number) => {
     router.push(`/notice/${id}`);
@@ -102,14 +107,13 @@ const NoticeListPage = () => {
               onChange={(e) => setSearchType(e.target.value)}
             >
               <option value="제목">제목</option>
-              <option value="내용">내용</option>
-              <option value="제목+내용">제목+내용</option>
             </SearchSelect>
             <SearchInput
               type="text"
               placeholder="검색어를 입력하세요"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <SearchButton onClick={handleSearch}>검색</SearchButton>
           </SearchSection>
@@ -130,7 +134,7 @@ const NoticeListPage = () => {
                 >
                   <td>{notice.id}</td>
                   <td>{notice.title}</td>
-                  <td>{notice.date}</td>
+                  <td>{new Date(notice.date).toISOString().split('T')[0]}</td>
                 </tr>
               ))}
             </tbody>

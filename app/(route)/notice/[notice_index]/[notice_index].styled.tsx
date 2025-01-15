@@ -53,7 +53,7 @@ export const NoticeInfo = styled.div`
 `;
 
 export const Content = styled.p`
-    min-height: auto; /* 높이를 자동으로 조정 */
+    min-height: 300px; /* 높이를 자동으로 조정 */
     width: 100%; /* 최대 너비 설정 */
     max-width: 100%;
     font-size: 17px;
