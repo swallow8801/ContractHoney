@@ -139,7 +139,7 @@ export const FormFileInput = styled.input`
 
 export const SubmitButton = styled.button`
   padding: 10px 20px;
-align-self: flex-end;
+  align-self: flex-end;
   background-color: rgb(169, 169, 169);
   color: white;
   font-size: 17px;
@@ -150,6 +150,12 @@ align-self: flex-end;
 
   &:hover {
     background-color: rgb(141, 141, 141);
+  }
+  
+  &:disabled {
+    background-color: #ccc; /* 비활성화된 버튼 배경색 */
+    cursor: not-allowed;   /* 클릭 불가 커서 */
+    opacity: 0.6;         /* 투명도 조절 */
   }
 `;
 
@@ -169,7 +175,7 @@ export const NotificationOverlay = styled.div`
 export const NotificationBox = styled.div`
   width: 400px;
   padding: 20px 30px;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -183,10 +189,10 @@ export const NotificationBox = styled.div`
 
 export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
   background-color: ${({ $type }) => ($type === 'success' ? '#f44336' : '#4caf50')};
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
-  padding: 10px 15px;
+  padding: 7px 20px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
