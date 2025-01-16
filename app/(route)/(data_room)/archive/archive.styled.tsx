@@ -8,14 +8,14 @@ export const Container = styled.div`
 `;
 
 export const Sidebar = styled.aside`
-  width: 240px;
+  width: 20%;
   background: white;
   padding: 30px 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 6vh;
+  top: 8vh;
   left: 0;
-  height: calc(100vh - 6vh);
+  height: 92vh;
   overflow-y: auto;
 `;
 
@@ -28,11 +28,13 @@ export const SidebarTitle = styled.h2`
 `;
 
 export const Main = styled.main`
-  flex: 1;
-  padding: 20px 30px 30px 270px; // 상단 패딩을 30px에서 20px로 줄임
+  width: 80%;
+  min-height: 92vh;
+  padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
   margin-top: 3vh;
+  margin-left: 20%;
 `;
 
 export const Title = styled.h1`
@@ -57,8 +59,9 @@ export const SearchSection = styled.div`
   gap: 10px;
   margin-bottom: 30px;
   background: #ffffff;
-  padding: 0px;
+  padding: 20px;
   border-radius: 8px;
+  margin: 0px;
 `;
 
 export const SearchSelect = styled.select`
@@ -126,6 +129,10 @@ export const ArchiveTable = styled.table`
 
   td:nth-child(2) {
     text-align: left;
+  }
+
+  th:nth-child(2) {
+    text-align: center;
   }
 
   td:nth-child(3), th:nth-child(3),
