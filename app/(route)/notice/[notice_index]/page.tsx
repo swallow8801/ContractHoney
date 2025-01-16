@@ -98,16 +98,15 @@ const NoticeDetailPage = () => {
       }
     } else if (notification?.type === 'confirm-delete') {
       try {
-        const response = await fetch(`/api/notice/delete`, {
+        const response = await fetch(`/api/notice/delete?id=${currentNotice?.id}`, {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: currentNotice?.id }),
         });
-
+  
         if (response.ok) {
-          setNotification({ type: 'success', message: '공지사항이 성공적으로 삭제되었습니다.' });
+          setNotification({ type: 'complete', message: '공지사항이 성공적으로 삭제되었습니다.' });
+          setTimeout(() => {
+            router.push('/notice'); // /notice로 이동
+          }, 800);
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -116,8 +115,12 @@ const NoticeDetailPage = () => {
         console.error('Error deleting notice:', error);
         setNotification({ type: 'error', message: '서버와 통신 중 문제가 발생했습니다.' });
       }
+    } else if (notification?.type === 'complete') {
+      setNotification(null); // 확인 버튼 클릭 시 알림 닫기
+      router.push('/notice'); // /notice로 이동
     }
-  };
+  }; 
+  
 
   const handleCancel = () => {
     setNotification(null);
@@ -133,16 +136,30 @@ const NoticeDetailPage = () => {
         <NotificationOverlay>
           <NotificationBox>
             <NotificationMessage>{notification.message}</NotificationMessage>
-            <ConfirmButton
-              $isDelete={notification.type === 'confirm-delete'}
-              onClick={handleConfirm}>
-              확인
-            </ConfirmButton>
-            <ConfirmButton
-              style={{background: 'rgb(169, 169, 169)', marginLeft: '20px'}}
-              onClick={handleCancel}>
-              취소
-            </ConfirmButton>
+            {notification.type === 'complete' ? (
+              <ConfirmButton
+                $isDelete={false} // 회색 버튼 스타일
+                onClick={handleConfirm}
+                style={{ background: 'rgb(169, 169, 169)' }}
+              >
+                확인
+              </ConfirmButton>
+            ) : (
+              <>
+                <ConfirmButton
+                  $isDelete={notification.type === 'confirm-delete'} // 삭제 시 빨간색 버튼
+                  onClick={handleConfirm}
+                >
+                  확인
+                </ConfirmButton>
+                <ConfirmButton
+                  style={{ background: 'rgb(169, 169, 169)', marginLeft: '20px' }}
+                  onClick={handleCancel}
+                >
+                  취소
+                </ConfirmButton>
+              </>
+            )}
           </NotificationBox>
         </NotificationOverlay>
       )}
