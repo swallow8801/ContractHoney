@@ -28,7 +28,7 @@ import {
 } from './archive.styled';
 
 interface Archive {
-  id: number;
+  ar_id: number;
   ar_title: string;
   ar_part: string;
   ar_date: string;
@@ -89,9 +89,9 @@ const StandardContractsPage = () => {
     return d.toLocaleDateString('ko-KR');
   };
 
-  const handleDownload = (e: React.MouseEvent, id: number) => {
+  const handleDownload = (e: React.MouseEvent, ar_id: number) => {
     e.stopPropagation();
-    console.log('Downloading document:', id);
+    console.log('Downloading document:', ar_id);
   };
 
   return (
@@ -153,14 +153,14 @@ const StandardContractsPage = () => {
           </thead>
           <tbody>
             {currentItems.map((contract) => (
-              <tr key={contract.id}>
-                <td>{contract.id}</td>
+              <tr key={contract.ar_id}>
+                <td>{contract.ar_id}</td>
                 <td>{contract.ar_title}</td>
                 <td>{contract.ar_part}</td>
                 <td>{formatDate(contract.ar_date)}</td>
                 <td>
                   <AttachmentIcon
-                    onClick={(e) => handleDownload(e, contract.id)}
+                    onClick={(e) => handleDownload(e, contract.ar_id)}
                   >
                     <Download size={16} />
                   </AttachmentIcon>

@@ -135,6 +135,7 @@ export const ArchiveTable = styled.table`
     text-align: center;
   }
 
+  td:nth-child(1), th:nth-child(1),
   td:nth-child(3), th:nth-child(3),
   td:nth-child(4), th:nth-child(4),
   td:nth-child(5), th:nth-child(5) {
