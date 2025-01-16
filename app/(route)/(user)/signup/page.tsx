@@ -56,7 +56,7 @@ const SignupPage = () => {
       setEmailSuccess('');
       return;
     }
-
+  
     try {
       const response = await fetch('/api/verify-email', {
         method: 'POST',
@@ -65,15 +65,24 @@ const SignupPage = () => {
         },
         body: JSON.stringify({ email: user_email }),
       });
+  
+      // 응답 상태 코드 확인
+      if (!response.ok) {
+        throw new Error('서버 오류');
+      }
+  
       const data = await response.json();
-      if (data.available) {
-        setIsEmailVerified(true);
-        setEmailError('');
-        setEmailSuccess('사용 가능한 이메일입니다.');
-      } else {
-        setEmailError('중복된 이메일이 존재합니다.');
-        setIsEmailVerified(false);
-        setEmailSuccess('');
+      
+      if (data) {
+        if (data.available) {
+          setIsEmailVerified(true);
+          setEmailError('');
+          setEmailSuccess('사용 가능한 이메일입니다.');
+        } else {
+          setEmailError('중복된 이메일이 존재합니다.');
+          setIsEmailVerified(false);
+          setEmailSuccess('');
+        }
       }
     } catch (error) {
       console.error('이메일 확인 오류:', error);
@@ -81,7 +90,7 @@ const SignupPage = () => {
       setEmailSuccess('');
     }
   };
-
+  
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
