@@ -9,7 +9,6 @@ import {
   Title,
   NoticeTitle,
   Form,
-  FormFileInput,
   FormInput,
   FormLabel,
   FormTextarea,
@@ -19,6 +18,7 @@ import {
   ConfirmButton,
   ButtonContainer,
   CancelButton,
+  SidebarTitle,
 } from './writeNoti.styled';
 
 const WriteNoti = () => {
@@ -88,7 +88,6 @@ const WriteNoti = () => {
 
   return (
     <Container>
-      {/* 알림 박스와 배경 어둡게 */}
       {notification && (
         <NotificationOverlay>
           <NotificationBox $type={notification.type}>
@@ -98,7 +97,7 @@ const WriteNoti = () => {
         </NotificationOverlay>
       )}
       <Sidebar>
-        <Title>공지사항</Title>
+        <SidebarTitle>공지사항</SidebarTitle>
       </Sidebar>
       <Main>
         <NoticeTitle>공지사항 작성</NoticeTitle>
@@ -139,3 +138,4 @@ const WriteNoti = () => {
 };
 
 export default WriteNoti;
+

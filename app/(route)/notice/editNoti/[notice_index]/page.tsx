@@ -14,31 +14,34 @@ import {
   FormTextarea,
   SubmitButton,
   CancelButton,
-  ButtonContainer, // 스타일 추가
+  ButtonContainer,
+  NotificationOverlay,
+  NotificationBox,
+  NotificationMessage,
+  ConfirmButton,
 } from "./[notice_index].styled";
 
 const EditNoti = () => {
-  const params = useParams(); // useParams로 notice_index 가져오기
+  const params = useParams();
   const router = useRouter();
 
-  // 상태 관리
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false); // 관리자인지 확인하는 상태 추가
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
     
-    // 사용자 권한 확인 (localStorage에서 가져오기)
-    useEffect(() => {
-      const userAdmin = localStorage.getItem('admin');
-      if (userAdmin === '1') {
-        setIsAdmin(true); // 관리자인 경우
-      }
-    }, []);
+  useEffect(() => {
+    const userAdmin = localStorage.getItem('admin');
+    if (userAdmin === '1') {
+      setIsAdmin(true);
+    } else {
+      router.push('/notice');
+    }
+  }, [router]);
 
-  // 공지사항 ID
   const noticeId = params.notice_index;
 
-  // 공지사항 데이터 가져오기
   useEffect(() => {
     const fetchNotice = async () => {
       try {
@@ -63,7 +66,6 @@ const EditNoti = () => {
     }
   }, [noticeId]);
 
-  // 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -75,18 +77,25 @@ const EditNoti = () => {
       });
 
       if (response.ok) {
-        router.push(`/notice/${noticeId}`); // 수정 후 notice/{id}로 이동
+        setNotification({ type: 'success', message: '공지사항이 성공적으로 수정되었습니다.' });
       } else {
-        console.error("Failed to update notice");
+        setNotification({ type: 'error', message: '공지사항 수정에 실패했습니다.' });
       }
     } catch (error) {
       console.error("Error updating notice:", error);
+      setNotification({ type: 'error', message: '서버 오류가 발생했습니다.' });
     }
   };
 
-  // 취소 버튼 핸들러
   const handleCancel = () => {
-    router.push(`/notice/${noticeId}`); // 취소하면 notice/{id}로 이동
+    router.push(`/notice/${noticeId}`);
+  };
+
+  const handleNotificationConfirm = () => {
+    setNotification(null);
+    if (notification?.type === 'success') {
+      router.push(`/notice/${noticeId}`);
+    }
   };
 
   if (loading) {
@@ -95,6 +104,16 @@ const EditNoti = () => {
 
   return (
     <Container>
+      {notification && (
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            <ConfirmButton $type={notification.type} onClick={handleNotificationConfirm}>
+              확인
+            </ConfirmButton>
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Sidebar>
         <Title>공지사항</Title>
       </Sidebar>
@@ -137,3 +156,4 @@ const EditNoti = () => {
 };
 
 export default EditNoti;
+

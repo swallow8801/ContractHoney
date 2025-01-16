@@ -20,6 +20,7 @@ import {
   NotificationMessage,
   ConfirmButton,
   NotificationOverlay,
+  SidebarTitle,
 } from './[notice_index].styled';
 
 interface Notice {
@@ -39,8 +40,8 @@ const NoticeDetailPage = () => {
   const [nextNotice, setNextNotice] = useState<Notice | null>(null);
   const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showNotification, setShowNotification] = useState(false); // 상태 추가
 
-  // 사용자 권한 확인
   useEffect(() => {
     const userAdmin = localStorage.getItem('admin');
     if (userAdmin === '1') {
@@ -55,17 +56,12 @@ const NoticeDetailPage = () => {
         const data = await response.json();
         setNotices(data.notices);
 
-        const currentId = parseInt(params.notice_index, 10);
+        const currentId = parseInt(params.notice_index as string, 10);
 
-        // 현재 공지사항 찾기
         const current = data.notices.find((notice: Notice) => notice.id === currentId);
-
-        // flag가 1이 아닌 이전 공지사항 찾기
         const prev = data.notices
           .filter((notice: Notice) => notice.flag !== 1 && notice.id < currentId)
           .sort((a: Notice, b: Notice) => b.id - a.id)[0] || null;
-
-        // flag가 1이 아닌 다음 공지사항 찾기
         const next = data.notices
           .filter((notice: Notice) => notice.flag !== 1 && notice.id > currentId)
           .sort((a: Notice, b: Notice) => a.id - b.id)[0] || null;
@@ -86,27 +82,28 @@ const NoticeDetailPage = () => {
   };
 
   const handleEdit = () => {
-    setNotification({ type: 'confirm', message: '수정하시겠습니까?' });
+    setShowNotification(true); // 수정 버튼 클릭 핸들러 수정
+  };
+
+  const handleConfirmEdit = () => { // 확인 버튼 클릭 핸들러 추가
+    setShowNotification(false);
+    if (currentNotice) {
+      router.push(`/notice/editNoti/${currentNotice.id}`);
+    }
   };
 
   const handleConfirm = async () => {
-    if (notification?.type === 'success' || notification?.type === 'error') {
-      setNotification(null);
-    } else if (notification?.type === 'confirm') {
-      if (currentNotice) {
-        router.push(`/notice/editNoti/${currentNotice.id}`);
-      }
-    } else if (notification?.type === 'confirm-delete') {
+    if (notification?.type === 'confirm-delete') {
       try {
         const response = await fetch(`/api/notice/delete?id=${currentNotice?.id}`, {
           method: 'DELETE',
         });
-  
+
         if (response.ok) {
-          setNotification({ type: 'complete', message: '공지사항이 성공적으로 삭제되었습니다.' });
+          setNotification({ type: 'success', message: '공지사항이 성공적으로 삭제되었습니다.' });
           setTimeout(() => {
-            router.push('/notice'); // /notice로 이동
-          }, 800);
+            router.push('/notice');
+          }, 1500);
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -115,12 +112,10 @@ const NoticeDetailPage = () => {
         console.error('Error deleting notice:', error);
         setNotification({ type: 'error', message: '서버와 통신 중 문제가 발생했습니다.' });
       }
-    } else if (notification?.type === 'complete') {
-      setNotification(null); // 확인 버튼 클릭 시 알림 닫기
-      router.push('/notice'); // /notice로 이동
+    } else {
+      setNotification(null);
     }
-  }; 
-  
+  };
 
   const handleCancel = () => {
     setNotification(null);
@@ -136,52 +131,45 @@ const NoticeDetailPage = () => {
         <NotificationOverlay>
           <NotificationBox>
             <NotificationMessage>{notification.message}</NotificationMessage>
-            {notification.type === 'complete' ? (
-              <ConfirmButton
-                $isDelete={false} // 회색 버튼 스타일
-                onClick={handleConfirm}
-                style={{ background: 'rgb(169, 169, 169)' }}
-              >
-                확인
+            <ConfirmButton $type={notification.type as 'success' | 'error'} onClick={handleConfirm}>
+              확인
+            </ConfirmButton>
+            {notification.type === 'confirm-delete' && (
+              <ConfirmButton $type="error" onClick={handleCancel}>
+                취소
               </ConfirmButton>
-            ) : (
-              <>
-                <ConfirmButton
-                  $isDelete={notification.type === 'confirm-delete'} // 삭제 시 빨간색 버튼
-                  onClick={handleConfirm}
-                >
-                  확인
-                </ConfirmButton>
-                <ConfirmButton
-                  style={{ background: 'rgb(169, 169, 169)', marginLeft: '20px' }}
-                  onClick={handleCancel}
-                >
-                  취소
-                </ConfirmButton>
-              </>
             )}
           </NotificationBox>
         </NotificationOverlay>
       )}
+      {showNotification && ( // NotificationBox 렌더링 추가
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>공지사항을 수정하시겠습니까?</NotificationMessage>
+            <ConfirmButton $type="success" onClick={handleConfirmEdit}>
+              확인
+            </ConfirmButton>
+            <ConfirmButton $type="error" onClick={() => setShowNotification(false)}>
+              취소
+            </ConfirmButton>
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Sidebar>
-        <Title>공지사항</Title>
+        <SidebarTitle>공지사항</SidebarTitle>
       </Sidebar>
       <Main>
         <NoticeTitle>{currentNotice.title}</NoticeTitle>
-        <NoticeInfo>작성일: {currentNotice.date}</NoticeInfo>
+        <NoticeInfo>작성일: {new Date(currentNotice.date).toLocaleDateString()}</NoticeInfo>
         <Content>{currentNotice.content}</Content>
 
         <NavigationTable>
           <tbody>
-            <NavigationRow></NavigationRow>
             <NavigationRow>
               <td>다음글</td>
               <td>
                 {nextNotice ? (
-                  <span
-                    style={{ cursor: 'pointer', color: '#202020' }}
-                    onClick={() => router.push(`/notice/${nextNotice.id}`)}
-                  >
+                  <span onClick={() => router.push(`/notice/${nextNotice.id}`)}>
                     {nextNotice.title}
                   </span>
                 ) : (
@@ -193,10 +181,7 @@ const NoticeDetailPage = () => {
               <td>이전글</td>
               <td>
                 {prevNotice ? (
-                  <span
-                    style={{ cursor: 'pointer', color: '#202020' }}
-                    onClick={() => router.push(`/notice/${prevNotice.id}`)}
-                  >
+                  <span onClick={() => router.push(`/notice/${prevNotice.id}`)}>
                     {prevNotice.title}
                   </span>
                 ) : (
@@ -221,3 +206,4 @@ const NoticeDetailPage = () => {
 };
 
 export default NoticeDetailPage;
+

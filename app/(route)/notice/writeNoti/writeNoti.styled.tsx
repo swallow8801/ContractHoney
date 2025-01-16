@@ -1,57 +1,40 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    display: flex;
-    width: 100%;
-    height: 92vh;
-    background: #ffffff;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
 `;
 
 export const Sidebar = styled.aside`
-    width: 20%; /* 사이드바 너비 */
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    align-items: center; /* 중앙 정렬 */
-    padding: 30px 0;
-
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 20px 0 0 0; /* 제목과 간격 추가 */
-        width: 70%; /* 박스 너비 */
-        background: #ffffff; /* 박스 배경색 */
-        border: 1px solid #e0e0e0; /* 박스 테두리 */
-        border-radius: 5px; /* 모서리 둥글게 */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        li {
-        font-size: 16px;
-        padding: 15px 10px; /* 내부 여백 */
-        cursor: pointer;
-        border-bottom: 1px solid #e0e0e0; /* 리스트 구분선 */
-
-        &:last-child {
-            border-bottom: none; /* 마지막 리스트 구분선 제거 */
-        }
-
-        &:hover {
-            color:rgb(206, 161, 0); /* 호버 시 색상 변경 */
-            background: #f1f1f1; /* 호버 시 배경색 변경 */
-        }
-        }
-    }
+  width: 20%;
+  background: white;
+  padding: 30px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  height: 92vh;
+  overflow-y: auto;
 `;
 
 export const Main = styled.main`
-    flex: 1;
-    padding: 40px;
-    width: 80%;
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    gap: 20px;
-    margin-bottom: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
+  width: 80%;
+  min-height: 92vh;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+  margin-left: 20%;
+`;
+
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export const Title = styled.h1`
@@ -61,14 +44,13 @@ export const Title = styled.h1`
     text-align: center; /* 제목 중앙 정렬 */
 `;
 
-export const NoticeTitle = styled.div`
-    font-size: 27px;
-    color: #2d2d2d;
-    font-weight: 500;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1.6px solid rgb(190, 190, 190);
+export const NoticeTitle = styled.h2`
+  font-size: 28px;
+  color: #2d2d2d;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #F2B024;
 `;
 
 export const NoticeBox = styled.div`
@@ -95,92 +77,93 @@ export const NoticeBox = styled.div`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 80%; /* Main의 80%로 설정 */
-  margin: 0 auto; /* 가로 중앙 정렬 */
-  text-align: left; /* 텍스트는 왼쪽 정렬 */
+  gap: 16px;
+  width: 100%;
 `;
 
 export const FormLabel = styled.label`
-  font-size: 19px;
-  font-weight: 600;
-  color: #737373;
-  text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
 `;
 
 export const FormInput = styled.input`
-  padding: 10px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   width: 100%;
-  margin-bottom: 30px;
-  background-color: ${({ disabled }) => (disabled ? '#f0f0f0' : 'white')};
-  color: ${({ disabled }) => (disabled ? '#a0a0a0' : 'black')};
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'text')};
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+  }
 `;
 
 export const FormTextarea = styled.textarea`
-  padding: 10px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   width: 100%;
-  height: 400px; /* 기본 높이 설정 */
-  resize: vertical; /* 사용자가 수직 방향으로 크기 조정 가능 */
-  margin-bottom: 30px;
-  overflow-y: auto; /* 텍스트가 많아질 경우 스크롤 표시 */
-  background-color: ${({ disabled }) => (disabled ? '#f0f0f0' : 'white')};
-  color: ${({ disabled }) => (disabled ? '#a0a0a0' : 'black')};
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'text')};
+  height: 300px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonContainer = styled.div`
-  display:flex;
+  display: flex;
   justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
-`
+  gap: 16px;
+  margin-top: 24px;
+`;
 
 export const SubmitButton = styled.button`
-  width: 80px;
-  padding: 7px 20px;
-  align-self: flex-end;
-  background-color:  rgb(58, 152, 239);
+  padding: 10px 20px;
+  background: #F2B024;
   color: white;
-  font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color:  rgb(50, 123, 192);
+    background: #e0a00f;
   }
-  
+
   &:disabled {
-    background-color: #ccc; /* 비활성화된 버튼 배경색 */
-    cursor: not-allowed;   /* 클릭 불가 커서 */
-    opacity: 0.6;         /* 투명도 조절 */
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 `;
 
 export const CancelButton = styled(SubmitButton)`
-  width: 80px;
-  padding: 7px 20px;
-  align-self: flex-end; 
-  background-color: rgb(169, 169, 169);
-  color: white;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
+  background-color: #808080;
 
   &:hover {
-    background-color: rgb(141, 141, 141);
+    background-color: #666666;
   }
-
-  margin-left: 10px;
 `;
 
 export const NotificationOverlay = styled.div`
@@ -189,39 +172,46 @@ export const NotificationOverlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3); /* 배경 어둡게 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 `;
 
-export const NotificationBox = styled.div`
+export const NotificationBox = styled.div<{ $type: 'success' | 'error' }>`
   width: 400px;
-  padding: 20px 30px;
+  padding: 24px;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
 
   p {
-    margin: 0 0 20px 0;
-    font-size: 20px;
+    margin: 0 0 16px 0;
+    font-size: 18px;
     font-weight: 500;
+    color: ${({ $type }) => ($type === 'success' ? '#4caf50' : '#f44336')};
   }
 `;
 
-export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
-  background-color: ${({ $type }) => ($type === 'success' ? '#f44336' : '#4caf50')};
+export const ConfirmButton = styled.button`
+  background-color: #F2B024;
   color: #ffffff;
   border: none;
-  border-radius: 5px;
-  padding: 7px 20px;
-  font-size: 16px;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s;
 
   &:hover {
-    background-color: ${({ $type }) => ($type === 'success' ? '#e53935' : '#45a049')};
+    background-color: #e0a00f;
   }
 `;
+
+export const FormFileInput = styled.input`
+  // Add styles for file input if needed
+`;
+
