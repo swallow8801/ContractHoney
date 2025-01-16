@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
@@ -135,15 +135,16 @@ export const Pagination = styled.div`
 `;
 
 export const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 12px;
-  border: 1px solid ${props => props.$active ? '#333' : '#ddd'};
-  background: ${props => props.$active ? '#333' : 'white'};
-  color: ${props => props.$active ? 'white' : '#666'};
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
 
-  &:hover {
-    background: ${props => props.$active ? '#333' : '#f8f8f8'};
+  &:hover:not(:disabled) {
+    background: #f0f0f0;
   }
 
   &:disabled {
@@ -200,11 +201,13 @@ export const InfoItem = styled.div`
   font-size: 14px;
   line-height: 1.6;
 
-  svg {
-    color: #F2B024;
-    flex-shrink: 0;
-    margin-top: 3px;
-  }
+  ${props => props.icon && css`
+    svg {
+      color: #F2B024;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+  `}
 `;
 
 export const CategoryButtons = styled.div`
@@ -236,5 +239,18 @@ export const LawLink = styled.a`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const PageInfo = styled.span`
+  margin: 0 10px;
+  font-size: 14px;
+  color: #666;
+`;
+
+export const StyledIcon = styled.span`
+  color: #F2B024;
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
 `;
 
