@@ -88,6 +88,51 @@ export const NavigationRow = styled.tr`
     border-bottom: 1px solid #e0e0e0;
 `;
 
+export const ButtonContainer = styled.button`
+    align-self: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px;
+    margin-right: 25px;
+    gap: 10px;
+`
+
+export const EditButton = styled.button`
+    width: 80px;
+    align-self: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px;
+    margin-right: 25px;
+    padding: 7px 10px;
+    background: rgb(91, 155, 215);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+        background: rgb(64, 133, 197);
+    }
+        
+`;
+
+export const DeleteButton = styled.button`
+    width: 80px;
+    align-self: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px;
+    margin-right: 25px;
+    padding: 7px 10px;
+    background: rgb(213, 55, 55);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+        background: rgb(174, 49, 49);
+    }
+        
+`;
+
 export const BackButton = styled.button`
     width: 80px;
     align-self: flex-end; /* 오른쪽 정렬 */
@@ -105,4 +150,47 @@ export const BackButton = styled.button`
         background: rgb(141, 141, 141);
     }
         
+`;
+
+export const NotificationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3); /* 배경 어둡게 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const NotificationBox = styled.div`
+  width: 400px;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+`;
+
+export const NotificationMessage = styled.p`
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+export const ConfirmButton = styled.button`
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: #0056b3;
+  }
 `;

@@ -12,7 +12,9 @@ export async function GET(request: NextRequest) {
         DATE_FORMAT(notice_date, '%Y-%m-%d %H:%i:%s') AS date,
         notice_flag AS flag
       FROM 
-        notice 
+        notice
+      WHERE 
+        notice_flag = 0
       ORDER BY notice_id DESC
     `);
 

@@ -1,68 +1,12 @@
 import styled from 'styled-components';
 
-export const Alert = styled.div<{ type: 'success' | 'error' | '' }>`
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-  font-size: 16px; /* 글씨 크기 약간 키움 */
-  color: ${(props) =>
-    props.type === 'success' ? 'green' : props.type === 'error' ? 'red' : 'black'};
-  background-color: ${(props) =>
-    props.type === 'success' ? '#e0f7e0' : props.type === 'error' ? '#fbe5e5' : 'transparent'};
-  border: ${(props) =>
-    props.type === 'success' ? '1px solid green' : props.type === 'error' ? '1px solid red' : 'none'};
-`;
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
-  background: #ffffff;
-`;
-
-export const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 32px;
-  border-bottom: 1px solid #d9d9d9;
-`;
-
-export const Logo = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-`;
-
-export const Nav = styled.nav`
-  flex: 1;
-`;
-
-export const NavList = styled.ul`
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 24px;
-`;
-
-export const NavItem = styled.li`
-  font-size: 16px;
-  color: #1e1e1e;
-  cursor: pointer;
-`;
-
-export const LoginButton = styled.button`
-  padding: 8px 16px;
-  background: #2c2c2c;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  min-height: 100vh;
+  background: #f5f5f5;
 `;
 
 export const Main = styled.main`
@@ -75,38 +19,46 @@ export const Main = styled.main`
 `;
 
 export const LoginCard = styled.div`
-  width: 640px;
+  width: 100%;
+  max-width: 400px;
   padding: 40px;
-  border: 1px solid rgba(102, 102, 102, 0.5);
-  border-radius: 24px;
-  text-align: center;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 export const Title = styled.h1`
-  font-size: 32px;
-  font-weight: 500;
-  color: #333333;
-  margin-bottom: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+  text-align: center;
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 `;
 
 export const Label = styled.label`
-  font-size: 16px;
-  color: #666666;
-  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 12px;
-  border: 1px solid rgba(102, 102, 102, 0.35);
-  border-radius: 12px;
-  font-size: 16px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
 `;
 
 export const PasswordField = styled.div`
@@ -116,60 +68,76 @@ export const PasswordField = styled.div`
 export const ShowPassword = styled.button`
   position: absolute;
   right: 12px;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(102, 102, 102, 0.8);
+  color: #666;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 `;
 
 export const SubmitButton = styled.button`
-  padding: 16px;
-  background: #111111;
+  width: 100%;
+  padding: 12px;
+  background: #808080; // 회색으로 변경
   color: #ffffff;
   border: none;
-  border-radius: 40px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-`;
+  transition: background-color 0.3s;
 
-export const ForgotPassword = styled.a`
-  display: block;
-  margin: 16px 0;
-  color: #111111;
-  text-decoration: underline;
-  cursor: pointer;
+  &:hover {
+    background: #666666; // 호버 시 더 어두운 회색
+  }
 `;
 
 export const Divider = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 16px 0;
+  margin: 24px 0;
 `;
 
 export const Line = styled.div`
   flex: 1;
   height: 1px;
-  background: rgba(102, 102, 102, 0.25);
-`;
-
-export const SignUpButton = styled.button`
-  padding: 16px;
-  width: 100%;
-  background: none;
-  border: 1px solid #111111;
-  border-radius: 40px;
-  cursor: pointer;
-  color: #111111;
+  background: #ddd;
 `;
 
 export const SignInButton = styled.button`
-  padding: 16px;
   width: 100%;
-  background: none;
-  border: 1px solid #111111;
-  border-radius: 40px;
+  padding: 12px;
+  background: #e0e0e0; // 밝은 회색으로 변경
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  color: #111111;
-  margin-top: 16px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background: #d0d0d0; // 호버 시 약간 어두운 회색
+  }
 `;
+
+export const Alert = styled.div<{ type: 'success' | 'error' | '' }>`
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  color: ${(props) =>
+    props.type === 'success' ? '#155724' : props.type === 'error' ? '#721c24' : '#383d41'};
+  background-color: ${(props) =>
+    props.type === 'success' ? '#d4edda' : props.type === 'error' ? '#f8d7da' : '#e9ecef'};
+  border: 1px solid
+    ${(props) =>
+      props.type === 'success' ? '#c3e6cb' : props.type === 'error' ? '#f5c6cb' : '#d6d8db'};
+`;
+

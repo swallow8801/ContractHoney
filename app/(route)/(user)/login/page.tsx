@@ -17,22 +17,22 @@ import {
   Divider,
   Line,
   SignUpButton,
-  Alert, // 새 스타일 추가
+  Alert,
 } from './login.styled';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState<'success' | 'error' | ''>(''); // 알림 유형 추가
+  const [alertType, setAlertType] = useState<'success' | 'error' | ''>('');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  // 로그인된 상태라면 메인 페이지로 리디렉션
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      router.push('/main');
+      router.push('/');
     }
   }, [router]);
 
@@ -40,22 +40,21 @@ const LoginPage = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_email: email, user_password: password }), // user_email을 email 상태로 보내기
+        body: JSON.stringify({ user_email: email, user_password: password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // 로그인 성공 시 토큰을 localStorage에 저장
         localStorage.setItem('authToken', data.token);
-        // user_admin 값이 1이면 admin을 1로 저장
         if (data.userAdmin === 1) {
           localStorage.setItem('admin', '1');
         }
@@ -63,10 +62,10 @@ const LoginPage = () => {
         setAlertType('success');
         window.dispatchEvent(new Event('authChange'));
         setTimeout(() => {
-          router.push('/main');
-        }, 2000); // 2초 후 메인 페이지로 이동
+          router.push('/');
+        }, 2000);
       } else {
-        setAlertMessage(data.message || '로그인에 실패했습니다.');
+        setAlertMessage(data.error || '로그인에 실패했습니다.');
         setAlertType('error');
       }
     } catch (error) {
@@ -80,7 +79,7 @@ const LoginPage = () => {
       <Main>
         <LoginCard>
           <Title>로그인</Title>
-          <Form>
+          <Form onSubmit={handleLogin}>
             <Label htmlFor="email">이메일</Label>
             <Input
               id="email"
@@ -88,30 +87,32 @@ const LoginPage = () => {
               placeholder="이메일을 입력하세요"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
             <Label htmlFor="password">비밀번호</Label>
             <PasswordField>
               <Input
                 id="password"
-                type={passwordVisible ? "text" : "password"} // 비밀번호 가리기/보이기
+                type={passwordVisible ? "text" : "password"}
                 placeholder="비밀번호를 입력하세요"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
               <ShowPassword type="button" onClick={togglePasswordVisibility}>
-                {passwordVisible ? "숨기기" : "보이기"}
+                {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
               </ShowPassword>
             </PasswordField>
 
-            <SubmitButton type="button" onClick={handleLogin}>
+            <SubmitButton type="submit">
               로그인
             </SubmitButton>
           </Form>
 
           {alertMessage && (
             <Alert type={alertType}>{alertMessage}</Alert>
-          )} {/* 알림 메시지 표시 */}
+          )}
 
           <ForgotPassword href="#">비밀번호를 잊으셨나요?</ForgotPassword>
           <Divider>
@@ -120,7 +121,6 @@ const LoginPage = () => {
             <Line />
           </Divider>
           <SignUpButton onClick={() => router.push('/signup')}>회원가입</SignUpButton>
-
         </LoginCard>
       </Main>
     </Container>
