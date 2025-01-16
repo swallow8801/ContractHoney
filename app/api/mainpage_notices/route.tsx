@@ -1,29 +1,17 @@
 import { NextResponse } from 'next/server';
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { db } from '@/app/lib/database';
 
 export async function GET() {
   try {
-    // 데이터베이스 연결
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    });
-
-    // 최신 공지사항 3개 가져오기
-    const [rows] = await connection.query(`
+    // 최신 공지사항 3개 가져오기 (삭제되지 않은 것만)
+    const [rows] = await db.query(`
       SELECT 
-        bp.post_id, 
-        bp.post_title, 
-        u.user_name AS author, 
-        bp.post_datetime 
-      FROM board_post bp
-      JOIN User u ON bp.user_id = u.user_id
-      ORDER BY bp.post_datetime DESC 
+        notice_id, 
+        notice_title, 
+        notice_date
+      FROM notice
+      WHERE notice_flag != 1
+      ORDER BY notice_date DESC 
       LIMIT 3
     `);
 
@@ -34,3 +22,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch notices' }, { status: 500 });
   }
 }
+
