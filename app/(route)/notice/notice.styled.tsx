@@ -96,7 +96,7 @@ export const BoardTable = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #f8f8f8;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -119,7 +119,7 @@ export const BoardTable = styled.table`
   }
 
   tr:hover td {
-    background: #f8fbff;
+    background: #fcfcfc;
   }
 
   td:nth-child(1), th:nth-child(1) {
@@ -136,9 +136,6 @@ export const BoardTable = styled.table`
     text-align: center;
   }
 
-  tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
 `;
 
 export const Pagination = styled.div`
