@@ -12,7 +12,7 @@ import {
   SearchSelect,
   SearchInput,
   SearchButton,
-  LawTable,
+  Table,
   Pagination,
   PageButton,
   MenuList,
@@ -24,7 +24,7 @@ import {
   CategoryButton,
   LawLink,
   PageInfo,
-  StyledIcon, // Assuming this styled component is defined elsewhere
+  StyledIcon,
 } from './law.styled';
 
 const categories = ['전체', '공정거래법', '약관법', '전자상거래법', '대규모유통업법', '기타'];
@@ -49,14 +49,12 @@ const LawsAndRegulationsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
   useEffect(() => {
-    // URL에서 search 파라미터 가져오기
     const searchQuery = searchParams.get('search');
     if (searchQuery) {
       setSearchTerm(searchQuery);
       setSearchKeyword(searchQuery);
     }
 
-    // API에서 데이터 가져오기
     const fetchLaws = async () => {
       try {
         const response = await fetch('/api/law');
@@ -88,7 +86,6 @@ const LawsAndRegulationsPage = () => {
   const handleSearch = () => {
     setSearchKeyword(searchTerm);
     setCurrentPage(1);
-    // URL에 검색어 추가
     router.push(`/law?search=${searchTerm}`);
   };
 
@@ -179,7 +176,7 @@ const LawsAndRegulationsPage = () => {
           <SearchButton onClick={handleSearch}>검색</SearchButton>
         </SearchSection>
 
-        <LawTable>
+        <Table>
           <thead>
             <tr>
               <th>구분</th>
@@ -204,7 +201,7 @@ const LawsAndRegulationsPage = () => {
               </tr>
             ))}
           </tbody>
-        </LawTable>
+        </Table>
 
         <Pagination>
           <PageButton 
