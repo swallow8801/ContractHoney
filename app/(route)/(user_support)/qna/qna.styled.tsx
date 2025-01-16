@@ -304,3 +304,32 @@ export const ToggleButton = styled.button`
     transform: none;
   }
 `;
+
+export const DeleteButton = styled.button`
+  background: none; /* 배경 없음 */
+  border: none; /* 테두리 없음 */
+  color: red; /* 빨간 글씨 */
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: right; /* 오른쪽 정렬 */
+  padding: 0; /* 여백 없음 */
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: darkred; /* 호버 시 더 어두운 빨간색 */
+    text-decoration: underline; /* 호버 시 밑줄 */
+  }
+
+  &:focus {
+    outline: none;
+    color: darkred; /* 포커스 시 어두운 빨간색 */
+    text-decoration: underline; /* 포커스 시 밑줄 */
+  }
+
+  &:disabled {
+    color: #ccc; /* 비활성화 시 회색 */
+    cursor: not-allowed; /* 비활성화 시 커서 */
+    text-decoration: none;
+  }
+`;
