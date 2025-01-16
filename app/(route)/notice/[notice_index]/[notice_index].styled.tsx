@@ -162,6 +162,9 @@ export const NotificationOverlay = styled.div`
 `;
 
 export const NotificationBox = styled.div`
+  width: 350px;
+  height: 150px;
+  padding: 20px 30px;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -169,6 +172,7 @@ export const NotificationBox = styled.div`
 `;
 
 export const NotificationMessage = styled.p`
+  margin-top: 12.5px;
   margin-bottom: 20px;
   font-size: 16px;
 `;
@@ -198,5 +202,3 @@ export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm'
         : '#e0e0e0'};
   }
 `;
-
-

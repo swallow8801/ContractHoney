@@ -77,33 +77,31 @@ const NoticeDetailPage = () => {
     fetchNotices();
   }, [params.notice_index]);
 
-  const handleDelete = () => {
+  const handleDelete = () => { 
     setNotification({ type: 'confirm-delete', message: '삭제하시겠습니까?' });
   };
-
+  
   const handleEdit = () => {
-    setShowNotification(true); // 수정 버튼 클릭 핸들러 수정
+    setNotification({ type: 'confirm', message: '수정하시겠습니까?' });
   };
-
-  const handleConfirmEdit = () => { // 확인 버튼 클릭 핸들러 추가
-    setShowNotification(false);
-    if (currentNotice) {
-      router.push(`/notice/editNoti/${currentNotice.id}`);
-    }
-  };
-
+  
   const handleConfirm = async () => {
-    if (notification?.type === 'confirm-delete') {
+    if (notification?.type === 'success' || notification?.type === 'error') {
+      setNotification(null);
+    } else if (notification?.type === 'confirm') {
+      if (currentNotice) {
+        router.push(`/notice/editNoti/${currentNotice.id}`);
+      }
+    } else if (notification?.type === 'confirm-delete') {
       try {
         const response = await fetch(`/api/notice/delete?id=${currentNotice?.id}`, {
           method: 'DELETE',
         });
-
         if (response.ok) {
-          setNotification({ type: 'norm', message: '공지사항이 성공적으로 삭제되었습니다.' });
+          setNotification({ type: 'norm', message: '공지사항이 성공적으로 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
           setTimeout(() => {
             router.push('/notice');
-          }, 1000);
+          }, 1200);
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -116,53 +114,51 @@ const NoticeDetailPage = () => {
       setNotification(null);
     }
   };
-
+  
   const handleCancel = () => {
     setNotification(null);
   };
-
+  
   if (!currentNotice) {
     return <p>Loading...</p>;
   }
-
+  
   return (
     <Container>
       {notification && (
-        <NotificationOverlay>
-          <NotificationBox>
-            <NotificationMessage>{notification.message}</NotificationMessage>
-            {notification.type === 'confirm-delete' ? (
-              <>
-                {/* 삭제 확인 버튼은 error 색상 */}
-                <ConfirmButton $type="error" onClick={handleConfirm}>
-                  확인
-                </ConfirmButton>
-                {/* 취소 버튼은 norm 색상 */}
-                <ConfirmButton $type="norm" onClick={handleCancel}>
-                  취소
-                </ConfirmButton>
-              </>
-            ) : (
-              <ConfirmButton $type={notification.type as 'success' | 'error'} onClick={handleConfirm}>
-                확인
-              </ConfirmButton>
-            )}
-          </NotificationBox>
-        </NotificationOverlay>
-      )}
-      {showNotification && (
-        <NotificationOverlay>
-          <NotificationBox>
-            <NotificationMessage>수정하시겠습니까?</NotificationMessage>
-            <ConfirmButton $type="success" onClick={handleConfirmEdit}>
+      <NotificationOverlay>
+        <NotificationBox>
+          <NotificationMessage>{notification.message}</NotificationMessage>
+
+          {notification.type === 'norm' ? ( 
+            // 삭제 완료 상태: 확인 버튼만 표시
+            <ConfirmButton
+              $type="norm"
+              onClick={handleCancel}
+            >
               확인
             </ConfirmButton>
-            <ConfirmButton $type="norm" onClick={() => setShowNotification(false)}>
-              취소
-            </ConfirmButton>
-          </NotificationBox>
-        </NotificationOverlay>
-      )}
+          ) : (
+            <>
+              {/* 요청 상태: 확인 버튼 */}
+              <ConfirmButton
+                $type={notification.type === 'confirm-delete' ? 'error' : 'success'}
+                onClick={handleConfirm}
+              >
+                확인
+              </ConfirmButton>
+              {/* 요청 상태: 취소 버튼 */}
+              <ConfirmButton
+                $type="norm"
+                onClick={handleCancel}
+              >
+                취소
+              </ConfirmButton>
+            </>
+          )}
+        </NotificationBox>
+      </NotificationOverlay>
+    )}
       <Sidebar>
         <SidebarTitle>공지사항</SidebarTitle>
       </Sidebar>

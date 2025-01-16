@@ -19,6 +19,7 @@ import {
   ButtonContainer,
   CancelButton,
   SidebarTitle,
+  NotificationMessage,
 } from './writeNoti.styled';
 
 const WriteNoti = () => {
@@ -58,7 +59,7 @@ const WriteNoti = () => {
       });
 
       if (response.ok) {
-        setNotification({ type: 'success', message: '공지사항이 성공적으로 등록되었습니다.' });
+        setNotification({ type: 'success', message: '공지사항이 등록되었습니다.' });
       } else {
         const result = await response.json();
         setNotification({ type: 'error', message: result.error || '오류가 발생했습니다.' });
@@ -90,9 +91,9 @@ const WriteNoti = () => {
     <Container>
       {notification && (
         <NotificationOverlay>
-          <NotificationBox $type={notification.type}>
-            <p>{notification.message}</p>
-            <ConfirmButton onClick={handleConfirm}>확인</ConfirmButton>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            <ConfirmButton $type='norm' onClick={handleConfirm}>확인</ConfirmButton>
           </NotificationBox>
         </NotificationOverlay>
       )}

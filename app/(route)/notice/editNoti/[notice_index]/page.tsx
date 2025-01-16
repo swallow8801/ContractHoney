@@ -108,7 +108,7 @@ const EditNoti = () => {
         <NotificationOverlay>
           <NotificationBox>
             <NotificationMessage>{notification.message}</NotificationMessage>
-            <ConfirmButton $type={notification.type} onClick={handleNotificationConfirm}>
+            <ConfirmButton $type='norm' onClick={handleNotificationConfirm}>
               확인
             </ConfirmButton>
           </NotificationBox>

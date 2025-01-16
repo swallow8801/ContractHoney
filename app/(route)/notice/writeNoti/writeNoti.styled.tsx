@@ -179,39 +179,43 @@ export const NotificationOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const NotificationBox = styled.div<{ $type: 'success' | 'error' }>`
-  width: 400px;
-  padding: 24px;
-  background-color: #ffffff;
+export const NotificationBox = styled.div`
+  width: 350px;
+  height: 150px;
+  background-color: white;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
-
-  p {
-    margin: 0 0 16px 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: ${({ $type }) => ($type === 'success' ? '#4caf50' : '#f44336')};
-  }
 `;
 
-export const ConfirmButton = styled.button`
-  background-color: #F2B024;
-  color: #ffffff;
+export const NotificationMessage = styled.p`
+  margin-top: 12.5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+`;
+
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' }>`
+  padding: 8px 16px;
+  margin: 0 5px;
   border: none;
   border-radius: 4px;
-  padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  background-color: ${props =>
+    props.$type === 'success'
+      ? '#4caf50'
+      : props.$type === 'error'
+      ? '#ff4444'
+      : '#f0f0f0'};
+  color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
 
   &:hover {
-    background-color: #e0a00f;
+    background-color: ${props =>
+      props.$type === 'success'
+        ? '#45a049'
+        : props.$type === 'error'
+        ? '#ff3333'
+        : '#e0e0e0'};
   }
 `;
-
-export const FormFileInput = styled.input`
-  // Add styles for file input if needed
-`;
-
