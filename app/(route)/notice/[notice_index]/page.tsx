@@ -27,6 +27,7 @@ interface Notice {
   title: string;
   date: string;
   content: string;
+  flag: number;
 }
 
 const NoticeDetailPage = () => {
@@ -37,6 +38,15 @@ const NoticeDetailPage = () => {
   const [prevNotice, setPrevNotice] = useState<Notice | null>(null);
   const [nextNotice, setNextNotice] = useState<Notice | null>(null);
   const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false); // 관리자인지 확인하는 상태 추가
+  
+  // 사용자 권한 확인 (localStorage에서 가져오기)
+  useEffect(() => {
+    const userAdmin = localStorage.getItem('admin');
+    if (userAdmin === '1') {
+      setIsAdmin(true); // 관리자인 경우
+    }
+  }, []);
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -44,24 +54,33 @@ const NoticeDetailPage = () => {
         const response = await fetch('/api/notice');
         const data = await response.json();
         setNotices(data.notices);
-
+  
         const currentId = parseInt(params.notice_index, 10);
-
-        // 현재 공지사항, 이전 공지사항, 다음 공지사항 찾기
+  
+        // 현재 공지사항 찾기
         const current = data.notices.find((notice: Notice) => notice.id === currentId);
-        const prev = data.notices.find((notice: Notice) => notice.id === currentId - 1);
-        const next = data.notices.find((notice: Notice) => notice.id === currentId + 1);
-
+  
+        // flag가 1이 아닌 이전 공지사항 찾기
+        const prev = data.notices
+          .filter((notice: Notice) => notice.flag !== 1 && notice.id < currentId)
+          .sort((a: Notice, b: Notice) => b.id - a.id)[0] || null; // 가장 큰 id 선택
+  
+        // flag가 1이 아닌 다음 공지사항 찾기
+        const next = data.notices
+          .filter((notice: Notice) => notice.flag !== 1 && notice.id > currentId)
+          .sort((a: Notice, b: Notice) => a.id - b.id)[0] || null; // 가장 작은 id 선택
+  
         setCurrentNotice(current || null);
-        setPrevNotice(prev || null);
-        setNextNotice(next || null);
+        setPrevNotice(prev);
+        setNextNotice(next);
       } catch (error) {
         console.error('Error fetching notices:', error);
       }
     };
-
+  
     fetchNotices();
   }, [params.notice_index]);
+  
 
   const handleDelete = async () => {
     if (!currentNotice) return;
@@ -168,8 +187,12 @@ const NoticeDetailPage = () => {
           </tbody>
         </NavigationTable>
         <ButtonContainer>
+        {isAdmin && (
+          <>
           <EditButton onClick={handleEdit}>수정</EditButton>
           <DeleteButton onClick={handleDelete}>삭제</DeleteButton>
+          </>
+        )}
           <BackButton onClick={() => router.push('/notice')}>목록</BackButton>
         </ButtonContainer>
       </Main>

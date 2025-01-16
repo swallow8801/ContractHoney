@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Container,
@@ -27,6 +27,15 @@ const WriteNoti = () => {
   const [content, setContent] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false); // 관리자인지 확인하는 상태 추가
+  
+  // 사용자 권한 확인 (localStorage에서 가져오기)
+  useEffect(() => {
+    const userAdmin = localStorage.getItem('admin');
+    if (userAdmin === '1') {
+      setIsAdmin(true); // 관리자인 경우
+    }
+  }, []);
 
   // 파일 선택 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +100,7 @@ const WriteNoti = () => {
         <Title>공지사항</Title>
       </Sidebar>
       <Main>
-        <NoticeTitle>공지사항 작성하기</NoticeTitle>
+        <NoticeTitle>공지사항 작성</NoticeTitle>
         <Form onSubmit={handleSubmit}>
           <FormLabel htmlFor="notice_title">제목</FormLabel>
           <FormInput
@@ -120,7 +129,7 @@ const WriteNoti = () => {
             accept=".pdf,.doc,.docx,.hwp,.txt"
           />
 
-          <SubmitButton type="submit">등록하기</SubmitButton>
+          <SubmitButton type="submit" disabled={!isAdmin}>등록하기</SubmitButton>
         </Form>
       </Main>
     </Container>
