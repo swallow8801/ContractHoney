@@ -11,7 +11,7 @@ export async function GET() {
         notice_date
       FROM notice
       WHERE notice_flag != 1
-      ORDER BY notice_date DESC 
+      ORDER BY notice_id DESC 
       LIMIT 3
     `);
 
