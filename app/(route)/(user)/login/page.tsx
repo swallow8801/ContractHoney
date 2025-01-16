@@ -19,6 +19,7 @@ import {
   SignUpButton,
   Alert,
 } from './login.styled';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -100,7 +101,7 @@ const LoginPage = () => {
                 required
               />
               <ShowPassword type="button" onClick={togglePasswordVisibility}>
-                {passwordVisible ? "숨기기" : "보이기"}
+                {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
               </ShowPassword>
             </PasswordField>
 
