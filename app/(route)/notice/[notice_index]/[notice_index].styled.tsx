@@ -101,7 +101,7 @@ export const EditButton = styled.button`
     margin-top: 20px;
     margin-right: 25px;
     padding: 7px 10px;
-    background: rgb(91, 155, 215);
+    background: rgb(58, 152, 239);
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -109,7 +109,7 @@ export const EditButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        background: rgb(64, 133, 197);
+        background: rgb(50, 123, 192);
     }
         
 `;
@@ -180,8 +180,8 @@ export const NotificationMessage = styled.p`
   margin-bottom: 20px;
 `;
 
-export const ConfirmButton = styled.button`
-  background: #007bff;
+export const ConfirmButton = styled.button<{ $isDelete?: boolean }>`
+  background: ${({ $isDelete }) => ($isDelete ? 'rgb(213, 55, 55)' : 'rgb(58, 152, 239)')};
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -191,6 +191,7 @@ export const ConfirmButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: #0056b3;
+    background: ${({ $isDelete }) => ($isDelete ? 'rgb(174, 49, 49)' : 'rgb(50, 123, 192)')};
   }
 `;
+
