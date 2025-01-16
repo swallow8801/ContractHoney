@@ -56,10 +56,9 @@ export const SearchSection = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
-  background: #f8f8f8;
-  padding: 20px;
+  background: #ffffff;
+  padding: 0px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export const SearchSelect = styled.select`
@@ -122,7 +121,7 @@ export const ArchiveTable = styled.table`
   }
 
   tr:hover td {
-    background: #f8fbff;
+    background: #fcfcfc;
   }
 
   td:nth-child(2) {
