@@ -17,6 +17,8 @@ import {
   NotificationOverlay,
   NotificationBox,
   ConfirmButton,
+  ButtonContainer,
+  CancelButton,
 } from './writeNoti.styled';
 
 const WriteNoti = () => {
@@ -36,12 +38,6 @@ const WriteNoti = () => {
       setIsAdmin(true); // 관리자인 경우
     }
   }, []);
-
-  // 파일 선택 핸들러
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    setFile(selectedFile || null);
-  };
 
   // 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,6 +81,11 @@ const WriteNoti = () => {
     setNotification(null); // 알림 박스 숨기기
   };
 
+  // 취소 버튼 핸들러
+  const handleCancel = () => {
+    router.push(`/notice`); // 취소하면 notice/
+  };
+
   return (
     <Container>
       {/* 알림 박스와 배경 어둡게 */}
@@ -109,6 +110,7 @@ const WriteNoti = () => {
             placeholder="제목을 입력하세요."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            disabled={!isAdmin}
             required
           />
 
@@ -118,18 +120,18 @@ const WriteNoti = () => {
             placeholder="내용을 입력하세요."
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            disabled={!isAdmin}
             required
           />
 
-          <FormLabel htmlFor="notice_file">파일 첨부</FormLabel>
-          <FormFileInput
-            id="file"
-            type="file"
-            onChange={handleFileChange}
-            accept=".pdf,.doc,.docx,.hwp,.txt"
-          />
-
-          <SubmitButton type="submit" disabled={!isAdmin}>등록하기</SubmitButton>
+          <ButtonContainer>
+            <SubmitButton type="submit" disabled={!isAdmin}>
+              작성
+            </SubmitButton>
+            <CancelButton type="button" onClick={handleCancel}>
+              취소
+            </CancelButton>
+          </ButtonContainer>
         </Form>
       </Main>
     </Container>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -26,13 +26,15 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState<'success' | 'error' | ''>('');
+  const [alertType, setAlertType] = useState<'success' | 'error' | ''>(''); 
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      router.push('/');
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        router.push('/');
+      }
     }
   }, [router]);
 
@@ -54,16 +56,22 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('authToken', data.token);
-        if (data.userAdmin === 1) {
-          localStorage.setItem('admin', '1');
+        if (data.error) {
+          // 이메일 인증이 안 된 경우 처리
+          setAlertMessage('이메일 인증을 완료해주세요.');
+          setAlertType('error');
+        } else {
+          localStorage.setItem('authToken', data.token);
+          if (data.userAdmin === 1) {
+            localStorage.setItem('admin', '1');
+          }
+          setAlertMessage('로그인에 성공했습니다.');
+          setAlertType('success');
+          window.dispatchEvent(new Event('authChange'));
+          setTimeout(() => {
+            router.push('/');
+          }, 2000);
         }
-        setAlertMessage('로그인에 성공했습니다.');
-        setAlertType('success');
-        window.dispatchEvent(new Event('authChange'));
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
       } else {
         setAlertMessage(data.error || '로그인에 실패했습니다.');
         setAlertType('error');
@@ -128,4 +136,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

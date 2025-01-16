@@ -32,6 +32,11 @@ export async function POST(request: NextRequest) {
     const user = rows[0]; // 사용자 데이터
     console.log('사용자 데이터:', user);
 
+    // 이메일 인증 여부 확인
+    if (user.is_verified === 0) {
+      return NextResponse.json({ error: '이메일 인증을 완료해주세요.' }, { status: 401 });
+    }
+
     // 비밀번호 확인
     const stored_password: string = user.user_password; // 암호화된 비밀번호
     const passwordMatch = await bcrypt.compare(user_password, stored_password);
@@ -55,4 +60,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
-

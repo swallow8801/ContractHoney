@@ -199,7 +199,7 @@ export const NotificationOverlay = styled.div`
 export const NotificationBox = styled.div`
   width: 400px;
   padding: 20px 30px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -213,10 +213,10 @@ export const NotificationBox = styled.div`
 
 export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
   background-color: ${({ $type }) => ($type === 'success' ? '#f44336' : '#4caf50')};
-  color: #ffffff;
+  color: #fff;
   border: none;
   border-radius: 5px;
-  padding: 7px 20px;
+  padding: 10px 15px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;

@@ -9,7 +9,6 @@ import {
   Main,
   Title,
   SearchSection,
-  SearchSelect,
   SearchInput,
   SearchButton,
   ArchiveTable,
@@ -23,6 +22,9 @@ import {
   LogoImage,
   ExplanationText,
   PhoneNumber,
+  PageInfo,
+  SidebarTitle,
+  ExplanationTextContainer,
 } from './archive.styled';
 
 interface Archive {
@@ -42,20 +44,17 @@ const StandardContractsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [contracts, setContracts] = useState<Archive[]>([]);
 
-  // 페이지 로드 시 계약서 목록을 API에서 가져옵니다.
   useEffect(() => {
-    // URL에서 search 파라미터 가져오기
     const searchQuery = searchParams.get('search');
     if (searchQuery) {
       setSearchTerm(searchQuery);
     }
 
-    // API에서 데이터 가져오기
     const fetchContracts = async () => {
       try {
         const response = await fetch('/api/archive');
         const data = await response.json();
-        setContracts(data);  // 계약서 목록을 상태에 저장
+        setContracts(data);
       } catch (error) {
         console.error('Failed to fetch contracts:', error);
       }
@@ -73,23 +72,21 @@ const StandardContractsPage = () => {
     return false;
   });
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const pageCount = Math.ceil(filteredContracts.length / itemsPerPage);
   const currentItems = filteredContracts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // 검색 시 URL에 검색어 추가
   const handleSearch = () => {
     setCurrentPage(1);
     router.push(`/archive?search=${searchTerm}`);
   };
 
-  // 날짜 형식 변경 함수
   const formatDate = (date: string) => {
     const d = new Date(date);
-    return d.toLocaleDateString('ko-KR');  // '2024-11-27' 형식으로 변환
+    return d.toLocaleDateString('ko-KR');
   };
 
   const handleDownload = (e: React.MouseEvent, id: number) => {
@@ -100,7 +97,7 @@ const StandardContractsPage = () => {
   return (
     <Container>
       <Sidebar>
-        <Title>자료실</Title>
+        <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
           <MenuItem
             $active={pathname === '/archive'}
@@ -123,22 +120,18 @@ const StandardContractsPage = () => {
             src="/images/공정거래위원회.png"
             alt="공정거래위원회"
           />
-          <ExplanationText>
-            표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을 최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는 것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다. 이와 관련하여 문의사항이 있으시면{' '}
-            <a href="https://www.ftc.go.kr" target="_blank" rel="noopener noreferrer">
-              유통거래정책과
-            </a>{' '}
-            로 문의하시기 바랍니다.
-            <PhoneNumber>(044)200-4966</PhoneNumber>
-          </ExplanationText>
+          <ExplanationTextContainer>
+            <ExplanationText>
+              표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을 최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는 것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다. 이와 관련하여 문의사항이 있으시면{' '}
+              <a href="https://www.ftc.go.kr" target="_blank" rel="noopener noreferrer">
+                유통거래정책과
+              </a>{' '}
+              로 문의하시기 바랍니다.
+              <PhoneNumber>(044)200-4966</PhoneNumber>
+            </ExplanationText>
+          </ExplanationTextContainer>
         </ExplanationSection>
         <SearchSection>
-          <SearchSelect
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="제목">제목</option>
-          </SearchSelect>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
@@ -164,16 +157,10 @@ const StandardContractsPage = () => {
                 <td>{contract.id}</td>
                 <td>{contract.ar_title}</td>
                 <td>{contract.ar_part}</td>
-                <td>{formatDate(contract.ar_date)}</td> {/* 개정일 포맷 적용 */}
-                <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <td>{formatDate(contract.ar_date)}</td>
+                <td>
                   <AttachmentIcon
                     onClick={(e) => handleDownload(e, contract.id)}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: '100%',
-                    }}
                   >
                     <Download size={16} />
                   </AttachmentIcon>
@@ -184,32 +171,32 @@ const StandardContractsPage = () => {
         </ArchiveTable>
 
         <Pagination>
-          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
-            {'<<'}
-          </PageButton>
-          <PageButton
+          <PageButton 
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             {'<'}
           </PageButton>
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
-            <PageButton
-              key={page}
-              $active={currentPage === page}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </PageButton>
-          ))}
+          {[...Array(5)].map((_, i) => {
+            const pageNumber = currentPage - 2 + i;
+            if (pageNumber > 0 && pageNumber <= pageCount) {
+              return (
+                <PageButton
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  $active={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PageButton>
+              );
+            }
+            return null;
+          })}
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
           >
             {'>'}
-          </PageButton>
-          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>
-            {'>>'}
           </PageButton>
         </Pagination>
       </Main>
@@ -218,3 +205,4 @@ const StandardContractsPage = () => {
 };
 
 export default StandardContractsPage;
+

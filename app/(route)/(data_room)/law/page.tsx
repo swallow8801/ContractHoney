@@ -2,17 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Check } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import {
   Container,
   Sidebar,
   Main,
   Title,
   SearchSection,
-  SearchSelect,
   SearchInput,
   SearchButton,
-  LawTable,
+  Table,
   Pagination,
   PageButton,
   MenuList,
@@ -23,6 +22,9 @@ import {
   CategoryButtons,
   CategoryButton,
   LawLink,
+  PageInfo,
+  StyledIcon,
+  SidebarTitle,
 } from './law.styled';
 
 const categories = ['전체', '공정거래법', '약관법', '전자상거래법', '대규모유통업법', '기타'];
@@ -47,14 +49,12 @@ const LawsAndRegulationsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
   useEffect(() => {
-    // URL에서 search 파라미터 가져오기
     const searchQuery = searchParams.get('search');
     if (searchQuery) {
       setSearchTerm(searchQuery);
       setSearchKeyword(searchQuery);
     }
 
-    // API에서 데이터 가져오기
     const fetchLaws = async () => {
       try {
         const response = await fetch('/api/law');
@@ -76,7 +76,7 @@ const LawsAndRegulationsPage = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const pageCount = Math.ceil(filteredLaws.length / itemsPerPage);
   const currentItems = filteredLaws.slice(
     (currentPage - 1) * itemsPerPage,
@@ -86,14 +86,13 @@ const LawsAndRegulationsPage = () => {
   const handleSearch = () => {
     setSearchKeyword(searchTerm);
     setCurrentPage(1);
-    // URL에 검색어 추가
     router.push(`/law?search=${searchTerm}`);
   };
 
   return (
     <Container>
       <Sidebar>
-        <Title>자료실</Title>
+        <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
           <MenuItem
             $active={pathname === '/archive'}
@@ -114,34 +113,34 @@ const LawsAndRegulationsPage = () => {
 
         <InfoSection>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>http://www.law.go.kr에서도 위원회소관법령을 확인할 수 있습니다.</span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>
               고시 · 지침 등의 행정규칙은 제 · 개정 사항이 반영되는 데 일주일 정도 소요되는 경우가 있으므로
               최근 제 · 개정 사항은 '공정위뉴스 {'>'} 행정규칙 제 · 개정 공지'에서도 확인해 주시기 바랍니다.
             </span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>본 페이지의 다양한 법령정보는 국민생활의 편의를 위하여 관보 등에서 공포된 내용을 수집하여 제공됩니다.</span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>본 페이지에서 제공되는 법령정보는 법적 효력이 없으므로, 참고자료로 활용하시기 바랍니다.</span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>헌법, 법률, 조약, 대통령령, 행정규칙, 자치법규, 판례 등 대한민국 법령정보에 대한 효력은 관보 등에 있습니다.</span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>외국어번역 법령정보는 공식적 효력이 있는 번역물이 아니므로 참고로만 사용하시기 바랍니다.</span>
           </InfoItem>
           <InfoItem>
-            <Check size={16} />
+            <StyledIcon><CheckCircle size={16} /></StyledIcon>
             <span>국문 법령과 외국어번역 법령정보 간에 의미상 차이가 있는 경우에는 국문 법령정보가 우선권을 가집니다.</span>
           </InfoItem>
         </InfoSection>
@@ -162,12 +161,6 @@ const LawsAndRegulationsPage = () => {
         </CategoryButtons>
 
         <SearchSection>
-          <SearchSelect
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="제목">제목</option>
-          </SearchSelect>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
@@ -177,7 +170,7 @@ const LawsAndRegulationsPage = () => {
           <SearchButton onClick={handleSearch}>검색</SearchButton>
         </SearchSection>
 
-        <LawTable>
+        <Table>
           <thead>
             <tr>
               <th>구분</th>
@@ -202,35 +195,35 @@ const LawsAndRegulationsPage = () => {
               </tr>
             ))}
           </tbody>
-        </LawTable>
+        </Table>
 
         <Pagination>
-          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
-            {'<<'}
-          </PageButton>
-          <PageButton
+          <PageButton 
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             {'<'}
           </PageButton>
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
-            <PageButton
-              key={page}
-              $active={currentPage === page}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </PageButton>
-          ))}
+          {[...Array(5)].map((_, i) => {
+            const pageNumber = currentPage - 2 + i;
+            if (pageNumber > 0 && pageNumber <= pageCount) {
+              return (
+                <PageButton
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  $active={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PageButton>
+              );
+            }
+            return null;
+          })}
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
           >
             {'>'}
-          </PageButton>
-          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>
-            {'>>'}
           </PageButton>
         </Pagination>
       </Main>
@@ -239,3 +232,4 @@ const LawsAndRegulationsPage = () => {
 };
 
 export default LawsAndRegulationsPage;
+
