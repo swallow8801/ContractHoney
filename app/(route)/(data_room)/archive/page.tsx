@@ -9,7 +9,6 @@ import {
   Main,
   Title,
   SearchSection,
-  SearchSelect,
   SearchInput,
   SearchButton,
   ArchiveTable,
@@ -24,6 +23,8 @@ import {
   ExplanationText,
   PhoneNumber,
   PageInfo,
+  SidebarTitle,
+  ExplanationTextContainer,
 } from './archive.styled';
 
 interface Archive {
@@ -71,7 +72,7 @@ const StandardContractsPage = () => {
     return false;
   });
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const pageCount = Math.ceil(filteredContracts.length / itemsPerPage);
   const currentItems = filteredContracts.slice(
     (currentPage - 1) * itemsPerPage,
@@ -96,7 +97,7 @@ const StandardContractsPage = () => {
   return (
     <Container>
       <Sidebar>
-        <Title>자료실</Title>
+        <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
           <MenuItem
             $active={pathname === '/archive'}
@@ -119,22 +120,18 @@ const StandardContractsPage = () => {
             src="/images/공정거래위원회.png"
             alt="공정거래위원회"
           />
-          <ExplanationText>
-            표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을 최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는 것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다. 이와 관련하여 문의사항이 있으시면{' '}
-            <a href="https://www.ftc.go.kr" target="_blank" rel="noopener noreferrer">
-              유통거래정책과
-            </a>{' '}
-            로 문의하시기 바랍니다.
-            <PhoneNumber>(044)200-4966</PhoneNumber>
-          </ExplanationText>
+          <ExplanationTextContainer>
+            <ExplanationText>
+              표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을 최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는 것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다. 이와 관련하여 문의사항이 있으시면{' '}
+              <a href="https://www.ftc.go.kr" target="_blank" rel="noopener noreferrer">
+                유통거래정책과
+              </a>{' '}
+              로 문의하시기 바랍니다.
+              <PhoneNumber>(044)200-4966</PhoneNumber>
+            </ExplanationText>
+          </ExplanationTextContainer>
         </ExplanationSection>
         <SearchSection>
-          <SearchSelect
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="제목">제목</option>
-          </SearchSelect>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
@@ -177,17 +174,29 @@ const StandardContractsPage = () => {
           <PageButton 
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            aria-label="Previous page"
           >
-            이전
+            {'<'}
           </PageButton>
-          <PageInfo>{currentPage} / {pageCount}</PageInfo>
+          {[...Array(5)].map((_, i) => {
+            const pageNumber = currentPage - 2 + i;
+            if (pageNumber > 0 && pageNumber <= pageCount) {
+              return (
+                <PageButton
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  $active={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PageButton>
+              );
+            }
+            return null;
+          })}
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
-            aria-label="Next page"
           >
-            다음
+            {'>'}
           </PageButton>
         </Pagination>
       </Main>

@@ -13,17 +13,26 @@ export const Sidebar = styled.aside`
   padding: 30px 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 0;
+  top: 6vh;
   left: 0;
-  height: 100vh;
+  height: calc(100vh - 6vh);
   overflow-y: auto;
+`;
+
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export const Main = styled.main`
   flex: 1;
-  padding: 30px 30px 30px 270px; // 왼쪽 패딩을 270px로 증가
+  padding: 20px 30px 30px 270px;
   display: flex;
   flex-direction: column;
+  margin-top: 3vh;
 `;
 
 export const Title = styled.h1`
@@ -90,16 +99,26 @@ export const Table = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #f8f8f8;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
 
   th, td {
     padding: 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #eee;
     font-size: 14px;
+    &:first-child {
+      width: 15%;
+    }
+    &:nth-child(2) {
+      width: 55%;
+    }
+    &:last-child {
+      width: 30%;
+    }
   }
 
   th {
@@ -115,6 +134,7 @@ export const Table = styled.table`
   tr:hover td {
     background: #f8fbff;
   }
+
 `;
 
 export const Pagination = styled.div`
@@ -122,11 +142,11 @@ export const Pagination = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-  gap: 10px;
+  gap: 5px;
 `;
 
 export const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 16px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
   background: ${props => props.$active ? '#F2B024' : 'white'};
   color: ${props => props.$active ? 'white' : '#666'};
@@ -169,27 +189,29 @@ export const MenuItem = styled.li<{ $active?: boolean }>`
 export const InfoSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-  background: #f8f8f8;
+  gap: 10px;
+  padding: 15px;
+  background: #ffffff;
   border-radius: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
 `;
 
 export const InfoItem = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: flex-start;
   color: #555;
-  font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.4;
 
   ${props => props.icon && css`
     svg {
       color: #F2B024;
       flex-shrink: 0;
-      margin-top: 3px;
+      margin-top: 2px;
+      width: 14px;
+      height: 14px;
     }
   `}
 `;

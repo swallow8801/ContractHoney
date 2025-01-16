@@ -9,7 +9,6 @@ import {
   Main,
   Title,
   SearchSection,
-  SearchSelect,
   SearchInput,
   SearchButton,
   Table,
@@ -25,6 +24,7 @@ import {
   LawLink,
   PageInfo,
   StyledIcon,
+  SidebarTitle,
 } from './law.styled';
 
 const categories = ['전체', '공정거래법', '약관법', '전자상거래법', '대규모유통업법', '기타'];
@@ -76,7 +76,7 @@ const LawsAndRegulationsPage = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const pageCount = Math.ceil(filteredLaws.length / itemsPerPage);
   const currentItems = filteredLaws.slice(
     (currentPage - 1) * itemsPerPage,
@@ -92,7 +92,7 @@ const LawsAndRegulationsPage = () => {
   return (
     <Container>
       <Sidebar>
-        <Title>자료실</Title>
+        <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
           <MenuItem
             $active={pathname === '/archive'}
@@ -161,12 +161,6 @@ const LawsAndRegulationsPage = () => {
         </CategoryButtons>
 
         <SearchSection>
-          <SearchSelect
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="제목">제목</option>
-          </SearchSelect>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
@@ -207,17 +201,29 @@ const LawsAndRegulationsPage = () => {
           <PageButton 
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            aria-label="Previous page"
           >
-            이전
+            {'<'}
           </PageButton>
-          <PageInfo>{currentPage} / {pageCount}</PageInfo>
+          {[...Array(5)].map((_, i) => {
+            const pageNumber = currentPage - 2 + i;
+            if (pageNumber > 0 && pageNumber <= pageCount) {
+              return (
+                <PageButton
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  $active={currentPage === pageNumber}
+                >
+                  {pageNumber}
+                </PageButton>
+              );
+            }
+            return null;
+          })}
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
-            aria-label="Next page"
           >
-            다음
+            {'>'}
           </PageButton>
         </Pagination>
       </Main>

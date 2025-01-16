@@ -13,17 +13,26 @@ export const Sidebar = styled.aside`
   padding: 30px 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 0;
+  top: 6vh;
   left: 0;
-  height: 100vh;
+  height: calc(100vh - 6vh);
   overflow-y: auto;
+`;
+
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export const Main = styled.main`
   flex: 1;
-  padding: 30px 30px 30px 270px;
+  padding: 20px 30px 30px 270px; // 상단 패딩을 30px에서 20px로 줄임
   display: flex;
   flex-direction: column;
+  margin-top: 3vh;
 `;
 
 export const Title = styled.h1`
@@ -90,7 +99,7 @@ export const ArchiveTable = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #f8f8f8;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -125,16 +134,16 @@ export const ArchiveTable = styled.table`
   td:nth-child(5), th:nth-child(5) {
     text-align: center;
   }
+  td:last-child {
+    text-align: center;
+  }
 `;
 
-export const AttachmentIcon = styled.span`
-  cursor: pointer;
-  color: #F2B024;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #e0a00f;
-  }
+export const AttachmentIcon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 `;
 
 export const Pagination = styled.div`
@@ -142,11 +151,11 @@ export const Pagination = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-  gap: 10px;
+  gap: 5px;
 `;
 
 export const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 16px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
   background: ${props => props.$active ? '#F2B024' : 'white'};
   color: ${props => props.$active ? 'white' : '#666'};
@@ -188,10 +197,9 @@ export const MenuItem = styled.li<{ $active?: boolean }>`
 
 export const ExplanationSection = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 20px;
   padding: 20px;
-  background: #f8f8f8;
+  background: #ffffff;
   border-radius: 8px;
   margin: 0 0 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -201,8 +209,10 @@ export const LogoImage = styled.img`
   width: 200px;
   height: auto;
   object-fit: contain;
-  align-self: center;
-  margin-bottom: 10px;
+`;
+
+export const ExplanationTextContainer = styled.div`
+  flex: 1;
 `;
 
 export const ExplanationText = styled.div`
@@ -229,5 +239,20 @@ export const PageInfo = styled.span`
   margin: 0 10px;
   font-size: 14px;
   color: #666;
+`;
+
+export const DownloadButton = styled.button`
+  padding: 5px 10px;
+  background: #F2B024;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #e0a00f;
+  }
 `;
 
