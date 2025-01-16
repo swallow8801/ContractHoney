@@ -43,20 +43,17 @@ const StandardContractsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [contracts, setContracts] = useState<Archive[]>([]);
 
-  // 페이지 로드 시 계약서 목록을 API에서 가져옵니다.
   useEffect(() => {
-    // URL에서 search 파라미터 가져오기
     const searchQuery = searchParams.get('search');
     if (searchQuery) {
       setSearchTerm(searchQuery);
     }
 
-    // API에서 데이터 가져오기
     const fetchContracts = async () => {
       try {
         const response = await fetch('/api/archive');
         const data = await response.json();
-        setContracts(data);  // 계약서 목록을 상태에 저장
+        setContracts(data);
       } catch (error) {
         console.error('Failed to fetch contracts:', error);
       }
@@ -81,16 +78,14 @@ const StandardContractsPage = () => {
     currentPage * itemsPerPage
   );
 
-  // 검색 시 URL에 검색어 추가
   const handleSearch = () => {
     setCurrentPage(1);
     router.push(`/archive?search=${searchTerm}`);
   };
 
-  // 날짜 형식 변경 함수
   const formatDate = (date: string) => {
     const d = new Date(date);
-    return d.toLocaleDateString('ko-KR');  // '2024-11-27' 형식으로 변환
+    return d.toLocaleDateString('ko-KR');
   };
 
   const handleDownload = (e: React.MouseEvent, id: number) => {
@@ -165,16 +160,10 @@ const StandardContractsPage = () => {
                 <td>{contract.id}</td>
                 <td>{contract.ar_title}</td>
                 <td>{contract.ar_part}</td>
-                <td>{formatDate(contract.ar_date)}</td> {/* 개정일 포맷 적용 */}
-                <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <td>{formatDate(contract.ar_date)}</td>
+                <td>
                   <AttachmentIcon
                     onClick={(e) => handleDownload(e, contract.id)}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: '100%',
-                    }}
                   >
                     <Download size={16} />
                   </AttachmentIcon>
