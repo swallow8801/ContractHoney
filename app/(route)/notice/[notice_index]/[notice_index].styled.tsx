@@ -51,19 +51,22 @@ export const NoticeTitle = styled.h2`
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #F2B024;
   text-align: center; // 가운데 정렬 추가
 `;
 
 export const NoticeInfo = styled.div`
-  font-size: 14px;
+  font-size: 15px;
   color: #666;
+  padding-bottom: 20px;
   margin-bottom: 20px;
+  border-bottom: 2px solid #F2B024;
   text-align: right; // 오른쪽 정렬 추가
 `;
 
 export const Content = styled.div`
-  font-size: 16px;
+  min-height: 500px;
+  padding: 5px 20px;
+  font-size: 17px;
   line-height: 1.6;
   color: #333;
   margin-bottom: 30px;
@@ -77,7 +80,7 @@ export const NavigationTable = styled.table`
 `;
 
 export const NavigationRow = styled.tr`
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 
   &:last-child {
     border-bottom: none;
@@ -85,7 +88,7 @@ export const NavigationRow = styled.tr`
 
   td {
     padding: 10px;
-    font-size: 14px;
+    font-size: 15px;
 
     &:first-child {
       width: 100px;

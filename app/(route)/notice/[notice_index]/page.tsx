@@ -166,6 +166,7 @@ const NoticeDetailPage = () => {
         <Content>{currentNotice.content}</Content>
         <NavigationTable>
           <tbody>
+            <NavigationRow></NavigationRow>
             <NavigationRow>
               <td>다음글</td>
               <td
@@ -198,6 +199,7 @@ const NoticeDetailPage = () => {
                 )}
               </td>
             </NavigationRow>
+            <NavigationRow></NavigationRow>
           </tbody>
         </NavigationTable>
         <ButtonContainer>
