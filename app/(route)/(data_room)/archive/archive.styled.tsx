@@ -139,15 +139,16 @@ export const Pagination = styled.div`
 `;
 
 export const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 12px;
-  border: 1px solid ${props => props.$active ? '#333' : '#ddd'};
-  background: ${props => props.$active ? '#333' : 'white'};
-  color: ${props => props.$active ? 'white' : '#666'};
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
 
-  &:hover {
-    background: ${props => props.$active ? '#333' : '#f8f8f8'};
+  &:hover:not(:disabled) {
+    background: #f0f0f0;
   }
 
   &:disabled {
@@ -220,5 +221,11 @@ export const ExplanationText = styled.div`
 export const PhoneNumber = styled.div`
   color: #666;
   margin-top: 5px;
+`;
+
+export const PageInfo = styled.span`
+  margin: 0 10px;
+  font-size: 14px;
+  color: #666;
 `;
 

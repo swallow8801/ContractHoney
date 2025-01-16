@@ -23,6 +23,7 @@ import {
   LogoImage,
   ExplanationText,
   PhoneNumber,
+  PageInfo,
 } from './archive.styled';
 
 interface Archive {
@@ -184,32 +185,20 @@ const StandardContractsPage = () => {
         </ArchiveTable>
 
         <Pagination>
-          <PageButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
-            {'<<'}
-          </PageButton>
-          <PageButton
+          <PageButton 
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
+            aria-label="Previous page"
           >
-            {'<'}
+            이전
           </PageButton>
-          {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
-            <PageButton
-              key={page}
-              $active={currentPage === page}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </PageButton>
-          ))}
+          <PageInfo>{currentPage} / {pageCount}</PageInfo>
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
+            aria-label="Next page"
           >
-            {'>'}
-          </PageButton>
-          <PageButton onClick={() => setCurrentPage(pageCount)} disabled={currentPage === pageCount}>
-            {'>>'}
+            다음
           </PageButton>
         </Pagination>
       </Main>
@@ -218,3 +207,4 @@ const StandardContractsPage = () => {
 };
 
 export default StandardContractsPage;
+
