@@ -100,10 +100,10 @@ const NoticeDetailPage = () => {
         });
 
         if (response.ok) {
-          setNotification({ type: 'success', message: '공지사항이 성공적으로 삭제되었습니다.' });
+          setNotification({ type: 'norm', message: '공지사항이 성공적으로 삭제되었습니다.' });
           setTimeout(() => {
             router.push('/notice');
-          }, 1500);
+          }, 1000);
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -131,25 +131,33 @@ const NoticeDetailPage = () => {
         <NotificationOverlay>
           <NotificationBox>
             <NotificationMessage>{notification.message}</NotificationMessage>
-            <ConfirmButton $type={notification.type as 'success' | 'error'} onClick={handleConfirm}>
-              확인
-            </ConfirmButton>
-            {notification.type === 'confirm-delete' && (
-              <ConfirmButton $type="error" onClick={handleCancel}>
-                취소
+            {notification.type === 'confirm-delete' ? (
+              <>
+                {/* 삭제 확인 버튼은 error 색상 */}
+                <ConfirmButton $type="error" onClick={handleConfirm}>
+                  확인
+                </ConfirmButton>
+                {/* 취소 버튼은 norm 색상 */}
+                <ConfirmButton $type="norm" onClick={handleCancel}>
+                  취소
+                </ConfirmButton>
+              </>
+            ) : (
+              <ConfirmButton $type={notification.type as 'success' | 'error'} onClick={handleConfirm}>
+                확인
               </ConfirmButton>
             )}
           </NotificationBox>
         </NotificationOverlay>
       )}
-      {showNotification && ( // NotificationBox 렌더링 추가
+      {showNotification && (
         <NotificationOverlay>
           <NotificationBox>
-            <NotificationMessage>공지사항을 수정하시겠습니까?</NotificationMessage>
+            <NotificationMessage>수정하시겠습니까?</NotificationMessage>
             <ConfirmButton $type="success" onClick={handleConfirmEdit}>
               확인
             </ConfirmButton>
-            <ConfirmButton $type="error" onClick={() => setShowNotification(false)}>
+            <ConfirmButton $type="norm" onClick={() => setShowNotification(false)}>
               취소
             </ConfirmButton>
           </NotificationBox>

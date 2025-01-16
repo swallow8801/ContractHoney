@@ -173,7 +173,7 @@ export const NotificationMessage = styled.p`
   font-size: 16px;
 `;
 
-export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' }>`
   padding: 8px 16px;
   margin: 0 5px;
   border: none;
@@ -181,11 +181,22 @@ export const ConfirmButton = styled.button<{ $type: 'success' | 'error' }>`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  background-color: ${props => props.$type === 'success' ? '#4caf50' : '#ff4444'};
-  color: white;
+  background-color: ${props =>
+    props.$type === 'success'
+      ? '#4caf50'
+      : props.$type === 'error'
+      ? '#ff4444'
+      : '#f0f0f0'};
+  color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
 
   &:hover {
-    background-color: ${props => props.$type === 'success' ? '#45a049' : '#ff3333'};
+    background-color: ${props =>
+      props.$type === 'success'
+        ? '#45a049'
+        : props.$type === 'error'
+        ? '#ff3333'
+        : '#e0e0e0'};
   }
 `;
+
 
