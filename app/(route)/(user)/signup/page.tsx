@@ -17,6 +17,14 @@ import {
   Line,
   SignInButton,
   Alert,
+  ErrorMessage,
+  VerifyButton,
+  InputGroup,
+  SuccessMessage,
+  ModalOverlay,
+  ModalContent,
+  ModalMessage,
+  ModalButton,
 } from './signup.styled';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -30,15 +38,62 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailVerify = async () => {
+    if (!isValidEmail(user_email)) {
+      setEmailError('올바른 이메일 형식이 아닙니다.');
+      setEmailSuccess('');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/verify-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: user_email }),
+      });
+      const data = await response.json();
+      if (data.available) {
+        setIsEmailVerified(true);
+        setEmailError('');
+        setEmailSuccess('사용 가능한 이메일입니다.');
+      } else {
+        setEmailError('중복된 이메일이 존재합니다.');
+        setIsEmailVerified(false);
+        setEmailSuccess('');
+      }
+    } catch (error) {
+      console.error('이메일 확인 오류:', error);
+      setEmailError('이메일 확인 중 오류가 발생했습니다.');
+      setEmailSuccess('');
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
+    setPasswordError('');
+
+    if (!isEmailVerified) {
+      setError('이메일 중복 확인을 해주세요.');
+      return;
+    }
 
     if (user_password !== confirm_password) {
-      setError('비밀번호가 일치하지 않습니다.');
+      setPasswordError('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -56,10 +111,7 @@ const SignupPage = () => {
       if (data.error) {
         setError(data.error);
       } else {
-        setSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
-        setTimeout(() => {
-          router.push('/login');
-        }, 2000);
+        setShowModal(true);
       }
     } catch (error) {
       console.error('회원가입 오류:', error);
@@ -84,14 +136,34 @@ const SignupPage = () => {
             />
 
             <Label htmlFor="user_email">이메일</Label>
-            <Input
-              id="user_email"
-              type="email"
-              value={user_email}
-              onChange={(e) => setUserEmail(e.target.value)}
-              placeholder="이메일을 입력하세요"
-              required
-            />
+            <InputGroup>
+              <Input
+                id="user_email"
+                type="email"
+                value={user_email}
+                onChange={(e) => {
+                  const newEmail = e.target.value;
+                  setUserEmail(newEmail);
+                  setIsEmailVerified(false);
+                  setEmailSuccess('');
+                  if (newEmail && !isValidEmail(newEmail)) {
+                    setEmailError('올바른 이메일 형식이 아닙니다.');
+                  } else {
+                    setEmailError('');
+                  }
+                }}
+                placeholder="이메일을 입력하세요"
+                required
+                $error={!!emailError}
+                $verified={isEmailVerified}
+                disabled={isEmailVerified}
+              />
+              <VerifyButton type="button" onClick={handleEmailVerify} disabled={isEmailVerified}>
+                중복 확인
+              </VerifyButton>
+            </InputGroup>
+            {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
+            {emailSuccess && <SuccessMessage>{emailSuccess}</SuccessMessage>}
 
             <Label htmlFor="user_password">비밀번호</Label>
             <PasswordField>
@@ -117,11 +189,13 @@ const SignupPage = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="비밀번호를 다시 입력하세요"
                 required
+                $error={!!passwordError}
               />
               <ShowPassword type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </ShowPassword>
             </PasswordField>
+            {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
             <Label htmlFor="user_phone">전화번호</Label>
             <Input
@@ -138,7 +212,6 @@ const SignupPage = () => {
             </SubmitButton>
           </Form>
           {error && <Alert type="error">{error}</Alert>}
-          {success && <Alert type="success">{success}</Alert>}
           <Divider>
             <Line />
             <span>OR</span>
@@ -147,6 +220,16 @@ const SignupPage = () => {
           <SignInButton onClick={() => router.push('/login')}>로그인 페이지로 이동</SignInButton>
         </LoginCard>
       </Main>
+      {showModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalMessage>회원가입이 완료되었습니다.</ModalMessage>
+            <ModalButton onClick={() => router.push('/login')}>
+              로그인 페이지로 이동
+            </ModalButton>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Container>
   );
 };

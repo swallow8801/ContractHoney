@@ -47,17 +47,23 @@ export const Label = styled.label`
   margin-bottom: 4px;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ $error?: boolean; $verified?: boolean }>`
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid ${props => props.$error ? '#dc3545' : props.$verified ? '#28a745' : '#ddd'};
   border-radius: 4px;
   font-size: 14px;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s;
+  background-color: ${props => props.$verified ? '#e8f0fe' : 'white'};
 
   &:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: ${props => props.$error ? '#dc3545' : props.$verified ? '#28a745' : '#007bff'};
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
   }
 `;
 
@@ -139,5 +145,90 @@ export const Alert = styled.div<{ type: 'success' | 'error' | '' }>`
   border: 1px solid
     ${(props) =>
       props.type === 'success' ? '#c3e6cb' : props.type === 'error' ? '#f5c6cb' : '#d6d8db'};
+`;
+
+export const ErrorMessage = styled.span`
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+`;
+
+export const VerifyButton = styled.button`
+  padding: 10px 12px;
+  height: 40px; // 입력창과 동일한 높이로 설정
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap; // 텍스트가 줄바꿈되지 않도록 설정
+  min-width: 80px; // 최소 너비 설정
+
+  &:hover {
+    background: #0056b3;
+  }
+
+  &:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+  }
+`;
+
+export const InputGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+export const SuccessMessage = styled.div`
+  color: #28a745;
+  font-size: 14px;
+  margin-top: 5px;
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const ModalContent = styled.div`
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+export const ModalMessage = styled.p`
+  margin-bottom: 30px;
+  font-size: 18px;
+  color: #333;
+`;
+
+export const ModalButton = styled.button`
+  padding: 12px 24px;
+  background-color: #808080; // 회색으로 변경
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #666666; // 호버 시 더 어두운 회색
+  }
 `;
 

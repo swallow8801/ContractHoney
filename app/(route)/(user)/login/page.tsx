@@ -114,7 +114,7 @@ const LoginPage = () => {
             <Alert type={alertType}>{alertMessage}</Alert>
           )}
 
-          <ForgotPassword href="#">비밀번호를 잊으셨나요?</ForgotPassword>
+          <ForgotPassword onClick={() => router.push('/forgot-password')}>비밀번호를 잊으셨나요?</ForgotPassword>
           <Divider>
             <Line />
             <span>OR</span>
