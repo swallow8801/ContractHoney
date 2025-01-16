@@ -6,7 +6,6 @@ import {
   Container,
   Sidebar,
   Main,
-  Title,
   NoticeTitle,
   NoticeInfo,
   Content,
@@ -40,7 +39,6 @@ const NoticeDetailPage = () => {
   const [nextNotice, setNextNotice] = useState<Notice | null>(null);
   const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showNotification, setShowNotification] = useState(false); // 상태 추가
 
   useEffect(() => {
     const userAdmin = localStorage.getItem('admin');
@@ -98,10 +96,10 @@ const NoticeDetailPage = () => {
           method: 'DELETE',
         });
         if (response.ok) {
-          setNotification({ type: 'norm', message: '공지사항이 성공적으로 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
+          setNotification({ type: 'norm', message: '공지사항이 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
           setTimeout(() => {
             router.push('/notice');
-          }, 1200);
+          }, 1500);
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -164,14 +162,17 @@ const NoticeDetailPage = () => {
       </Sidebar>
       <Main>
         <NoticeTitle>{currentNotice.title}</NoticeTitle>
-        <NoticeInfo>작성일: {new Date(currentNotice.date).toLocaleDateString()}</NoticeInfo>
+        <NoticeInfo>작성일 : {new Date(new Date(currentNotice.date).getTime() + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19).replace("T", " ")}</NoticeInfo>
         <Content>{currentNotice.content}</Content>
-
         <NavigationTable>
           <tbody>
             <NavigationRow>
               <td>다음글</td>
-              <td>
+              <td
+                style={{
+                  color: !nextNotice ? '#999' : 'initial', // '다음글이 없습니다.'일 경우 색상 지정
+                }}
+              >
                 {nextNotice ? (
                   <span onClick={() => router.push(`/notice/${nextNotice.id}`)}>
                     {nextNotice.title}
@@ -183,7 +184,11 @@ const NoticeDetailPage = () => {
             </NavigationRow>
             <NavigationRow>
               <td>이전글</td>
-              <td>
+              <td
+                style={{
+                  color: !prevNotice ? '#999' : 'initial', // '이전글이 없습니다.'일 경우 색상 지정
+                }}
+              >
                 {prevNotice ? (
                   <span onClick={() => router.push(`/notice/${prevNotice.id}`)}>
                     {prevNotice.title}

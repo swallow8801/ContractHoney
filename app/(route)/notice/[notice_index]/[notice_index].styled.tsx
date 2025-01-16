@@ -95,10 +95,7 @@ export const NavigationRow = styled.tr`
 
     span {
       cursor: pointer;
-      color: #0066cc;
-
-      &:hover {
-        text-decoration: underline;
+      color: #595959;
       }
     }
   }

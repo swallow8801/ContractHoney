@@ -77,7 +77,7 @@ const EditNoti = () => {
       });
 
       if (response.ok) {
-        setNotification({ type: 'success', message: '공지사항이 성공적으로 수정되었습니다.' });
+        setNotification({ type: 'success', message: '공지사항이 수정되었습니다.' });
       } else {
         setNotification({ type: 'error', message: '공지사항 수정에 실패했습니다.' });
       }
