@@ -192,10 +192,47 @@ export const PageButton = styled.button<{ $active?: boolean }>`
   }
 `;
 
-export const ToggleButton = styled.button`
-  background: #3b3b3b; /* 기존보다 약간 밝은 색 */
+export const AnswerRow = styled.tr`
+  background-color: #fefefe;
+  td {
+    padding: 15px 20px;
+    border-top: 2px solid #f0f0f0; /* 밝은 경계선 */
+  }
+`;
+
+export const AnswerContent = styled.div`
+  background: #f9f9f9; /* 부드러운 회색 배경 */
+  padding: 18px 20px;
+  margin-top: 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px; /* 둥근 모서리 */
+  font-size: 15px;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 부드러운 그림자 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .answer-text {
+    font-weight: 600; /* 답변 내용을 강조 */
+    font-size: 15px;
+    color: #444;
+    flex: 3; /* 답변 내용을 더 넓게 표시 */
+    margin-right: 20px; /* 답변 내용과 날짜 사이 간격 */
+  }
+
+  .answer-date {
+    font-size: 13px; /* 날짜는 작게 */
+    color: #888;
+    flex: 1; /* 날짜를 작게 표시 */
+    text-align: right;
+  }
+`;
+
+export const AnswerButton = styled.button`
+  background: #2c2c2c; /* 기본 어두운 회색 */
   border: none;
-  color: white;
+  color: white; /* 텍스트는 흰색 */
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -223,47 +260,47 @@ export const ToggleButton = styled.button`
 
   &:disabled {
     background: #a1a1a1; /* 비활성화 시 더 밝은 회색 */
-    color: #d1d1d1;
+    color: #d1d1d1; /* 텍스트도 흐린 회색 */
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
   }
 `;
 
-export const AnswerRow = styled.tr`
-  background-color: #f9f9f9;
-  td {
-    padding: 10px;
-    border-top: 1px solid #ddd;
-  }
-`;
+export const ToggleButton = styled.button`
+  background: #d3d3d3; /* 기본 밝은 회색 */
+  border: none;
+  color: #2c2c2c; /* 텍스트는 어두운 회색 */
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 
-export const AnswerContent = styled.div`
-  background: #f8f8f8;
-  padding: 15px;
-  margin-top: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #333;
-
-  h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #444;
+  &:hover {
+    background: #e0e0e0; /* Hover 시 더 밝은 회색 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
 
-  p {
-    margin: 0;
-    line-height: 1.5;
-    color: #555;
+  &:active {
+    background: #c0c0c0; /* Active 시 중간 밝기의 회색 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
   }
 
-  span {
-    display: block;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #888;
+  &:focus {
+    outline: 2px solid #e0e0e0; /* Hover와 같은 색감으로 포커스 처리 */
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #f0f0f0; /* 비활성화 시 매우 밝은 회색 */
+    color: #a1a1a1; /* 텍스트도 흐린 회색 */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
   }
 `;

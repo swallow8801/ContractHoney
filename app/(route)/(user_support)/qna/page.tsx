@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Container,
   Sidebar,
@@ -16,8 +16,9 @@ import {
   PageButton,
   AnswerRow,
   AnswerContent,
+  AnswerButton,
   ToggleButton,
-} from './qna.styled';
+} from "./qna.styled";
 
 // Q&A 데이터 타입 정의
 interface QnaType {
@@ -42,19 +43,19 @@ const MainPage = () => {
       try {
         setIsLoading(true);
 
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem("authToken");
         if (!token) {
-          throw new Error('로그인이 필요합니다.');
+          throw new Error("로그인이 필요합니다.");
         }
 
-        const response = await fetch('/api/qna/qna_admin', {
+        const response = await fetch("/api/qna/qna_admin", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
-          throw new Error('데이터를 불러오는 데 실패했습니다.');
+          throw new Error("데이터를 불러오는 데 실패했습니다.");
         }
 
         const { isAdmin: adminRole, data }: { isAdmin: boolean; data: QnaType[] } = await response.json();
@@ -79,8 +80,8 @@ const MainPage = () => {
       <Sidebar>
         <Title>Q&A</Title>
         <MenuList>
+          <MenuItem onClick={() => router.push("/faq")}>자주 묻는 질문</MenuItem>
           <MenuItem $active>Q&A</MenuItem>
-          <MenuItem onClick={() => router.push('/faq')}>자주 묻는 질문</MenuItem>
         </MenuList>
       </Sidebar>
       <Main>
@@ -88,7 +89,7 @@ const MainPage = () => {
         {isLoading ? (
           <p>데이터를 불러오는 중입니다...</p>
         ) : error ? (
-          <p style={{ color: 'red', fontWeight: 'bold' }}>{error}</p>
+          <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
         ) : qnas.length > 0 ? (
           <>
             <Table>
@@ -107,25 +108,33 @@ const MainPage = () => {
                     <tr>
                       <td>{index + 1}</td>
                       <td>{qna.qna_title}</td>
-                      {isAdmin && <td>{qna.user_name || '알 수 없음'}</td>}
+                      {isAdmin && <td>{qna.user_name || "알 수 없음"}</td>}
                       <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
                       <td>
                         {qna.qna_answer ? (
                           <ToggleButton onClick={() => toggleAnswer(qna.qna_id)}>
-                            {openAnswers[qna.qna_id] ? '닫기' : '답변 확인'}
+                            {openAnswers[qna.qna_id] ? "닫기" : "답변 확인"}
                           </ToggleButton>
+                        ) : isAdmin ? (
+                          <AnswerButton onClick={() => router.push(`/qna/answerQnA?qnaId=${qna.qna_id}`)}>
+                            답변 작성
+                          </AnswerButton>
                         ) : (
-                          '답변 대기 중'
+                          "답변 대기 중"
                         )}
                       </td>
+
                     </tr>
                     {openAnswers[qna.qna_id] && qna.qna_answer && (
                       <AnswerRow>
                         <td colSpan={isAdmin ? 5 : 4}>
-                          <AnswerContent>
-                            <p>{qna.qna_answer}</p>
-                            <p>답변 날짜: {new Date(qna.qna_answ_date!).toLocaleDateString()}</p>
-                          </AnswerContent>
+                        <AnswerContent>
+                          <span className="answer-text">{qna.qna_answer}</span>
+                          <span className="answer-date">
+                            답변 날짜: {new Date(qna.qna_answ_date!).toLocaleDateString()}
+                          </span>
+                        </AnswerContent>
+
                         </td>
                       </AnswerRow>
                     )}
@@ -143,7 +152,7 @@ const MainPage = () => {
         ) : (
           <p>등록된 Q&A가 없습니다.</p>
         )}
-        {!isAdmin && <WriteButton onClick={() => router.push('/qna/writeQnA')}>문의하기</WriteButton>}
+        {!isAdmin && <WriteButton onClick={() => router.push("/qna/writeQnA")}>문의하기</WriteButton>}
       </Main>
     </Container>
   );
