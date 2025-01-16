@@ -267,44 +267,6 @@ export const AnswerButton = styled.button`
   }
 `;
 
-export const ToggleButton = styled.button`
-  background: #d3d3d3; /* 기본 밝은 회색 */
-  border: none;
-  color: #2c2c2c; /* 텍스트는 어두운 회색 */
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #e0e0e0; /* Hover 시 더 밝은 회색 */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    background: #c0c0c0; /* Active 시 중간 밝기의 회색 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transform: translateY(0);
-  }
-
-  &:focus {
-    outline: 2px solid #e0e0e0; /* Hover와 같은 색감으로 포커스 처리 */
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    background: #f0f0f0; /* 비활성화 시 매우 밝은 회색 */
-    color: #a1a1a1; /* 텍스트도 흐린 회색 */
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-  }
-`;
-
 export const DeleteButton = styled.button`
   background: none; /* 배경 없음 */
   border: none; /* 테두리 없음 */

@@ -14,32 +14,27 @@ import {
   WriteButton,
   Pagination,
   PageButton,
-  AnswerRow,
-  AnswerContent,
-  AnswerButton,
-  ToggleButton,
   DeleteButton,
 } from "./qna.styled";
 
-// Q&A 데이터 타입 정의
 interface QnaType {
   qna_id: number;
   qna_title: string;
   qna_cont_date: string;
-  user_name?: string; // 작성자의 이름 (관리자용)
-  qna_answer: string | null; // 답변 내용
-  qna_answ_date: string | null; // 답변 날짜
+  user_name?: string;
+  qna_answer: string | null;
+  qna_answ_date: string | null;
+  isOwner: boolean; // 본인이 작성한 Q&A 여부
 }
 
 const MainPage = () => {
   const router = useRouter();
   const [qnas, setQnas] = useState<QnaType[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [openAnswers, setOpenAnswers] = useState<{ [key: number]: boolean }>({}); // 답변 표시 상태
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const itemsPerPage = 10; // 한 페이지당 항목 수
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchQnas = async () => {
@@ -106,10 +101,6 @@ const MainPage = () => {
     }
   };
 
-  const toggleAnswer = (qnaId: number) => {
-    setOpenAnswers((prev) => ({ ...prev, [qnaId]: !prev[qnaId] }));
-  };
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = qnas.slice(startIndex, startIndex + itemsPerPage);
   const totalPages = Math.ceil(qnas.length / itemsPerPage);
@@ -139,51 +130,37 @@ const MainPage = () => {
                   {isAdmin && <th>작성자</th>}
                   <th>작성일</th>
                   <th>답변 상태</th>
-                  {!isAdmin && <th>삭제</th>}
+                  {!isAdmin && <th></th>}
                 </tr>
               </thead>
               <tbody>
                 {currentItems.map((qna, index) => (
-                  <React.Fragment key={qna.qna_id}>
-                    <tr>
-                      <td>{startIndex + index + 1}</td>
-                      <td>{qna.qna_title}</td>
-                      {isAdmin && <td>{qna.user_name || "알 수 없음"}</td>}
-                      <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
+                  <tr key={qna.qna_id}>
+                    <td>{startIndex + index + 1}</td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() => router.push(`/qna/${qna.qna_id}`)}
+                    >
+                      {qna.qna_title}
+                    </td>
+                    {isAdmin && <td>{qna.user_name || "알 수 없음"}</td>}
+                    <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
+                    <td>{qna.qna_answer ? "답변 완료" : "답변 대기 중"}</td>
+                    {!isAdmin && (
                       <td>
-                        {qna.qna_answer ? (
-                          <ToggleButton onClick={() => toggleAnswer(qna.qna_id)}>
-                            {openAnswers[qna.qna_id] ? "닫기" : "답변 확인"}
-                          </ToggleButton>
-                        ) : isAdmin ? (
-                          <AnswerButton onClick={() => router.push(`/qna/answerQnA?qnaId=${qna.qna_id}`)}>
-                            답변 작성
-                          </AnswerButton>
-                        ) : (
-                          "답변 대기 중"
+                        {!qna.qna_answer && (
+                          <DeleteButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(qna.qna_id);
+                            }}
+                          >
+                            삭제
+                          </DeleteButton>
                         )}
                       </td>
-                      {!isAdmin && (
-                        <td>
-                          {!qna.qna_answer && (
-                            <DeleteButton onClick={() => handleDelete(qna.qna_id)}>삭제</DeleteButton>
-                          )}
-                        </td>
-                      )}
-                    </tr>
-                    {openAnswers[qna.qna_id] && qna.qna_answer && (
-                      <AnswerRow>
-                        <td colSpan={isAdmin ? 5 : 6}>
-                          <AnswerContent>
-                            <span className="answer-text">{qna.qna_answer}</span>
-                            <span className="answer-date">
-                              답변 날짜: {new Date(qna.qna_answ_date!).toLocaleDateString()}
-                            </span>
-                          </AnswerContent>
-                        </td>
-                      </AnswerRow>
                     )}
-                  </React.Fragment>
+                  </tr>
                 ))}
               </tbody>
             </Table>
