@@ -31,10 +31,9 @@ import {
 
 // 공지사항 데이터 타입 정의
 interface NoticeType {
-  post_id: number;
-  post_title: string;
-  author: string;
-  post_datetime: string;
+  notice_id: number;
+  notice_title: string;
+  notice_date: string;
 }
 
 const MainPage = () => {
@@ -235,10 +234,9 @@ const MainPage = () => {
             <p>공지사항을 불러오는 중 오류가 발생했습니다: {error}</p>
           ) : (
             notices.map((notice) => (
-              <NoticeItem key={notice.post_id} onClick={() => handleNoticeClick(notice.post_id)}>
-                <NoticeItemTitle>{notice.post_title}</NoticeItemTitle>
-                <NoticeItemAuthor>{notice.author}</NoticeItemAuthor>
-                <NoticeItemDate>{new Date(notice.post_datetime).toLocaleDateString()}</NoticeItemDate>
+              <NoticeItem key={notice.notice_id} onClick={() => handleNoticeClick(notice.notice_id)}>
+                <NoticeItemTitle>{notice.notice_title}</NoticeItemTitle>
+                <NoticeItemDate>{new Date(notice.notice_date).toLocaleDateString()}</NoticeItemDate>
               </NoticeItem>
             ))
           )}
@@ -250,3 +248,4 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
