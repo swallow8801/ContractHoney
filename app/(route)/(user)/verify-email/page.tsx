@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Container, Title, StatusMessage, Card, Button } from './verifyEmail.styled';
 
 const VerifyEmail = () => {
   const searchParams = useSearchParams();
@@ -26,10 +27,13 @@ const VerifyEmail = () => {
   }, [token]);
 
   return (
-    <div>
-      <h1>이메일 인증</h1>
-      <p>{status}</p>
-    </div>
+    <Container>
+      <Card>
+        <Title>이메일 인증</Title>
+        <StatusMessage>{status}</StatusMessage>
+        <Button onClick={() => window.location.href = '/login'}>로그인 페이지로 돌아가기</Button>
+      </Card>
+    </Container>
   );
 };
 

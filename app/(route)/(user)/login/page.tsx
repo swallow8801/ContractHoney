@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -30,9 +30,11 @@ const LoginPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      router.push('/');
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        router.push('/');
+      }
     }
   }, [router]);
 
