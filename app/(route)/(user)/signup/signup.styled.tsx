@@ -73,8 +73,11 @@ export const ShowPassword = styled.button`
   background: none;
   border: none;
   color: #666;
-  font-size: 12px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 `;
 
 export const SubmitButton = styled.button`
