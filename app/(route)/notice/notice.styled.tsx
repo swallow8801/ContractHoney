@@ -28,12 +28,12 @@ export const SidebarTitle = styled.h2`
 `;
 
 export const Main = styled.main`
-  width: 80%;
+  width: 70%;
   padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
   margin-top: 3vh;
-  margin-left: 20%;
+  margin-left: 25%;
 `;
 
 export const MainTitle = styled.h2`

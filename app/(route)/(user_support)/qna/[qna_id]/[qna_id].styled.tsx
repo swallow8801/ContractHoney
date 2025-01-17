@@ -28,12 +28,12 @@ export const SidebarTitle = styled.h2`
 `;
 
 export const Main = styled.main`
-  width: 80%;
+  width: 70%;
   padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
   margin-top: 3vh;
-  margin-left: 20%;
+  margin-left: 25%;
 `;
 
 export const MainTitle = styled.h2`
@@ -75,13 +75,10 @@ export const ArchiveTable = styled.table`
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  th,
-  td {
-    padding: 12px 15px; /* 패딩을 줄여서 컴팩트한 느낌 */
-    text-align: left;
+  th, td {
+    padding: 15px;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    font-size: 14.5px;
   }
 
   th {
@@ -98,14 +95,28 @@ export const ArchiveTable = styled.table`
     background: #fcfcfc;
   }
 
-  td:first-child,
-  th:first-child {
-    width: 25%; /* 작성일 컬럼 */
+  td:nth-child(1), th:nth-child(1) {
+    width: 10%;
+    text-align: center;
   }
 
-  td:last-child,
-  th:last-child {
-    width: 75%; /* 내용 컬럼 */
+  td:nth-child(2) {
+    text-align: left;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 15%;
+    text-align: center;
+  }
+
+  td:nth-child(4), th:nth-child(4) {
+    width: 20%;
+    text-align: center;
+  }
+
+  td:nth-child(5), th:nth-child(5) {
+    width: 20%;
+    text-align: center;
   }
 `;
 
@@ -118,23 +129,29 @@ export const Pagination = styled.div`
   gap: 5px;
 `;
 
-export const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  background: ${props => props.$active ? '#F2B024' : 'white'};
-  color: ${props => props.$active ? 'white' : '#666'};
-  cursor: pointer;
-  font-size: 14px;
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 40px;
+`;
+
+export const Button = styled.button`
+  padding: 8px 16px;
+  border: none;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+`;
 
-  &:hover:not(:disabled) {
-    background: ${props => props.$active ? '#e0a00f' : '#f0f0f0'};
-  }
+export const BackButton = styled(Button)`
+  background-color: #f0f0f0;
+  color: #333;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+  &:hover {
+    background-color: #e0e0e0;
   }
 `;
 
@@ -148,7 +165,8 @@ export const ReplyButton = styled.button`
   font-size: 14px;
   font-weight: 600;
   transition: background 0.3s ease;
-  align-self: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
+  /* 버튼을 오른쪽 끝으로 정렬 */
+  align-self: center;
 
   &:hover {
     background: #e0a00f;
@@ -164,12 +182,104 @@ export const ReplySection = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  position: relative; /* 부모 요소를 기준으로 배치 */
+`;
+
+export const TextareaContainer = styled.div`
+  position: relative; /* textarea를 기준으로 버튼 배치 */
+  width: 100%;
+
   textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    min-height: 150px;
+    padding: 15px 20px 55px 20px; /* 하단과 우측 공간 확보 */
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 7px 12px;
+    background: #F2B024;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: #e0a00f;
+    }
+
+    &:disabled {
+      background: #ddd;
+      cursor: not-allowed;
+    }
   }
 `;
+
+export const NotificationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const NotificationBox = styled.div`
+  width: 350px;
+  height: 150px;
+  padding: 20px 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+`;
+
+export const NotificationMessage = styled.p`
+  margin-top: 12.5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+`;
+
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' | 'ok' }>`
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: ${props =>
+    props.$type === 'success'
+      ? '#4caf50'
+      : props.$type === 'error'
+      ? '#ff4444'
+      : props.$type === 'ok'
+      ? '#F2B024'
+      : '#f0f0f0'};
+  color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$type === 'success'
+        ? '#45a049'
+        : props.$type === 'error'
+        ? '#ff3333'
+        : props.$type === 'ok'
+        ? '#e0a00f'
+        : '#e0e0e0'};
+  }
+`;
+

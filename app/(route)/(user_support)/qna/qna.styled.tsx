@@ -28,12 +28,12 @@ export const SidebarTitle = styled.h2`
 `;
 
 export const Main = styled.main`
-  width: 80%;
+  width: 70%;
   padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
   margin-top: 3vh;
-  margin-left: 20%;
+  margin-left: 25%;
 `;
 
 export const Title = styled.h1`
@@ -132,7 +132,7 @@ export const Table = styled.table`
   }
 
   td:nth-child(5), th:nth-child(5) {
-    width: 10%;
+    width: 15%;
     text-align: center;
   }
 `;

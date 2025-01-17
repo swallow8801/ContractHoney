@@ -11,10 +11,15 @@ import {
   MenuList,
   MenuItem,
   ArchiveTable,
-  Pagination,
-  PageButton,
   ReplySection,
   ReplyButton,
+  BackButton,
+  ButtonContainer,
+  TextareaContainer,
+  ConfirmButton,
+  NotificationBox,
+  NotificationMessage,
+  NotificationOverlay,
 } from "./[qna_id].styled";
 
 interface QnaType {
@@ -44,6 +49,7 @@ const QnaDetailPage = () => {
   const [qna, setQna] = useState<QnaType | null>(null);
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -94,20 +100,20 @@ const QnaDetailPage = () => {
 
   const handleReplySubmit = async () => {
     if (!reply.trim()) {
-      alert("답변 내용을 입력하세요.");
+      setNotification({ type: 'error', message: '답변 내용을 입력하세요.' });
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        alert("로그인이 필요합니다.");
+        setNotification({ type: 'error', message: '로그인이 필요합니다.' });
         router.push("/login");
         return;
       }
-
+  
       const response = await fetch(`/api/qna/${params.qna_id}`, {
         method: "POST",
         headers: {
@@ -116,18 +122,18 @@ const QnaDetailPage = () => {
         },
         body: JSON.stringify({ answer: reply }),
       });
-
+  
       if (!response.ok) {
         throw new Error("API 요청에 실패했습니다.");
       }
-
+  
       const updatedQna = await response.json();
       setQna(updatedQna.qna);
       setReply("");
-      alert("답변이 성공적으로 등록되었습니다.");
+      setNotification({ type: 'ok', message: '답변이 등록되었습니다.' });
     } catch (error) {
       console.error("Error submitting reply:", error);
-      alert("답변 등록 중 오류가 발생했습니다.");
+      setNotification({ type: 'error', message: '답변 등록 중 오류가 발생했습니다.' });
     } finally {
       setLoading(false);
     }
@@ -139,6 +145,19 @@ const QnaDetailPage = () => {
 
   return (
     <Container>
+      {notification && (
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            <ConfirmButton
+              $type={notification.type === 'ok' ? 'ok' : 'error'}
+              onClick={() => setNotification(null)}
+            >
+              확인
+            </ConfirmButton>
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Sidebar>
         <SidebarTitle>Q&A</SidebarTitle>
         <MenuList>
@@ -178,20 +197,22 @@ const QnaDetailPage = () => {
         </ArchiveTable>
         {!qna?.qna_answer && isAdmin && (
           <ReplySection>
-            <textarea
-              placeholder="답변을 입력하세요."
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              disabled={loading}
-            />
-            <ReplyButton onClick={handleReplySubmit} disabled={loading}>
-              {loading ? "등록 중..." : "답변 등록"}
-            </ReplyButton>
+            <TextareaContainer>
+              <textarea
+                placeholder="답변을 입력하세요."
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                disabled={loading}
+              />
+              <button onClick={handleReplySubmit} disabled={loading}>
+                {loading ? "등록 중..." : "답변 등록"}
+              </button>
+            </TextareaContainer>
           </ReplySection>
         )}
-        <Pagination>
-          <PageButton onClick={() => router.push("/qna")}>목록으로</PageButton>
-        </Pagination>
+        <ButtonContainer>
+          <BackButton onClick={() => router.push('/qna')}>목록</BackButton>
+        </ButtonContainer>
       </Main>
     </Container>
   );
