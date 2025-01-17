@@ -63,8 +63,10 @@ export const ExplanationText = styled.p`
 export const SearchSection = styled.div`
   display: flex;
   gap: 10px;
-  margin: 0px 0px 20px 0px;
   background: #ffffff;
+  padding: 0 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
 `;
 
 

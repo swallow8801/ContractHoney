@@ -57,11 +57,10 @@ export const MainTitle = styled.h2`
 export const SearchSection = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 30px;
   background: #ffffff;
-  padding: 20px;
+  padding: 0 20px;
   border-radius: 8px;
-  margin: 0px;
+  margin-bottom: 20px;
 `;
 
 export const SearchSelect = styled.select`
