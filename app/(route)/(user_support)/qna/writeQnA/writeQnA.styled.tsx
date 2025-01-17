@@ -66,55 +66,55 @@ export const MainTitle = styled.h2`
   border-bottom: 2px solid #F2B024;
 `;
 
-export const NoticeBox = styled.div`
-  padding: 20px;
-  background: #fff7e5;
-  border: 1px solid #F2B024;
-  border-radius: 8px;
-  margin-bottom: 20px;
-
-  p {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2d2d2d;
-  }
-
-  span {
-    font-size: 14px;
-    color: #666;
-  }
-`;
-
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  width: 80%;
+  margin: 0 auto;
 `;
 
 export const FormLabel = styled.label`
   font-size: 14px;
-  color: #333;
-  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
 `;
 
 export const FormInput = styled.input`
-  padding: 10px;
-  font-size: 14px;
+  width: 100%;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
 `;
 
 export const FormTextarea = styled.textarea`
-  padding: 10px;
-  font-size: 14px;
+  width: 100%;
+  height: 300px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
   resize: vertical;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
 `;
 
-export const FormFileInput = styled.input`
-  font-size: 14px;
-  border: 1px solid #ddd;
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
 `;
 
 export const SubmitButton = styled.button`
@@ -133,3 +133,69 @@ export const SubmitButton = styled.button`
   }
 `;
 
+export const CancelButton = styled(SubmitButton)`
+  background-color: #f0f0f0;
+  color: #333;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;
+
+export const NotificationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const NotificationBox = styled.div`
+  width: 350px;
+  height: 150px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+`;
+
+export const NotificationMessage = styled.p`
+  margin-top: 12.5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+`;
+
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' | 'ok' }>`
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: ${props =>
+    props.$type === 'success'
+      ? '#4caf50'
+      : props.$type === 'error'
+      ? '#ff4444'
+      : props.$type === 'ok'
+      ? '#F2B024'
+      : '#f0f0f0'};
+  color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$type === 'success'
+        ? '#45a049'
+        : props.$type === 'error'
+        ? '#ff3333'
+        : props.$type === 'ok'
+        ? '#e0a00f'
+        : '#e0e0e0'};
+  }
+`;

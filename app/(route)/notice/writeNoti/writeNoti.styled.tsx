@@ -77,7 +77,8 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 100%;
+  width: 80%;
+  margin: 0 auto;
 `;
 
 export const FormLabel = styled.label`
@@ -194,7 +195,7 @@ export const NotificationMessage = styled.p`
   font-size: 16px;
 `;
 
-export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' }>`
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' | 'ok' }>`
   padding: 8px 16px;
   margin: 0 5px;
   border: none;
@@ -207,6 +208,8 @@ export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm'
       ? '#4caf50'
       : props.$type === 'error'
       ? '#ff4444'
+      : props.$type === 'ok'
+      ? '#F2B024'
       : '#f0f0f0'};
   color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
 
@@ -216,6 +219,8 @@ export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm'
         ? '#45a049'
         : props.$type === 'error'
         ? '#ff3333'
+        : props.$type === 'ok'
+        ? '#e0a00f'
         : '#e0e0e0'};
   }
 `;

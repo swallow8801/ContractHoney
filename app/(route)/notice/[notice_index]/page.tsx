@@ -96,7 +96,7 @@ const NoticeDetailPage = () => {
           method: 'DELETE',
         });
         if (response.ok) {
-          setNotification({ type: 'norm', message: '공지사항이 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
+          setNotification({ type: 'ok', message: '공지사항이 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
           setTimeout(() => {
             router.push('/notice');
           }, 1500);
@@ -128,10 +128,10 @@ const NoticeDetailPage = () => {
         <NotificationBox>
           <NotificationMessage>{notification.message}</NotificationMessage>
 
-          {notification.type === 'norm' ? ( 
+          {notification.type === 'ok' ? ( 
             // 삭제 완료 상태: 확인 버튼만 표시
             <ConfirmButton
-              $type="norm"
+              $type="ok"
               onClick={handleCancel}
             >
               확인

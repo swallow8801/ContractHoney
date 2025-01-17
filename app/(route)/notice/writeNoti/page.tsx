@@ -6,7 +6,6 @@ import {
   Container,
   Sidebar,
   Main,
-  Title,
   NoticeTitle,
   Form,
   FormInput,
@@ -93,7 +92,7 @@ const WriteNoti = () => {
         <NotificationOverlay>
           <NotificationBox>
             <NotificationMessage>{notification.message}</NotificationMessage>
-            <ConfirmButton $type='norm' onClick={handleConfirm}>확인</ConfirmButton>
+            <ConfirmButton $type='ok' onClick={handleConfirm}>확인</ConfirmButton>
           </NotificationBox>
         </NotificationOverlay>
       )}

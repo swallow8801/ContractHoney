@@ -76,12 +76,11 @@ const MainPage = () => {
   }, [router]);
 
   const handleDelete = async (qnaId: number) => {
-    if (!window.confirm("정말로 삭제하시겠습니까?")) return;
+    if (!window.confirm("삭제하시겠습니까?")) return;
 
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        alert("로그인이 필요합니다.");
         router.push("/login");
         return;
       }
@@ -181,20 +180,42 @@ const MainPage = () => {
               </tbody>
             </Table>
             <Pagination>
-              <PageButton disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-                이전
+              <PageButton
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 10, 1))}
+                disabled={currentPage <= 10}
+              >
+                {"<<"}
               </PageButton>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <PageButton
-                  key={i}
-                  $active={currentPage === i + 1}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </PageButton>
-              ))}
-              <PageButton disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-                다음
+              <PageButton
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                {"<"}
+              </PageButton>
+              {[...Array(10)].map((_, i) => {
+                const pageNumber = Math.floor((currentPage - 1) / 10) * 10 + i + 1;
+                if (pageNumber > totalPages) return null;
+                return (
+                  <PageButton
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    $active={currentPage === pageNumber}
+                  >
+                    {pageNumber}
+                  </PageButton>
+                );
+              })}
+              <PageButton
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                {">"}
+              </PageButton>
+              <PageButton
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 10, totalPages))}
+                disabled={currentPage > totalPages - 10}
+              >
+                {">>"}
               </PageButton>
             </Pagination>
           </>
