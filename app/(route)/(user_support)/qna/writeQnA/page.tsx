@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import {
   Container,
@@ -11,32 +11,41 @@ import {
   MenuItem,
   MainTitle,
   Form,
-  FormFileInput,
   FormInput,
   FormLabel,
   FormTextarea,
-  NoticeBox,
   SubmitButton,
+  NotificationOverlay,
+  NotificationBox,
+  ConfirmButton,
+  NotificationMessage,
+  ButtonContainer,
+  CancelButton,
 } from "./writeQnA.styled";
 
 const WriteQnA = () => {
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로를 확인
+  const pathname = usePathname();
+
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const title = (document.getElementById("title") as HTMLInputElement)?.value.trim();
     const content = (document.getElementById("content") as HTMLTextAreaElement)?.value.trim();
-    const token = localStorage.getItem("authToken"); // 로컬 스토리지에서 토큰 가져오기
+    const token = localStorage.getItem("authToken");
 
     if (!title || !content) {
-      alert("제목과 내용을 모두 입력하세요.");
+      setNotification({ type: "error", message: "제목과 내용을 모두 입력하세요." });
       return;
     }
 
     if (!token) {
-      alert("로그인이 필요합니다.");
+      setNotification({ type: "error", message: "로그인이 필요합니다." });
       router.push("/login");
       return;
     }
@@ -60,15 +69,35 @@ const WriteQnA = () => {
         throw new Error("API 요청에 실패했습니다.");
       }
 
-      alert("Q&A가 성공적으로 등록되었습니다.");
-      router.push("/qna");
+      setNotification({ type: "success", message: "Q&A가 등록되었습니다." });
     } catch (error: any) {
       console.error("Error submitting Q&A:", error.message);
+      setNotification({ type: "error", message: "서버와 통신 중 문제가 발생했습니다." });
     }
+  };
+
+  const handleConfirm = () => {
+    if (notification?.type === "success") {
+      router.push("/qna");
+    }
+    setNotification(null);
+  };
+
+  const handleCancel = () => {
+    router.push("/qna");
   };
 
   return (
     <Container>
+      {notification && (
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            <ConfirmButton $type='ok' onClick={handleConfirm}>확인</ConfirmButton>
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
+
       <Sidebar>
         <SidebarTitle>고객지원</SidebarTitle>
         <MenuList>
@@ -79,19 +108,16 @@ const WriteQnA = () => {
             자주 묻는 질문
           </MenuItem>
           <MenuItem
-            $active={pathname === "/qna" || pathname === "/qna/writeQnA"} // Q&A 작성 페이지 포함
+            $active={pathname === "/qna" || pathname === "/qna/writeQnA"}
             onClick={() => router.push("/qna")}
           >
             Q&A
           </MenuItem>
         </MenuList>
       </Sidebar>
+
       <Main>
-        <MainTitle>Q&A 작성하기</MainTitle>
-        <NoticeBox>
-          <p>Q&A 이용안내</p>
-          <span>답변 등록 시 가입한 이메일로 메일이 발송될 예정입니다.</span>
-        </NoticeBox>
+        <MainTitle>Q&A 작성</MainTitle>
         <Form onSubmit={handleSubmit}>
           <FormLabel htmlFor="title">제목</FormLabel>
           <FormInput id="title" type="text" placeholder="제목을 입력하세요." />
@@ -99,7 +125,10 @@ const WriteQnA = () => {
           <FormLabel htmlFor="content">내용</FormLabel>
           <FormTextarea id="content" placeholder="내용을 입력하세요." />
 
-          <SubmitButton type="submit">등록하기</SubmitButton>
+          <ButtonContainer>
+            <SubmitButton type="submit">등록</SubmitButton>
+            <CancelButton type="button" onClick={handleCancel}>취소</CancelButton>
+          </ButtonContainer>
         </Form>
       </Main>
     </Container>

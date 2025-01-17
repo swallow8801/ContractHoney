@@ -96,8 +96,8 @@ export default function MyPage() {
             const contracts = await statsResponse.json();
             setStats({
               analyzed_count: contracts.length,
-              unfair_count: contracts.filter((c: any) => c.con_unfair).length,
-              toxic_count: contracts.filter((c: any) => c.con_toxic).length,
+              unfair_count: contracts.reduce((sum: number, contract: any) => sum + (contract.unfair_count || 0), 0),
+              toxic_count: contracts.reduce((sum: number, contract: any) => sum + (contract.toxic_count || 0), 0),
             });
           }
         }

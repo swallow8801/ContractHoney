@@ -94,9 +94,8 @@ export const Table = styled.table`
 
   th, td {
     padding: 15px;
-    text-align: left;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 14.5px;
   }
 
   th {
@@ -113,16 +112,27 @@ export const Table = styled.table`
     background: #fcfcfc;
   }
 
+  td:nth-child(1), th:nth-child(1) {
+    width: 10%;
+    text-align: center;
+  }
+
   td:nth-child(2) {
     text-align: left;
   }
 
-  td:nth-child(3), th:nth-child(3),
-  td:nth-child(4), th:nth-child(4),
-  td:nth-child(5), th:nth-child(5) {
+  td:nth-child(3), th:nth-child(3) {
+    width: 15%;
     text-align: center;
   }
-  td:last-child {
+
+  td:nth-child(4), th:nth-child(4) {
+    width: 15%;
+    text-align: center;
+  }
+
+  td:nth-child(5), th:nth-child(5) {
+    width: 10%;
     text-align: center;
   }
 `;
@@ -215,18 +225,20 @@ export const Pagination = styled.div`
 
 export const PageButton = styled.button<{ $active?: boolean }>`
   padding: 8px 12px;
-  border: 1px solid ${props => props.$active ? '#333' : '#ddd'};
-  background: ${props => props.$active ? '#333' : 'white'};
+  border: 1px solid #ddd;
+  background: ${props => props.$active ? '#F2B024' : 'white'};
   color: ${props => props.$active ? 'white' : '#666'};
   cursor: pointer;
   font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 
-  &:hover {
-    background: ${props => props.$active ? '#333' : '#f8f8f8'};
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? '#e0a00f' : '#f0f0f0'};
   }
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.2;
   }
 `;
