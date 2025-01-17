@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    height: 100vh;
+    height: calc(100vh - 90px);
     scroll-snap-type: y mandatory;
     overflow-y: scroll;
     scroll-behavior: smooth;
@@ -27,7 +27,7 @@ export const Group = styled.div<{ $backgroundImage: string }>`
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100vh;
+    height: calc(100vh - 90px);
     width: 100%;
     scroll-snap-align: start;
     scroll-snap-stop: always;

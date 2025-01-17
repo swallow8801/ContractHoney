@@ -3,25 +3,24 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  min-height: 100vh;
+  height: calc(100vh - 90px);
   background: #ffffff;
 `;
 
 export const Sidebar = styled.aside`
   width: 20%;
+  height: 100%;
   background: white;
   padding: 30px 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 8vh;
+  top: 90px;
   left: 0;
-  height: 92vh;
   overflow-y: auto;
 `;
 
 export const Main = styled.main`
   width: 80%;
-  min-height: 92vh;
   padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
