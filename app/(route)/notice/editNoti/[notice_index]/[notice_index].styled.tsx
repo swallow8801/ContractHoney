@@ -49,6 +49,8 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 80%;
+  margin: 0 auto;
 `;
 
 export const FormLabel = styled.label`

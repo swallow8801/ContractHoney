@@ -33,11 +33,13 @@ const WriteNoti = () => {
   
   // 사용자 권한 확인 (localStorage에서 가져오기)
   useEffect(() => {
-    const userAdmin = localStorage.getItem('admin');
-    if (userAdmin === '1') {
-      setIsAdmin(true); // 관리자인 경우
-    }
-  }, []);
+      const userAdmin = localStorage.getItem('admin');
+      if (userAdmin === '1') {
+        setIsAdmin(true);
+      } else {
+        router.push('/notice');
+      }
+    }, [router]);
 
   // 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
