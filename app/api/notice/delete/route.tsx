@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/database';
+import { ResultSetHeader } from 'mysql2'; // MySQL 클라이언트에서 제공하는 타입
 
 // 공지사항 삭제
 export async function DELETE(request: NextRequest) {
@@ -11,7 +12,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     // notice_flag를 1로 업데이트하여 삭제 처리
-    const [result] = await db.query(
+    const [result] = await db.query<ResultSetHeader>(
       `UPDATE notice SET notice_flag = 1 WHERE notice_id = ?`,
       [id]
     );

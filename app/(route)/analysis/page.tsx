@@ -65,6 +65,7 @@ interface ContractIden {
   law_clause_number: number | null;
   law_subclause_number: number | null;
   law_explain: string | null;
+  checked?: boolean; // 선택적 속성 추가
 }
 
 const AnalysisPage = () => {
