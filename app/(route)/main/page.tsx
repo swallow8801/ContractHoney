@@ -44,7 +44,7 @@ const MainPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notices, setNotices] = useState<NoticeType[]>([]); // 타입 적용
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Updated: Initialize isLoading to false
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -64,7 +64,7 @@ const MainPage = () => {
       } catch (err: any) {
         setError(err.message);
       } finally {
-        setIsLoading(false);
+        // Removed: setIsLoading(false);
       }
     };
 
@@ -128,6 +128,8 @@ const MainPage = () => {
       formData.append('fileName', fileNameWithoutExtension);
       formData.append('fileType', fileExtension);
 
+      const startTime = Date.now();
+
       try {
         const token = localStorage.getItem('authToken');
         const response = await fetch('/api/upload-contract', {
@@ -143,11 +145,20 @@ const MainPage = () => {
         }
 
         const data = await response.json();
-        router.push(`/result?contractId=${data.contractId}`);
+
+        // Calculate the remaining time to ensure a minimum of 3 seconds
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, 3000 - elapsedTime);
+
+        // Use setTimeout to delay the navigation
+        setTimeout(() => {
+          setIsLoading(false);
+          router.push(`/result?contractId=${data.contractId}`);
+        }, remainingTime);
+
       } catch (error) {
         console.error('Error uploading contract:', error);
         // Handle error (e.g., show error message to user)
-      } finally {
         setIsLoading(false);
       }
     }
@@ -161,7 +172,8 @@ const MainPage = () => {
     <Container>
       {isLoading && (
         <LoadingOverlay>
-          <LoadingSpinner />
+          <LoadingSpinner
+           />
           <LoadingText>계약서를 분석 중입니다...</LoadingText>
         </LoadingOverlay>
       )}
