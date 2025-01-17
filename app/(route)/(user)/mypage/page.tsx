@@ -33,6 +33,7 @@ import {
   StatGroup,
   StatGroupLabel,
   StatGroupItem,
+  Main,
 } from './mypage.styled';
 
 interface UserProfile {
@@ -179,113 +180,115 @@ export default function MyPage() {
 
   return (
     <Container>
-      <ProfileCard>
-        <ProfileHeader>
-          <UserName>{profile.user_name} 님</UserName>
-          <EditButton onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}>
-            {isEditing ? '저장' : 'EDIT'}
-          </EditButton>
-        </ProfileHeader>
-        <UserEmail>{profile.user_email}</UserEmail>
+      <Main>
+        <ProfileCard>
+          <ProfileHeader>
+            <UserName>{profile.user_name} 님</UserName>
+            <EditButton onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}>
+              {isEditing ? '저장' : 'EDIT'}
+            </EditButton>
+          </ProfileHeader>
+          <UserEmail>{profile.user_email}</UserEmail>
 
-        <Form>
-          <FormGroup>
-            <Label>이름</Label>
-            <Input
-              type="text"
-              value={isEditing ? editedName : profile.user_name}
-              disabled={!isEditing}
-              onChange={(e) => setEditedName(e.target.value.slice(0, 12))}
-              maxLength={12}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label>이메일</Label>
-            <InputWithCheck>
+          <Form>
+            <FormGroup>
+              <Label>이름</Label>
               <Input
-                type="email"
-                value={profile.user_email}
-                disabled={true}
-                style={{ backgroundColor: '#f0f0f0', color: '#666' }}
+                type="text"
+                value={isEditing ? editedName : profile.user_name}
+                disabled={!isEditing}
+                onChange={(e) => setEditedName(e.target.value.slice(0, 12))}
+                maxLength={12}
               />
-              <VerifiedCheck>
-                <CheckCircle size={16} />
-              </VerifiedCheck>
-            </InputWithCheck>
-          </FormGroup>
+            </FormGroup>
 
-          <FormGroup>
-            <Label>전화번호</Label>
-            <Input
-              type="tel"
-              value={isEditing ? editedPhone : profile.user_phone.replace(/-/g, '')}
-              disabled={!isEditing}
-              onChange={handlePhoneChange}
-              placeholder="01012345678"
-              maxLength={11}
-            />
-          </FormGroup>
-          {alert && (
-            <Alert type={alert.type}>
-              {alert.message}
-            </Alert>
-          )}
+            <FormGroup>
+              <Label>이메일</Label>
+              <InputWithCheck>
+                <Input
+                  type="email"
+                  value={profile.user_email}
+                  disabled={true}
+                  style={{ backgroundColor: '#f0f0f0', color: '#666' }}
+                />
+                <VerifiedCheck>
+                  <CheckCircle size={16} />
+                </VerifiedCheck>
+              </InputWithCheck>
+            </FormGroup>
 
-          <StatsContainer>
-            <StatItem>
-              <StatIcon>
-                <FileText size={24} />
-              </StatIcon>
-              <StatInfo>
-                <StatLabel>계약서 분석 횟수</StatLabel>
-                <StatValue>{stats.analyzed_count}</StatValue>
-              </StatInfo>
-            </StatItem>
-            <StatItem>
-              <StatIcon>
-                <AlertTriangle size={24} />
-              </StatIcon>
-              <StatInfo>
-                <StatGroupLabel>판별된 조항</StatGroupLabel>
-                <StatGroup>
-                  <StatGroupItem>
-                    <StatLabel>불공정 조항</StatLabel>
-                    <StatValue>{stats.unfair_count}</StatValue>
-                  </StatGroupItem>
-                  <StatGroupItem>
-                    <StatLabel>독소 조항</StatLabel>
-                    <StatValue>{stats.toxic_count}</StatValue>
-                  </StatGroupItem>
-                </StatGroup>
-              </StatInfo>
-            </StatItem>
-          </StatsContainer>
+            <FormGroup>
+              <Label>전화번호</Label>
+              <Input
+                type="tel"
+                value={isEditing ? editedPhone : profile.user_phone.replace(/-/g, '')}
+                disabled={!isEditing}
+                onChange={handlePhoneChange}
+                placeholder="01012345678"
+                maxLength={11}
+              />
+            </FormGroup>
+            {alert && (
+              <Alert type={alert.type}>
+                {alert.message}
+              </Alert>
+            )}
 
-          <DeleteButton type="button" onClick={() => setShowDeleteModal(true)}>
-            회원 탈퇴
-          </DeleteButton>
-        </Form>
-      </ProfileCard>
+            <StatsContainer>
+              <StatItem>
+                <StatIcon>
+                  <FileText size={24} />
+                </StatIcon>
+                <StatInfo>
+                  <StatLabel>계약서 분석 횟수</StatLabel>
+                  <StatValue>{stats.analyzed_count}</StatValue>
+                </StatInfo>
+              </StatItem>
+              <StatItem>
+                <StatIcon>
+                  <AlertTriangle size={24} />
+                </StatIcon>
+                <StatInfo>
+                  <StatGroupLabel>판별된 조항</StatGroupLabel>
+                  <StatGroup>
+                    <StatGroupItem>
+                      <StatLabel>불공정 조항</StatLabel>
+                      <StatValue>{stats.unfair_count}</StatValue>
+                    </StatGroupItem>
+                    <StatGroupItem>
+                      <StatLabel>독소 조항</StatLabel>
+                      <StatValue>{stats.toxic_count}</StatValue>
+                    </StatGroupItem>
+                  </StatGroup>
+                </StatInfo>
+              </StatItem>
+            </StatsContainer>
 
-      {showDeleteModal && (
-        <Modal>
-          <ModalContent>
-            <ModalTitle>회원 탈퇴</ModalTitle>
-            <ModalText>
-              정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없으며, 모든 데이터가 삭제됩니다.
-            </ModalText>
-            <ModalButtons>
-              <ModalButton onClick={() => setShowDeleteModal(false)}>
-                취소
-              </ModalButton>
-              <ModalButton $danger onClick={handleDeleteAccount}>
-                탈퇴하기
-              </ModalButton>
-            </ModalButtons>
-          </ModalContent>
-        </Modal>
-      )}
+            <DeleteButton type="button" onClick={() => setShowDeleteModal(true)}>
+              회원 탈퇴
+            </DeleteButton>
+          </Form>
+        </ProfileCard>
+
+        {showDeleteModal && (
+          <Modal>
+            <ModalContent>
+              <ModalTitle>회원 탈퇴</ModalTitle>
+              <ModalText>
+                정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없으며, 모든 데이터가 삭제됩니다.
+              </ModalText>
+              <ModalButtons>
+                <ModalButton onClick={() => setShowDeleteModal(false)}>
+                  취소
+                </ModalButton>
+                <ModalButton $danger onClick={handleDeleteAccount}>
+                  탈퇴하기
+                </ModalButton>
+              </ModalButtons>
+            </ModalContent>
+          </Modal>
+        )}
+      </Main>
     </Container>
   );
 }

@@ -4,15 +4,18 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
   height: calc(100vh - 90px);
-  padding: 20px;
-  background: #ffffff;
+  background: #f5f5f5;
+`;
 
-  @media (max-width: 768px) {
-    padding: 10px;
-  }
+export const Main = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  padding: 40px;
 `;
 
 export const ProfileCard = styled.div`
