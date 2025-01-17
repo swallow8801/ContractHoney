@@ -1,172 +1,176 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 92vh;
+  min-height: 100vh;
   background: #ffffff;
 `;
 
-export const Sidebar = styled.div`
+export const Sidebar = styled.aside`
   width: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  background: white;
   padding: 30px 0;
-  background: #f5f5f5;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  height: 92vh;
+  overflow-y: auto;
+`;
+
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export const Main = styled.main`
-  flex: 1;
-  padding: 40px;
+  width: 80%;
+  min-height: 92vh;
+  padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
-  box-sizing: border-box;
+  margin-top: 3vh;
+  margin-left: 20%;
 `;
 
-export const Title = styled.h1`
-  font-size: 30px;
-  font-weight: 600;
-  color: rgb(75, 75, 75);
-`;
-
-export const QNATitle = styled.h2`
+export const MainTitle = styled.h2`
   font-size: 28px;
-  font-weight: 500;
   color: #2d2d2d;
-  text-align: center;
-  border-top: 1px solid #e0e0e0;
-  padding-bottom: 10px;
-  padding-top: 30px;
-`;
-
-export const QnaInfo = styled.div`
-  font-size: 16.5px;
-  color: #737373;
-  text-align: right;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 30px;
-  padding-right: 70px;
+  font-weight: 600;
   margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #F2B024;
 `;
 
-export const Content = styled.div`
-  font-size: 17px;
-  color: #2d2d2d;
-  line-height: 1.8;
-  white-space: pre-line; /* 줄바꿈 적용 */
-  overflow-wrap: break-word; /* 긴 단어를 줄 바꿈 */
-  padding: 20px 30px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
+export const MenuList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
 `;
 
-export const ReplySection = styled.div`
-  margin-top: 20px;
-`;
-
-export const ReplyTextarea = styled.textarea`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  resize: none;
+export const MenuItem = styled.li<{ $active?: boolean }>`
   font-size: 16px;
-  min-height: 100px;
-`;
-
-export const SubmitButton = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: #2c2c2c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-
-  &:hover {
-    background:rgb(120, 123, 126);
-  }
-`;
-
-export const Reply = styled.div`
-  margin-top: 20px;
   padding: 15px 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background: #f1f1f1;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const ReplyAuthor = styled.span`
-  font-weight: bold;
-  font-size: 16px;
-  color: #444;
-  margin-bottom: 5px;
-`;
-
-export const ReplyContent = styled.p`
-  font-size: 15px;
-  color: #333;
-  line-height: 1.5;
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  gap: 10px;
-`;
-
-export const BackButton = styled.button`
-  padding: 8px 16px;
-  background: rgb(169, 169, 169);
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  color: white;
   cursor: pointer;
+  color: ${props => props.$active ? '#F2B024' : '#666'};
+  background: ${props => props.$active ? '#fff7e5' : 'transparent'};
+  border-left: 4px solid ${props => props.$active ? '#F2B024' : 'transparent'};
+  transition: all 0.3s ease;
 
   &:hover {
-    background: rgb(141, 141, 141);
+    color: #F2B024;
+    background: #fff7e5;
   }
 `;
 
-export const NotificationOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
+export const ArchiveTable = styled.table`
+  width: 100%; /* 테이블 전체 너비를 줄임 */
+  margin: 0 auto; /* 테이블을 가운데 정렬 */
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  th,
+  td {
+    padding: 12px 15px; /* 패딩을 줄여서 컴팩트한 느낌 */
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  }
+
+  th {
+    background: #f8f8f8;
+    font-weight: 600;
+    color: #333;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: #fcfcfc;
+  }
+
+  td:first-child,
+  th:first-child {
+    width: 25%; /* 작성일 컬럼 */
+  }
+
+  td:last-child,
+  th:last-child {
+    width: 75%; /* 내용 컬럼 */
+  }
+`;
+
+
+export const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  margin-top: 30px;
+  gap: 5px;
 `;
 
-export const NotificationBox = styled.div`
-  width: 400px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  text-align: center;
+export const PageButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: ${props => props.$active ? '#F2B024' : 'white'};
+  color: ${props => props.$active ? 'white' : '#666'};
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? '#e0a00f' : '#f0f0f0'};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
-export const ConfirmButton = styled.button`
-  background: #007bff;
+export const ReplyButton = styled.button`
+  padding: 10px 20px;
+  background: #F2B024;
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+  align-self: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
 
   &:hover {
-    background: #0056b3;
+    background: #e0a00f;
+  }
+
+  &:disabled {
+    background: #ddd;
+    cursor: not-allowed;
+  }
+`;
+
+export const ReplySection = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
   }
 `;

@@ -6,10 +6,10 @@ import {
   Container,
   Sidebar,
   Main,
-  Title,
-  QNATitle,
+  SidebarTitle,
   MenuList,
   MenuItem,
+  MainTitle,
   Table,
   WriteButton,
   Pagination,
@@ -31,6 +31,7 @@ const MainPage = () => {
   const router = useRouter();
   const [qnas, setQnas] = useState<QnaType[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태 추가
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,6 +43,8 @@ const MainPage = () => {
         setIsLoading(true);
 
         const token = localStorage.getItem("authToken");
+        setIsLoggedIn(!!token); // 로그인 여부 확인
+
         if (!token) {
           throw new Error("로그인이 필요합니다.");
         }
@@ -108,14 +111,14 @@ const MainPage = () => {
   return (
     <Container>
       <Sidebar>
-        <Title>Q&A</Title>
+        <SidebarTitle>Q&A</SidebarTitle>
         <MenuList>
-          <MenuItem onClick={() => router.push("/faq")}>자주 묻는 질문</MenuItem>
+          <MenuItem onClick={() => router.push("/faq")} $active={false}>자주 묻는 질문</MenuItem>
           <MenuItem $active>Q&A</MenuItem>
         </MenuList>
       </Sidebar>
       <Main>
-        <QNATitle>Q&A</QNATitle>
+        <MainTitle>Q&A</MainTitle>
         {isLoading ? (
           <p>데이터를 불러오는 중입니다...</p>
         ) : error ? (
@@ -130,7 +133,7 @@ const MainPage = () => {
                   {isAdmin && <th>작성자</th>}
                   <th>작성일</th>
                   <th>답변 상태</th>
-                  {!isAdmin && <th></th>}
+                  {!isAdmin && <th>삭제</th>}
                 </tr>
               </thead>
               <tbody>
@@ -185,7 +188,9 @@ const MainPage = () => {
         ) : (
           <p>등록된 Q&A가 없습니다.</p>
         )}
-        {!isAdmin && <WriteButton onClick={() => router.push("/qna/writeQnA")}>문의하기</WriteButton>}
+        {isLoggedIn && !isAdmin && (
+          <WriteButton onClick={() => router.push("/qna/writeQnA")}>문의하기</WriteButton>
+        )}
       </Main>
     </Container>
   );

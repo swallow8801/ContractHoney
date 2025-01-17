@@ -1,100 +1,85 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    display: flex;
-    width: 100%;
-    height: 92vh;
-    background: #ffffff;
+  display: flex;
+  width: 100%;
+  height: 92vh;
+  background: #ffffff;
 `;
 
 export const Sidebar = styled.aside`
-    width: 20%; /* 사이드바 너비 */
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    align-items: center; /* 중앙 정렬 */
-    padding: 30px 0;
+  width: 20%;
+  background: white;
+  padding: 30px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  height: 92vh;
+  overflow-y: auto;
+`;
 
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 20px 0 0 0; /* 제목과 간격 추가 */
-        width: 70%; /* 박스 너비 */
-        background: #ffffff; /* 박스 배경색 */
-        border: 1px solid #e0e0e0; /* 박스 테두리 */
-        border-radius: 5px; /* 모서리 둥글게 */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        li {
-        font-size: 16px;
-        padding: 15px 10px; /* 내부 여백 */
-        cursor: pointer;
-        border-bottom: 1px solid #e0e0e0; /* 리스트 구분선 */
-
-        &:last-child {
-            border-bottom: none; /* 마지막 리스트 구분선 제거 */
-        }
-
-        &:hover {
-            color:rgb(206, 161, 0); /* 호버 시 색상 변경 */
-            background: #f1f1f1; /* 호버 시 배경색 변경 */
-        }
-        }
-    }
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export const MenuList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 20px 0 0 0;
-  width: 70%;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
 `;
 
 export const MenuItem = styled.li<{ $active?: boolean }>`
   font-size: 16px;
-  padding: 15px 10px;
+  padding: 15px 20px; /* 내부 여백 */
   cursor: pointer;
-  border-bottom: 1px solid #e0e0e0;
-  color: ${props => props.$active ? 'rgb(206, 161, 0)' : '#666'};
-  background: ${props => props.$active ? '#f1f1f1' : 'transparent'};
-
-  &:last-child {
-    border-bottom: none;
-  }
+  border-left: 4px solid transparent; /* 기본 투명한 테두리 */
+  color: ${props => (props.$active ? '#F2B024' : '#666')}; /* 활성화 색상 */
+  background: ${props => (props.$active ? '#fff7e5' : 'transparent')}; /* 활성화 배경색 */
+  transition: all 0.3s ease;
 
   &:hover {
-    color: rgb(206, 161, 0);
-    background: #f1f1f1;
+    color: #F2B024; /* 호버 시 텍스트 색상 */
+    background: #fff7e5; /* 호버 시 배경색 */
+    border-left-color: #F2B024; /* 호버 시 왼쪽 테두리 색상 */
   }
 `;
 
 export const Main = styled.main`
-    flex: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    gap: 20px;
-    margin-bottom: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
+  width: 80%;
+  min-height: 92vh;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+  margin-left: 20%;
 `;
 
 export const Title = styled.h1`
-    font-size: 30px;
-    font-weight: 600;
-    color: rgb(75, 75, 75);
-    text-align: center; /* 제목 중앙 정렬 */
+  font-size: 30px;
+  font-weight: 600;
+  color: rgb(75, 75, 75);
+  text-align: center;
+`;
+
+export const MainTitle = styled.h2`
+  font-size: 28px;
+  color: #2d2d2d;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #F2B024;
 `;
 
 export const FAQTitle = styled.h2`
-    font-size: 27px;
-    color: #2d2d2d;
-    font-weight: 500;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1.6px solid rgb(190, 190, 190);
+  font-size: 28px;
+  color: #2d2d2d;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #F2B024;
 `;
