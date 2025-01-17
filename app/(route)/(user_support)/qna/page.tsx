@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Container,
   Sidebar,
@@ -29,6 +29,7 @@ interface QnaType {
 
 const MainPage = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [qnas, setQnas] = useState<QnaType[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태 추가
@@ -111,10 +112,20 @@ const MainPage = () => {
   return (
     <Container>
       <Sidebar>
-        <SidebarTitle>Q&A</SidebarTitle>
+        <SidebarTitle>고객지원</SidebarTitle>
         <MenuList>
-          <MenuItem onClick={() => router.push("/faq")} $active={false}>자주 묻는 질문</MenuItem>
-          <MenuItem $active>Q&A</MenuItem>
+          <MenuItem
+            $active={pathname === '/faq'}
+            onClick={() => router.push('/faq')}
+          >
+            자주 묻는 질문
+          </MenuItem>
+          <MenuItem
+            $active={pathname === '/qna'}
+            onClick={() => router.push('/qna')}
+          >
+            Q&A
+          </MenuItem>
         </MenuList>
       </Sidebar>
       <Main>

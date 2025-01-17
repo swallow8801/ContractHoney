@@ -35,17 +35,16 @@ export const MenuList = styled.ul`
 
 export const MenuItem = styled.li<{ $active?: boolean }>`
   font-size: 16px;
-  padding: 15px 20px; /* 내부 여백 */
+  padding: 15px 20px;
   cursor: pointer;
-  border-left: 4px solid transparent; /* 기본 투명한 테두리 */
-  color: ${props => (props.$active ? '#F2B024' : '#666')}; /* 활성화 색상 */
-  background: ${props => (props.$active ? '#fff7e5' : 'transparent')}; /* 활성화 배경색 */
+  color: ${props => props.$active ? '#F2B024' : '#666'};
+  background: ${props => props.$active ? '#fff7e5' : 'transparent'};
+  border-left: 4px solid ${props => props.$active ? '#F2B024' : 'transparent'};
   transition: all 0.3s ease;
 
   &:hover {
-    color: #F2B024; /* 호버 시 텍스트 색상 */
-    background: #fff7e5; /* 호버 시 배경색 */
-    border-left-color: #F2B024; /* 호버 시 왼쪽 테두리 색상 */
+    color: #F2B024;
+    background: #fff7e5;
   }
 `;
 

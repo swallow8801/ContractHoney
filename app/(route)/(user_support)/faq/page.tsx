@@ -48,7 +48,7 @@ const FAQ = () => {
   return (
     <Container>
       <Sidebar>
-        <SidebarTitle>FAQ</SidebarTitle>
+        <SidebarTitle>고객지원</SidebarTitle>
         <MenuList>
           <MenuItem
             $active={pathname === '/faq'}
