@@ -24,15 +24,22 @@ export async function POST(request: NextRequest) {
 
     // Here you would typically upload the file to a storage service
     // For this example, we'll just use the file name and type
+    // TODO: Implement actual file upload logic
+    console.log(`File ${fileName} of type ${fileType} would be uploaded here.`);
 
     const [result] = await db.query(
-      'INSERT INTO contract (con_title, con_type, con_updatetime, con_summary, con_toxic, con_toxic_level, con_unfair, con_unfair_level, con_law, con_version, user_id) VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)',
-      [fileName, fileType, 'Default Summary', 'Default Toxic', 'Low', 'Default Unfair', 'Low', 'Default Law', 1, userId]
+      'INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)',
+      [userId, fileName, fileType, 1]
     );
 
-    const insertId = (result as any).insertId;
+    const contractId = (result as any).insertId;
 
-    return NextResponse.json({ contractId: insertId });
+    await db.query(
+      'INSERT INTO contract_postfile (con_id, con_filetype, con_datetype, con_filename) VALUES (?, ?, NOW(), ?)',
+      [contractId, fileType, fileName]
+    );
+
+    return NextResponse.json({ contractId: contractId });
   } catch (error) {
     console.error('Error uploading contract:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

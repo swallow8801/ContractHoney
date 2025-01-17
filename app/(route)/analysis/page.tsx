@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Share, Download, ChevronLeft, ChevronRight, FileText, Check } from 'lucide-react';
 import {
-  ReviewContainer,
+  Container,
   PreviewSection,
   AnalysisSection,
   NavigationBar,
@@ -31,39 +31,50 @@ import {
   PaginationContainer,
   PaginationButton,
   ClauseType,
-} from './result.styled';
+} from './analysis.styled';
 
 interface Contract {
   con_id: number;
+  user_id: number;
   con_title: string;
   con_type: string;
   con_updatetime: string;
-  con_summary: string;
-  con_toxic: string;
-  con_toxic_level: string;
-  con_unfair: string;
-  con_unfair_level: string;
-  con_law: string;
   con_version: number;
 }
 
-interface Clause {
-  id: string;
-  chapter: string;
-  title: string;
-  content: string;
-  type: 'unfair' | 'toxic';
-  checked: boolean;
+interface ContractSummary {
+  sum_id: number;
+  con_id: number;
+  sum_article_number: number;
+  sum_article_title: string;
+  sum_summary: string | null;
 }
 
-const ResultPage = () => {
+interface ContractIden {
+  iden_id: number;
+  con_id: number;
+  iden_article_number: number;
+  iden_clause_number: number | null;
+  iden_subclause_number: number | null;
+  iden_sentence: string;
+  iden_unfair: boolean;
+  iden_unfair_percent: number | null;
+  iden_toxic: boolean;
+  iden_toxic_percent: number | null;
+  law_article_number: number | null;
+  law_clause_number: number | null;
+  law_subclause_number: number | null;
+  law_explain: string | null;
+}
+
+const AnalysisPage = () => {
   const searchParams = useSearchParams();
   const [contract, setContract] = useState<Contract | null>(null);
+  const [contractSummaries, setContractSummaries] = useState<ContractSummary[]>([]);
+  const [contractIdens, setContractIdens] = useState<ContractIden[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages] = useState(27);
   const [activeTab, setActiveTab] = useState('요약');
-  const [unfairClauses, setUnfairClauses] = useState<Clause[]>([]);
-  const [toxicClauses, setToxicClauses] = useState<Clause[]>([]);
   const [currentClausePage, setCurrentClausePage] = useState(1);
   const clausesPerPage = 5;
 
@@ -86,31 +97,9 @@ const ResultPage = () => {
         throw new Error('Failed to fetch contract data');
       }
       const data = await response.json();
-      setContract(data);
-      // Here you would typically set the unfairClauses and toxicClauses based on the fetched data
-      // For now, we'll just use some dummy data
-      setUnfairClauses([
-        {
-          id: '1',
-          chapter: '제 2장',
-          title: '어쩌구 저쩌구',
-          content: '머시기 머시기한 내용',
-          type: 'unfair',
-          checked: false,
-        },
-        // ... add more unfair clauses
-      ]);
-      setToxicClauses([
-        {
-          id: '3',
-          chapter: '제 4장',
-          title: '독소조항 1',
-          content: '독소조항 내용',
-          type: 'toxic',
-          checked: false,
-        },
-        // ... add more toxic clauses
-      ]);
+      setContract(data.contract);
+      setContractSummaries(data.summaries);
+      setContractIdens(data.idens);
     } catch (error) {
       console.error('Error fetching contract data:', error);
       // Handle error (e.g., show error message to user)
@@ -126,25 +115,19 @@ const ResultPage = () => {
   };
 
   const handleClauseCheck = (id: string, type: 'unfair' | 'toxic') => {
-    if (type === 'unfair') {
-      setUnfairClauses(prev =>
-        prev.map(clause =>
-          clause.id === id ? { ...clause, checked: !clause.checked } : clause
-        )
-      );
-    } else {
-      setToxicClauses(prev =>
-        prev.map(clause =>
-          clause.id === id ? { ...clause, checked: !clause.checked } : clause
-        )
-      );
-    }
+    setContractIdens(prev =>
+      prev.map(clause =>
+        clause.iden_id.toString() === id ? {
+          ...clause,
+          checked: !clause.checked
+        } : clause
+      )
+    );
   };
 
   const renderPreview = () => {
     if (!contract) return null;
 
-    // For now, we'll just show a placeholder. In a real application, you'd render the actual contract content here.
     return (
       <HancomPlaceholder>
         <FileText size={48} />
@@ -171,84 +154,89 @@ const ResultPage = () => {
             </AnalysisItem>
             <AnalysisItem>
               <ItemLabel>계약 요약</ItemLabel>
-              <ItemContent>{contract.con_summary}</ItemContent>
-            </AnalysisItem>
-            <AnalysisItem>
-              <ItemLabel>독소조항</ItemLabel>
-              <ItemContent>{contract.con_toxic} (레벨: {contract.con_toxic_level})</ItemContent>
-            </AnalysisItem>
-            <AnalysisItem>
-              <ItemLabel>불공정조항</ItemLabel>
-              <ItemContent>{contract.con_unfair} (레벨: {contract.con_unfair_level})</ItemContent>
-            </AnalysisItem>
-            <AnalysisItem>
-              <ItemLabel>관련 법령</ItemLabel>
-              <ItemContent>{contract.con_law}</ItemContent>
+              <ItemContent>
+                {contractSummaries.map((summary) => (
+                  <div key={summary.sum_id}>
+                    <h4>{summary.sum_article_number}조: {summary.sum_article_title}</h4>
+                    <p>{summary.sum_summary}</p>
+                  </div>
+                ))}
+              </ItemContent>
             </AnalysisItem>
           </>
         );
       case '불공정조항':
+        return renderClauses('unfair');
       case '독소조항':
-        const clauses = activeTab === '불공정조항' ? unfairClauses : toxicClauses;
-        const totalClauses = clauses.length;
-        const uncheckedCount = clauses.filter(c => !c.checked).length;
-        const startIdx = (currentClausePage - 1) * clausesPerPage;
-        const endIdx = startIdx + clausesPerPage;
-        const currentClauses = clauses.slice(startIdx, endIdx);
-        const totalClausePages = Math.ceil(totalClauses / clausesPerPage);
-
-        return (
-          <>
-            <ClauseType>
-              {activeTab === '불공정조항' ? '불공정조항' : '독소조항'} ({uncheckedCount}/{totalClauses})
-            </ClauseType>
-            <ClauseList>
-              {currentClauses.map((clause) => (
-                <ClauseItem key={clause.id}>
-                  <ClauseCheckbox
-                    checked={clause.checked}
-                    onChange={() => handleClauseCheck(clause.id, clause.type)}
-                  >
-                    <Check size={16} />
-                  </ClauseCheckbox>
-                  <div>
-                    <ClauseTitle>{clause.chapter} - {clause.title}</ClauseTitle>
-                    <ClauseContent>{clause.content}</ClauseContent>
-                  </div>
-                </ClauseItem>
-              ))}
-            </ClauseList>
-            <PaginationContainer>
-              <PaginationButton
-                onClick={() => setCurrentClausePage(prev => Math.max(prev - 1, 1))}
-                disabled={currentClausePage === 1}
-              >
-                이전
-              </PaginationButton>
-              <PageInfo>{currentClausePage} / {totalClausePages}</PageInfo>
-              <PaginationButton
-                onClick={() => setCurrentClausePage(prev => Math.min(prev + 1, totalClausePages))}
-                disabled={currentClausePage === totalClausePages}
-              >
-                다음
-              </PaginationButton>
-            </PaginationContainer>
-          </>
-        );
+        return renderClauses('toxic');
       default:
         return null;
     }
   };
 
-  const getUnfairCount = () => unfairClauses.filter(c => !c.checked).length;
-  const getToxicCount = () => toxicClauses.filter(c => !c.checked).length;
+  const renderClauses = (type: 'unfair' | 'toxic') => {
+    const clauses = contractIdens.filter(iden => type === 'unfair' ? iden.iden_unfair : iden.iden_toxic);
+    const totalClauses = clauses.length;
+    const uncheckedCount = clauses.filter(c => !c.checked).length;
+    const startIdx = (currentClausePage - 1) * clausesPerPage;
+    const endIdx = startIdx + clausesPerPage;
+    const currentClauses = clauses.slice(startIdx, endIdx);
+    const totalClausePages = Math.ceil(totalClauses / clausesPerPage);
+
+    return (
+      <>
+        <ClauseType>
+          {type === 'unfair' ? '불공정조항' : '독소조항'} ({uncheckedCount}/{totalClauses})
+        </ClauseType>
+        <ClauseList>
+          {currentClauses.map((clause) => (
+            <ClauseItem key={clause.iden_id}>
+              <ClauseCheckbox
+                checked={clause.checked || false}
+                onClick={() => handleClauseCheck(clause.iden_id.toString(), type)}
+              >
+                <Check size={16} />
+              </ClauseCheckbox>
+              <div>
+                <ClauseTitle>{clause.iden_article_number}조 {clause.iden_clause_number && `${clause.iden_clause_number}항`} {clause.iden_subclause_number && `${clause.iden_subclause_number}호`}</ClauseTitle>
+                <ClauseContent>{clause.iden_sentence}</ClauseContent>
+                <p>확률: {type === 'unfair' ? clause.iden_unfair_percent : clause.iden_toxic_percent}%</p>
+                {clause.law_explain && <p>설명: {clause.law_explain}</p>}
+                {type === 'unfair' && clause.law_article_number && (
+                  <p>관련 법령: {clause.law_article_number}조 {clause.law_clause_number && `${clause.law_clause_number}항`} {clause.law_subclause_number && `${clause.law_subclause_number}호`}</p>
+                )}
+              </div>
+            </ClauseItem>
+          ))}
+        </ClauseList>
+        <PaginationContainer>
+          <PaginationButton
+            onClick={() => setCurrentClausePage(prev => Math.max(prev - 1, 1))}
+            disabled={currentClausePage === 1}
+          >
+            이전
+          </PaginationButton>
+          <PageInfo>{currentClausePage} / {totalClausePages}</PageInfo>
+          <PaginationButton
+            onClick={() => setCurrentClausePage(prev => Math.min(prev + 1, totalClausePages))}
+            disabled={currentClausePage === totalClausePages}
+          >
+            다음
+          </PaginationButton>
+        </PaginationContainer>
+      </>
+    );
+  };
+
+  const getUnfairCount = () => contractIdens.filter(c => c.iden_unfair).length;
+  const getToxicCount = () => contractIdens.filter(c => c.iden_toxic).length;
 
   if (!contract) {
     return <div>Loading...</div>;
   }
 
   return (
-    <ReviewContainer>
+    <Container>
       <PreviewSection>
         <NavigationBar>
           <DocumentTitle>{contract.con_title}</DocumentTitle>
@@ -297,9 +285,9 @@ const ResultPage = () => {
           </ActionButton>
         </ActionButtons>
       </AnalysisSection>
-    </ReviewContainer>
+    </Container>
   );
 };
 
-export default ResultPage;
+export default AnalysisPage;
 

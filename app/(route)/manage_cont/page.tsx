@@ -15,7 +15,6 @@ import {
   Td,
   VersionSelect,
   ActionButton,
-  FileSize,
   FileDate,
   SummaryBox,
   SummaryTh,
@@ -43,13 +42,7 @@ interface Contract {
   con_type: string;
   con_updatetime: string;
   con_summary: string | null;
-  con_toxic: string | null;
-  con_toxic_level: string | null;
-  con_unfair: string | null;
-  con_unfair_level: string | null;
-  con_law: string | null;
   con_version: number;
-  user_id: number;
 }
 
 export default function ManageContracts() {
@@ -61,11 +54,10 @@ export default function ManageContracts() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [currentPage, setCurrentPage] = useState(1)
   const [windowWidth, setWindowWidth] = useState(0)
-  const [isLoading, setIsLoading] = useState(true); // Added isLoading state
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5
 
   useEffect(() => {
-    // Set window width after component mounts
     setWindowWidth(window.innerWidth)
     
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -160,7 +152,11 @@ export default function ManageContracts() {
     setCurrentPage(newPage)
   }
 
-  if (isLoading) { // Added loading state check
+  const handleViewResults = (contractId: number) => {
+    router.push(`/analysis?contractId=${contractId}`);
+  }
+
+  if (isLoading) {
     return (
       <Container>
         <MainContent>
@@ -236,14 +232,6 @@ export default function ManageContracts() {
               <SummaryTh>계약 요약</SummaryTh>
               <SummaryTd>{selectedDoc?.con_summary || '-'}</SummaryTd>
             </tr>
-            <tr>
-              <SummaryTh>독소조항</SummaryTh>
-              <SummaryTd>{selectedDoc?.con_toxic || '-'} (레벨: {selectedDoc?.con_toxic_level || '-'})</SummaryTd>
-            </tr>
-            <tr>
-              <SummaryTh>불공정조항</SummaryTh>
-              <SummaryTd>{selectedDoc?.con_unfair || '-'} (레벨: {selectedDoc?.con_unfair_level || '-'})</SummaryTd>
-            </tr>
           </tbody>
         </SummaryBox>
 
@@ -268,7 +256,7 @@ export default function ManageContracts() {
                 )}
               </Th>
               <Th>버전</Th>
-              <Th>결과</Th>
+              <Th>결과창 이동</Th>
             </tr>
           </thead>
           <tbody>
@@ -293,8 +281,8 @@ export default function ManageContracts() {
                   </VersionSelect>
                 </Td>
                 <Td>
-                  <ActionButton>
-                    <Share size={20} />
+                  <ActionButton onClick={() => handleViewResults(contract.con_id)}>
+                    <FileText size={20} />
                   </ActionButton>
                 </Td>
               </tr>

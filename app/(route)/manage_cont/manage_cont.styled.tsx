@@ -5,7 +5,7 @@ import styled from 'styled-components'
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 90px);
+  height: 100vh;
   padding: 0.5rem;
   max-width: 1200px;
   width: 100%;
@@ -64,24 +64,22 @@ export const Table = styled.table`
   font-size: 0.8rem;
 
   th, td {
-    &:nth-child(1) { width: 25%; }
-    &:nth-child(2) { width: 15%; }
-    &:nth-child(3) { width: 15%; }
-    &:nth-child(4) { width: 20%; }
+    &:nth-child(1) { width: 30%; }
+    &:nth-child(2) { width: 20%; }
+    &:nth-child(3) { width: 20%; }
+    &:nth-child(4) { width: 15%; }
     &:nth-child(5) { width: 15%; }
-    &:nth-child(6) { width: 10%; }
   }
 
   @media (max-width: 768px) {
     font-size: 0.7rem;
 
     th, td {
-      &:nth-child(1) { width: 30%; }
-      &:nth-child(2) { width: 20%; }
+      &:nth-child(1) { width: 35%; }
+      &:nth-child(2) { width: 25%; }
       &:nth-child(3) { display: none; }
-      &:nth-child(4) { width: 25%; }
-      &:nth-child(5) { width: 15%; }
-      &:nth-child(6) { width: 10%; }
+      &:nth-child(4) { width: 20%; }
+      &:nth-child(5) { width: 20%; }
     }
   }
 `
@@ -147,11 +145,15 @@ export const ActionButton = styled.button`
   cursor: pointer;
   color: #666;
   padding: 0.5rem;
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+
   &:hover {
     color: #333;
   }
-`
+`;
 
 export const FileInfo = styled.div`
   display: flex;
@@ -374,5 +376,11 @@ export const LoadingText = styled.p`
   color: #666;
   font-size: 1rem;
   margin: 0;
+`;
+
+export const ActionButtonsContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
 `;
 

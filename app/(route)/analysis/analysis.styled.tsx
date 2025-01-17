@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ReviewContainer = styled.div`
+export const Container = styled.div`
   display: flex;
   width: 100%;
   height: 100vh;
@@ -147,12 +147,12 @@ export const ActionButton = styled.button`
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  
+
   &.share {
     background: #f5f5f5;
     color: #333;
   }
-  
+
   &.download {
     background: #333;
     color: white;

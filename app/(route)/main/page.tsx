@@ -11,7 +11,6 @@ import {
   Notice,
   NoticeItem,
   NoticeItemTitle,
-  NoticeItemAuthor,
   NoticeItemDate,
   ViewAll,
   FileUploadContainer,
@@ -20,8 +19,6 @@ import {
   FileName,
   SearchableSelect,
   SearchInput,
-  DropdownList,
-  DropdownItem,
   Select,
   LoadingOverlay,
   LoadingSpinner,
@@ -29,7 +26,6 @@ import {
   LoginMessage,
 } from './main.styled';
 
-// 공지사항 데이터 타입 정의
 interface NoticeType {
   notice_id: number;
   notice_title: string;
@@ -43,8 +39,8 @@ const MainPage = () => {
   const [searchType, setSearchType] = useState('법령');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [notices, setNotices] = useState<NoticeType[]>([]); // 타입 적용
-  const [isLoading, setIsLoading] = useState(false); // Updated: Initialize isLoading to false
+  const [notices, setNotices] = useState<NoticeType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -52,19 +48,16 @@ const MainPage = () => {
     const token = localStorage.getItem('authToken');
     setIsLoggedIn(!!token);
 
-    // Fetch notices from API
     const fetchNotices = async () => {
       try {
         const response = await fetch('/api/mainpage_notices');
         if (!response.ok) {
           throw new Error('Failed to fetch notices');
         }
-        const data: NoticeType[] = await response.json(); // 타입 선언
+        const data: NoticeType[] = await response.json();
         setNotices(data);
       } catch (err: any) {
         setError(err.message);
-      } finally {
-        // Removed: setIsLoading(false);
       }
     };
 
@@ -106,7 +99,6 @@ const MainPage = () => {
   };
 
   const handleSearch = () => {
-    // 검색어가 있을 경우 페이지로 이동
     if (searchQuery.trim()) {
       if (searchType === '법령') {
         router.push(`/law?search=${searchQuery}`);
@@ -128,8 +120,6 @@ const MainPage = () => {
       formData.append('fileName', fileNameWithoutExtension);
       formData.append('fileType', fileExtension);
 
-      const startTime = Date.now();
-
       try {
         const token = localStorage.getItem('authToken');
         const response = await fetch('/api/upload-contract', {
@@ -145,21 +135,13 @@ const MainPage = () => {
         }
 
         const data = await response.json();
-
-        // Calculate the remaining time to ensure a minimum of 3 seconds
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, 3000 - elapsedTime);
-
-        // Use setTimeout to delay the navigation
-        setTimeout(() => {
-          setIsLoading(false);
-          router.push(`/result?contractId=${data.contractId}`);
-        }, remainingTime);
+        setIsLoading(false);
+        router.push(`/analysis?contractId=${data.contractId}`);
 
       } catch (error) {
         console.error('Error uploading contract:', error);
-        // Handle error (e.g., show error message to user)
         setIsLoading(false);
+        setError('Failed to upload contract. Please try again.');
       }
     }
   };
@@ -172,8 +154,7 @@ const MainPage = () => {
     <Container>
       {isLoading && (
         <LoadingOverlay>
-          <LoadingSpinner
-           />
+          <LoadingSpinner />
           <LoadingText>계약서를 분석 중입니다...</LoadingText>
         </LoadingOverlay>
       )}
