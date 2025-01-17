@@ -1,0 +1,39 @@
+# Git 관련 파일
+.git
+.gitignore
+
+# Node.js 패키지
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 환경 파일
+.env
+.env.local
+.env.development
+
+# Next.js 빌드 출력물
+.next
+out
+
+# Docker 관련 파일
+Dockerfile
+.dockerignore
+
+# 테스트 및 코드 커버리지
+coverage
+
+# OS 및 편집기 관련 파일
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.swp
+*.swo
+
+# CI/CD 관련
+.vercel
+now.json
+*.tsbuildinfo

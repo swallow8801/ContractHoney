@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/database';
 import jwt from 'jsonwebtoken';
+import { RowDataPacket } from 'mysql2';
 
 export async function GET(
   request: NextRequest,
@@ -49,4 +50,3 @@ export async function GET(
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
