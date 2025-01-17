@@ -159,10 +159,11 @@ export const SubmitButton = styled.button`
 `;
 
 export const CancelButton = styled(SubmitButton)`
-  background-color: #808080;
+  background-color: #f0f0f0;
+  color: #333;
 
   &:hover {
-    background-color: #666666;
+    background-color: #e0e0e0;
   }
 `;
 
