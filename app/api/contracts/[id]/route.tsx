@@ -3,10 +3,33 @@ import { db } from '@/app/lib/database';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from 'mysql2';
 
-export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+interface ContractRow extends RowDataPacket {
+  con_id: string;
+  user_id: number;
+  // 필요한 다른 필드들을 추가
+}
+
+interface SummaryRow extends RowDataPacket {
+  con_id: string;
+  summary: string;
+  // 필요한 다른 필드들을 추가
+}
+
+interface IdentitiesRow extends RowDataPacket {
+  con_id: string;
+  identity: string;
+  // 필요한 다른 필드들을 추가
+}
+
+export async function GET(request: NextRequest) {
+  // 'id'를 확실히 추출하려면 `pop()`의 반환값이 undefined일 수 있음을 처리
+  const pathname = request.nextUrl.pathname;
+  const id = pathname.split('/').pop() || ''; // 빈 문자열로 처리
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID parameter is required' }, { status: 400 });
+  }
+
   const token = request.headers.get('Authorization')?.split(' ')[1];
 
   if (!token) {
@@ -18,25 +41,25 @@ export async function GET(
     const userId = decoded.userId;
 
     // Get contract data
-    const [contractRows] = await db.query(
+    const [contractRows] = await db.query<ContractRow[]>(
       'SELECT * FROM contract WHERE con_id = ? AND user_id = ?',
-      [context.params.id, userId]
+      [id, userId]
     );
 
-    if ((contractRows as any[]).length === 0) {
+    if (contractRows.length === 0) {
       return NextResponse.json({ error: 'Contract not found' }, { status: 404 });
     }
 
     // Get summaries
-    const [summaryRows] = await db.query(
+    const [summaryRows] = await db.query<SummaryRow[]>(
       'SELECT * FROM contract_summary WHERE con_id = ?',
-      [context.params.id]
+      [id]
     );
 
     // Get identifications
-    const [idenRows] = await db.query(
+    const [idenRows] = await db.query<IdentitiesRow[]>(
       'SELECT * FROM contract_iden WHERE con_id = ?',
-      [context.params.id]
+      [id]
     );
 
     return NextResponse.json({
