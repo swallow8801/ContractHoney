@@ -1,154 +1,136 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    display: flex;
-    width: 100%;
-    height: 92vh;
-    background: #ffffff;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
 `;
 
 export const Sidebar = styled.aside`
-    width: 20%; /* 사이드바 너비 */
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    align-items: center; /* 중앙 정렬 */
-    padding: 30px 0;
+  width: 20%;
+  background: white;
+  padding: 30px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  height: 92vh;
+  overflow-y: auto;
+`;
 
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 20px 0 0 0; /* 제목과 간격 추가 */
-        width: 70%; /* 박스 너비 */
-        background: #ffffff; /* 박스 배경색 */
-        border: 1px solid #e0e0e0; /* 박스 테두리 */
-        border-radius: 5px; /* 모서리 둥글게 */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+export const SidebarTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
+`;
 
-        li {
-        font-size: 16px;
-        padding: 15px 10px; /* 내부 여백 */
-        cursor: pointer;
-        border-bottom: 1px solid #e0e0e0; /* 리스트 구분선 */
+export const MenuList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
 
-        &:last-child {
-            border-bottom: none; /* 마지막 리스트 구분선 제거 */
-        }
+export const MenuItem = styled.li<{ $active?: boolean }>`
+  font-size: 16px;
+  padding: 15px 20px;
+  cursor: pointer;
+  color: ${props => props.$active ? '#F2B024' : '#666'};
+  background: ${props => props.$active ? '#fff7e5' : 'transparent'};
+  border-left: 4px solid ${props => props.$active ? '#F2B024' : 'transparent'};
+  transition: all 0.3s ease;
 
-        &:hover {
-            color:rgb(206, 161, 0); /* 호버 시 색상 변경 */
-            background: #f1f1f1; /* 호버 시 배경색 변경 */
-        }
-        }
-    }
+  &:hover {
+    color: #F2B024;
+    background: #fff7e5;
+  }
 `;
 
 export const Main = styled.main`
-    flex: 1;
-    padding: 40px;
-    width: 80%;
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    gap: 20px;
-    margin-bottom: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
+  width: 80%;
+  min-height: 92vh;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+  margin-left: 20%;
 `;
 
-export const Title = styled.h1`
-    font-size: 30px;
-    font-weight: 600;
-    color: rgb(75, 75, 75);
-    text-align: center; /* 제목 중앙 정렬 */
-`;
-
-export const NoticeTitle = styled.div`
-    font-size: 27px;
-    color: #2d2d2d;
-    font-weight: 500;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1.6px solid rgb(190, 190, 190);
+export const MainTitle = styled.h2`
+  font-size: 28px;
+  color: #2d2d2d;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #F2B024;
 `;
 
 export const NoticeBox = styled.div`
-  width: 80%;
-  background-color: #e0e0e0;
   padding: 20px;
-  border-radius: 5px;
-  margin: 0 auto 20px auto; /* 가로 중앙 정렬 */
-  text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+  background: #fff7e5;
+  border: 1px solid #F2B024;
+  border-radius: 8px;
+  margin-bottom: 20px;
 
   p {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d2d2d;
   }
 
   span {
-    font-size: 16px;
-    color: #555;
+    font-size: 14px;
+    color: #666;
   }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 80%; /* Main의 80%로 설정 */
-  margin: 0 auto; /* 가로 중앙 정렬 */
-  text-align: left; /* 텍스트는 왼쪽 정렬 */
+  gap: 20px;
 `;
 
 export const FormLabel = styled.label`
-  font-size: 19px;
+  font-size: 14px;
+  color: #333;
   font-weight: 600;
-  color: #737373;
-  text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
 `;
 
 export const FormInput = styled.input`
   padding: 10px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  margin-bottom: 30px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 `;
 
 export const FormTextarea = styled.textarea`
   padding: 10px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  height: 200px; /* 기본 높이 설정 */
-  resize: vertical; /* 사용자가 수직 방향으로 크기 조정 가능 */
-  margin-bottom: 30px;
-  overflow-y: auto; /* 텍스트가 많아질 경우 스크롤 표시 */
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
 `;
-
 
 export const FormFileInput = styled.input`
   font-size: 14px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 `;
 
 export const SubmitButton = styled.button`
-  padding: 10px 20px;
-align-self: flex-end;
-  background-color: rgb(169, 169, 169);
+  padding: 8px 20px;
+  background: #F2B024;
   color: white;
-  font-size: 17px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  margin: 50px auto; /* 가로 중앙 정렬 */
+  font-size: 14px;
+  align-self: flex-end;
+  margin-top: 20px;
 
   &:hover {
-    background-color: rgb(141, 141, 141);
+    background: #e0a00f;
   }
 `;
+

@@ -1,13 +1,15 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Container,
   Sidebar,
   Main,
-  Title,
-  NoticeTitle,
+  SidebarTitle,
+  MenuList,
+  MenuItem,
+  MainTitle,
   Form,
   FormFileInput,
   FormInput,
@@ -19,6 +21,7 @@ import {
 
 const WriteQnA = () => {
   const router = useRouter();
+  const pathname = usePathname(); // 현재 경로를 확인
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,18 +70,24 @@ const WriteQnA = () => {
   return (
     <Container>
       <Sidebar>
-        <Title>고객지원</Title>
-        <ul>
-          <li onClick={() => router.push("/faq")} style={{ cursor: "pointer" }}>
+        <SidebarTitle>고객지원</SidebarTitle>
+        <MenuList>
+          <MenuItem
+            $active={pathname === "/faq"}
+            onClick={() => router.push("/faq")}
+          >
             자주 묻는 질문
-          </li>
-          <li onClick={() => router.push("/qna")} style={{ cursor: "pointer" }}>
+          </MenuItem>
+          <MenuItem
+            $active={pathname === "/qna" || pathname === "/qna/writeQnA"} // Q&A 작성 페이지 포함
+            onClick={() => router.push("/qna")}
+          >
             Q&A
-          </li>
-        </ul>
+          </MenuItem>
+        </MenuList>
       </Sidebar>
       <Main>
-        <NoticeTitle>Q&A 작성하기</NoticeTitle>
+        <MainTitle>Q&A 작성하기</MainTitle>
         <NoticeBox>
           <p>Q&A 이용안내</p>
           <span>답변 등록 시 가입한 이메일로 메일이 발송될 예정입니다.</span>
@@ -89,9 +98,6 @@ const WriteQnA = () => {
 
           <FormLabel htmlFor="content">내용</FormLabel>
           <FormTextarea id="content" placeholder="내용을 입력하세요." />
-
-          <FormLabel htmlFor="file">파일 첨부</FormLabel>
-          <FormFileInput id="file" type="file" />
 
           <SubmitButton type="submit">등록하기</SubmitButton>
         </Form>

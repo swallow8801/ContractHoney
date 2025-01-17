@@ -39,16 +39,18 @@ const MainPage = () => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    const fetchQnas = async () => {
+    const checkLoginAndFetchQnas = async () => {
+      const token = localStorage.getItem("authToken");
+
+      // 로그인 여부 확인
+      if (!token) {
+        router.push("/login"); // 로그인 페이지로 즉시 리다이렉트
+        return;
+      }
+      setIsLoggedIn(true);
+
       try {
         setIsLoading(true);
-
-        const token = localStorage.getItem("authToken");
-        setIsLoggedIn(!!token); // 로그인 여부 확인
-
-        if (!token) {
-          throw new Error("로그인이 필요합니다.");
-        }
 
         const response = await fetch("/api/qna/qna_admin", {
           headers: {
@@ -70,8 +72,8 @@ const MainPage = () => {
       }
     };
 
-    fetchQnas();
-  }, []);
+    checkLoginAndFetchQnas();
+  }, [router]);
 
   const handleDelete = async (qnaId: number) => {
     if (!window.confirm("정말로 삭제하시겠습니까?")) return;
@@ -144,7 +146,7 @@ const MainPage = () => {
                   {isAdmin && <th>작성자</th>}
                   <th>작성일</th>
                   <th>답변 상태</th>
-                  {!isAdmin && <th>삭제</th>}
+                  {!isAdmin && <th></th>}
                 </tr>
               </thead>
               <tbody>
