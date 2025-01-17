@@ -24,7 +24,7 @@ interface QnaType {
   user_name?: string;
   qna_answer: string | null;
   qna_answ_date: string | null;
-  isOwner: boolean; // 본인이 작성한 Q&A 여부
+  isOwner: boolean;
 }
 
 const MainPage = () => {
@@ -32,7 +32,7 @@ const MainPage = () => {
   const pathname = usePathname();
   const [qnas, setQnas] = useState<QnaType[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태 추가
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,16 +42,15 @@ const MainPage = () => {
     const checkLoginAndFetchQnas = async () => {
       const token = localStorage.getItem("authToken");
 
-      // 로그인 여부 확인
       if (!token) {
-        router.push("/login"); // 로그인 페이지로 즉시 리다이렉트
+        router.push("/login");
         return;
       }
+
       setIsLoggedIn(true);
 
       try {
         setIsLoading(true);
-
         const response = await fetch("/api/qna/qna_admin", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -62,7 +61,8 @@ const MainPage = () => {
           throw new Error("데이터를 불러오는 데 실패했습니다.");
         }
 
-        const { isAdmin: adminRole, data }: { isAdmin: boolean; data: QnaType[] } = await response.json();
+        const { isAdmin: adminRole, data }: { isAdmin: boolean; data: QnaType[] } =
+          await response.json();
         setIsAdmin(adminRole);
         setQnas(data);
       } catch (err: any) {
@@ -116,14 +116,14 @@ const MainPage = () => {
         <SidebarTitle>고객지원</SidebarTitle>
         <MenuList>
           <MenuItem
-            $active={pathname === '/faq'}
-            onClick={() => router.push('/faq')}
+            $active={pathname === "/faq"}
+            onClick={() => router.push("/faq")}
           >
             자주 묻는 질문
           </MenuItem>
           <MenuItem
-            $active={pathname === '/qna'}
-            onClick={() => router.push('/qna')}
+            $active={pathname === "/qna"}
+            onClick={() => router.push("/qna")}
           >
             Q&A
           </MenuItem>
@@ -151,7 +151,7 @@ const MainPage = () => {
               <tbody>
                 {currentItems.map((qna, index) => (
                   <tr key={qna.qna_id}>
-                    <td>{startIndex + index + 1}</td>
+                    <td>{qnas.length - (startIndex + index)}</td>
                     <td
                       style={{ cursor: "pointer" }}
                       onClick={() => router.push(`/qna/${qna.qna_id}`)}
@@ -161,18 +161,16 @@ const MainPage = () => {
                     {isAdmin && <td>{qna.user_name || "알 수 없음"}</td>}
                     <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
                     <td>{qna.qna_answer ? "답변 완료" : "답변 대기 중"}</td>
-                    {!isAdmin && (
+                    {!isAdmin && !qna.qna_answer && (
                       <td>
-                        {!qna.qna_answer && (
-                          <DeleteButton
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(qna.qna_id);
-                            }}
-                          >
-                            삭제
-                          </DeleteButton>
-                        )}
+                        <DeleteButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(qna.qna_id);
+                          }}
+                        >
+                          삭제
+                        </DeleteButton>
                       </td>
                     )}
                   </tr>
@@ -206,13 +204,17 @@ const MainPage = () => {
                 );
               })}
               <PageButton
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
               >
                 {">"}
               </PageButton>
               <PageButton
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 10, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 10, totalPages))
+                }
                 disabled={currentPage > totalPages - 10}
               >
                 {">>"}
@@ -223,7 +225,9 @@ const MainPage = () => {
           <p>등록된 Q&A가 없습니다.</p>
         )}
         {isLoggedIn && !isAdmin && (
-          <WriteButton onClick={() => router.push("/qna/writeQnA")}>문의하기</WriteButton>
+          <WriteButton onClick={() => router.push("/qna/writeQnA")}>
+            문의하기
+          </WriteButton>
         )}
       </Main>
     </Container>
