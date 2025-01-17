@@ -110,7 +110,7 @@ export const Table = styled.table`
     padding: 15px;
     text-align: center;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 14.5px;
     &:first-child {
       width: 15%;
     }
@@ -161,7 +161,7 @@ export const PageButton = styled.button<{ $active?: boolean }>`
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.2;
   }
 `;
 
@@ -195,22 +195,22 @@ export const InfoSection = styled.div`
   border-radius: 8px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 12px;
+  font-size: 14px;
 `;
 
 export const InfoItem = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 5px;
   align-items: flex-start;
   color: #555;
   line-height: 1.4;
+  margin: 1px 0;
 
   ${props => props.icon && css`
     svg {
       color: #F2B024;
       flex-shrink: 0;
-      margin-top: 2px;
-      width: 14px;
+      width: 16px;
       height: 14px;
     }
   `}
@@ -218,9 +218,10 @@ export const InfoItem = styled.div`
 
 export const CategoryButtons = styled.div`
   display: flex;
-  margin-left: 10px;
-  gap: 15px;
+  margin-left: 20px;
+  gap: 25px;
   margin-bottom: 20px;
+  margin-top: 40px;
   flex-wrap: wrap;
 `;
 
@@ -231,7 +232,7 @@ export const CategoryButton = styled.button<{ $active?: boolean }>`
   background: ${props => props.$active ? '#F2B024' : '#e0e0e0'};
   color: ${props => props.$active ? 'white' : '#333'};
   cursor: pointer;
-  font-size: 14px;
+  font-size: 14.5px;
   transition: all 0.3s ease;
 
   &:hover {

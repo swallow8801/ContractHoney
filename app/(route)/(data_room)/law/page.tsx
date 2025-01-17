@@ -150,7 +150,6 @@ const LawsAndRegulationsPage = () => {
             <span>국문 법령과 외국어번역 법령정보 간에 의미상 차이가 있는 경우에는 국문 법령정보가 우선권을 가집니다.</span>
           </InfoItem>
         </InfoSection>
-
         <CategoryButtons>
           {categories.map((category) => (
             <CategoryButton
@@ -201,34 +200,52 @@ const LawsAndRegulationsPage = () => {
             ))}
           </tbody>
         </Table>
-
         <Pagination>
-          <PageButton 
+          {/* 이전 그룹으로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 10, 1))}
+            disabled={currentPage <= 10}
+          >
+            {"<<"}
+          </PageButton>
+
+          {/* 이전 페이지로 이동 */}
+          <PageButton
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            {'<'}
+            {"<"}
           </PageButton>
-          {[...Array(5)].map((_, i) => {
-            const pageNumber = currentPage - 2 + i;
-            if (pageNumber > 0 && pageNumber <= pageCount) {
-              return (
-                <PageButton
-                  key={pageNumber}
-                  onClick={() => setCurrentPage(pageNumber)}
-                  $active={currentPage === pageNumber}
-                >
-                  {pageNumber}
-                </PageButton>
-              );
-            }
-            return null;
+
+          {/* 페이지 번호 표시 */}
+          {[...Array(10)].map((_, i) => {
+            const pageNumber = Math.floor((currentPage - 1) / 10) * 10 + i + 1;
+            if (pageNumber > pageCount) return null; // 페이지 번호가 최대 페이지 수를 초과하면 렌더링 안 함
+            return (
+              <PageButton
+                key={pageNumber}
+                onClick={() => setCurrentPage(pageNumber)}
+                $active={currentPage === pageNumber}
+              >
+                {pageNumber}
+              </PageButton>
+            );
           })}
+
+          {/* 다음 페이지로 이동 */}
           <PageButton
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
             disabled={currentPage === pageCount}
           >
-            {'>'}
+            {">"}
+          </PageButton>
+
+          {/* 다음 그룹으로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 10, pageCount))}
+            disabled={currentPage > pageCount - 10}
+          >
+            {">>"}
           </PageButton>
         </Pagination>
       </Main>

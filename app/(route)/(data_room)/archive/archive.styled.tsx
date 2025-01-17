@@ -60,6 +60,7 @@ export const SearchSection = styled.div`
   background: #ffffff;
   padding: 0 20px;
   border-radius: 8px;
+  margin-top: 40px;
   margin-bottom: 20px;
 `;
 
@@ -109,7 +110,7 @@ export const ArchiveTable = styled.table`
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 14.5px;
     &:first-child {
       width: 10%;
     }
@@ -191,7 +192,7 @@ export const PageButton = styled.button<{ $active?: boolean }>`
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.2;
   }
 `;
 
@@ -237,8 +238,8 @@ export const ExplanationTextContainer = styled.div`
 `;
 
 export const ExplanationText = styled.div`
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 14.5px;
+  line-height: 1.8;
   color: #555;
 
   a {

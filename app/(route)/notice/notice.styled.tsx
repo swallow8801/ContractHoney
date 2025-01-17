@@ -55,8 +55,8 @@ export const ExplanationSection = styled.div`
 `;
 
 export const ExplanationText = styled.p`
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 14.5px;
+  line-height: 1.8;
   color: #555;
 `;
 
@@ -66,6 +66,7 @@ export const SearchSection = styled.div`
   background: #ffffff;
   padding: 0 20px;
   border-radius: 8px;
+  margin-top: 40px;
   margin-bottom: 20px;
 `;
 
@@ -106,7 +107,7 @@ export const BoardTable = styled.table`
   th, td {
     padding: 15px;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 14.5px;
   }
 
   th {
@@ -164,7 +165,7 @@ export const PageButton = styled.button<{ $active?: boolean }>`
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.2;
   }
 `;
 
