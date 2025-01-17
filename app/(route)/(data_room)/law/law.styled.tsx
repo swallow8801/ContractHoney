@@ -115,10 +115,10 @@ export const Table = styled.table`
       width: 15%;
     }
     &:nth-child(2) {
-      width: 55%;
+      width: 65%;
     }
     &:last-child {
-      width: 30%;
+      width: 20%;
     }
   }
 
@@ -239,12 +239,11 @@ export const CategoryButton = styled.button<{ $active?: boolean }>`
 `;
 
 export const LawLink = styled.a`
-  color: #0066cc;
   text-decoration: none;
   transition: color 0.3s ease;
   
   &:hover {
-    color: #004499;
+    font-weight: 500;
     text-decoration: underline;
   }
 `;

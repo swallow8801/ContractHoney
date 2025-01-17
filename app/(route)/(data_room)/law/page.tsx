@@ -89,6 +89,12 @@ const LawsAndRegulationsPage = () => {
     router.push(`/law?search=${searchTerm}`);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <Container>
       <Sidebar>
@@ -159,17 +165,16 @@ const LawsAndRegulationsPage = () => {
             </CategoryButton>
           ))}
         </CategoryButtons>
-
         <SearchSection>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <SearchButton onClick={handleSearch}>검색</SearchButton>
         </SearchSection>
-
         <Table>
           <thead>
             <tr>

@@ -39,14 +39,18 @@ const StandardContractsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [searchType, setSearchType] = useState("제목");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState('제목');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [contracts, setContracts] = useState<Archive[]>([]);
 
   useEffect(() => {
-    const searchQuery = searchParams?.get("search") || "";
-    setSearchTerm(searchQuery);
+    const searchQuery = searchParams.get('search');
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+      setSearchKeyword(searchQuery);
+    }
 
     const fetchContracts = async () => {
       try {
@@ -62,12 +66,11 @@ const StandardContractsPage = () => {
   }, [searchParams]);
 
   const filteredContracts = contracts.filter((contract) => {
-    const searchValue = searchTerm.toLowerCase();
-    if (!searchValue) return true;
-    if (searchType === "제목") {
-      return contract.ar_title.toLowerCase().includes(searchValue);
-    }
-    return false;
+    const matchesSearch =
+    searchKeyword === '' ||
+    (searchType === '제목' && contract.ar_title.toLowerCase().includes(searchKeyword.toLowerCase()));
+
+    return matchesSearch;
   });
 
   const itemsPerPage = 10;
@@ -78,8 +81,15 @@ const StandardContractsPage = () => {
   );
 
   const handleSearch = () => {
+    setSearchKeyword(searchTerm);
     setCurrentPage(1);
     router.push(`/archive?search=${searchTerm}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+    }
   };
 
   const formatDate = (date: string) => {
@@ -142,6 +152,7 @@ const StandardContractsPage = () => {
             placeholder="검색어를 입력하세요"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <SearchButton onClick={handleSearch}>검색</SearchButton>
         </SearchSection>
