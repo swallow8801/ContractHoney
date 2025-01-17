@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import { Download } from 'lucide-react';
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { Download } from "lucide-react";
+import dynamic from "next/dynamic";
 import {
   Container,
   Sidebar,
@@ -22,10 +23,9 @@ import {
   LogoImage,
   ExplanationText,
   PhoneNumber,
-  PageInfo,
   SidebarTitle,
   ExplanationTextContainer,
-} from './archive.styled';
+} from "./archive.styled";
 
 interface Archive {
   ar_id: number;
@@ -39,24 +39,22 @@ const StandardContractsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [searchType, setSearchType] = useState('제목');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchType, setSearchType] = useState("제목");
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [contracts, setContracts] = useState<Archive[]>([]);
 
   useEffect(() => {
-    const searchQuery = searchParams.get('search');
-    if (searchQuery) {
-      setSearchTerm(searchQuery);
-    }
+    const searchQuery = searchParams?.get("search") || "";
+    setSearchTerm(searchQuery);
 
     const fetchContracts = async () => {
       try {
-        const response = await fetch('/api/archive');
+        const response = await fetch("/api/archive");
         const data = await response.json();
         setContracts(data);
       } catch (error) {
-        console.error('Failed to fetch contracts:', error);
+        console.error("Failed to fetch contracts:", error);
       }
     };
 
@@ -66,7 +64,7 @@ const StandardContractsPage = () => {
   const filteredContracts = contracts.filter((contract) => {
     const searchValue = searchTerm.toLowerCase();
     if (!searchValue) return true;
-    if (searchType === '제목') {
+    if (searchType === "제목") {
       return contract.ar_title.toLowerCase().includes(searchValue);
     }
     return false;
@@ -86,12 +84,12 @@ const StandardContractsPage = () => {
 
   const formatDate = (date: string) => {
     const d = new Date(date);
-    return d.toLocaleDateString('ko-KR');
+    return d.toLocaleDateString("ko-KR");
   };
 
   const handleDownload = (e: React.MouseEvent, ar_id: number) => {
     e.stopPropagation();
-    console.log('Downloading document:', ar_id);
+    console.log("Downloading document:", ar_id);
   };
 
   return (
@@ -100,14 +98,14 @@ const StandardContractsPage = () => {
         <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
           <MenuItem
-            $active={pathname === '/archive'}
-            onClick={() => router.push('/archive')}
+            $active={pathname === "/archive"}
+            onClick={() => router.push("/archive")}
           >
             표준계약서
           </MenuItem>
           <MenuItem
-            $active={pathname === '/law'}
-            onClick={() => router.push('/law')}
+            $active={pathname === "/law"}
+            onClick={() => router.push("/law")}
           >
             법령
           </MenuItem>
@@ -122,8 +120,15 @@ const StandardContractsPage = () => {
           />
           <ExplanationTextContainer>
             <ExplanationText>
-              표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을 최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는 것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다. 이와 관련하여 문의사항이 있으시면{' '}
-              <a href="https://www.ftc.go.kr" target="_blank" rel="noopener noreferrer">
+              표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을
+              최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는
+              것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다.
+              이와 관련하여 문의사항이 있으시면{' '}
+              <a
+                href="https://www.ftc.go.kr"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 유통거래정책과
               </a>{' '}
               로 문의하시기 바랍니다.
@@ -171,7 +176,7 @@ const StandardContractsPage = () => {
         </ArchiveTable>
 
         <Pagination>
-          <PageButton 
+          <PageButton
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
@@ -182,7 +187,7 @@ const StandardContractsPage = () => {
             if (pageNumber > 0 && pageNumber <= pageCount) {
               return (
                 <PageButton
-                  key={pageNumber}
+                  key={`page-${pageNumber}`}
                   onClick={() => setCurrentPage(pageNumber)}
                   $active={currentPage === pageNumber}
                 >
@@ -204,5 +209,6 @@ const StandardContractsPage = () => {
   );
 };
 
-export default StandardContractsPage;
-
+export default dynamic(() => Promise.resolve(StandardContractsPage), {
+  ssr: false,
+});
