@@ -141,6 +141,7 @@ const SignupPage = () => {
               value={user_name}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="이름을 입력하세요"
+              maxLength={12}
               required
             />
 
@@ -213,6 +214,7 @@ const SignupPage = () => {
               value={user_phone}
               onChange={(e) => setUserPhone(e.target.value)}
               placeholder="전화번호를 입력하세요"
+              maxLength={11}
               required
             />
 
