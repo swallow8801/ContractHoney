@@ -154,7 +154,7 @@ export default function MyPage() {
         setAlert({ type: 'success', message: '정보가 성공적으로 업데이트되었습니다.' });
         setIsEditing(false);
         setProfile(prevProfile => ({
-          ...prevProfile,
+          ...prevProfile ? prevProfile : { user_id: 0, user_name: '', user_email: '', user_phone: '' },
           user_name: editedName,
           user_phone: editedPhone
         }));

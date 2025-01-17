@@ -197,7 +197,7 @@ export const InfoSection = styled.div`
   font-size: 14px;
 `;
 
-export const InfoItem = styled.div`
+export const InfoItem = styled.div<{ icon?: boolean }>`  /* 'icon' prop 추가 */
   display: flex;
   gap: 5px;
   align-items: flex-start;
@@ -242,7 +242,7 @@ export const CategoryButton = styled.button<{ $active?: boolean }>`
 export const LawLink = styled.a`
   text-decoration: none;
   transition: color 0.3s ease;
-  
+
   &:hover {
     font-weight: 500;
     text-decoration: underline;
@@ -261,4 +261,3 @@ export const StyledIcon = styled.span`
   display: inline-flex;
   align-items: center;
 `;
-
