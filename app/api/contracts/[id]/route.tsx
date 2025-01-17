@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/database';
 import jwt from 'jsonwebtoken';
+import { RowDataPacket } from 'mysql2';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  // URL에서 id 추출 (params로 전달된 id)
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'Contract ID is required' }, { status: 400 });
+  }
+
   const token = request.headers.get('Authorization')?.split(' ')[1];
 
   if (!token) {
@@ -16,12 +22,13 @@ export async function GET(
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { userId: number };
     const userId = decoded.userId;
 
-    const [rows] = await db.query(
+    // SQL 쿼리에서 id와 userId를 사용하여 계약 정보 조회
+    const [rows] = await db.query<RowDataPacket[]>(
       'SELECT * FROM contract WHERE con_id = ? AND user_id = ?',
-      [params.id, userId]
+      [id, userId]
     );
 
-    if ((rows as any[]).length === 0) {
+    if (rows.length === 0) {
       return NextResponse.json({ error: 'Contract not found' }, { status: 404 });
     }
 
@@ -31,4 +38,3 @@ export async function GET(
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
