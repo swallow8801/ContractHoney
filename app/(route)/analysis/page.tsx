@@ -17,25 +17,32 @@ import {
   Tab,
   Badge,
   AnalysisContent,
-  AnalysisItem,
-  ItemLabel,
-  ItemContent,
   ActionButtons,
   ActionButton,
   HancomPlaceholder,
-  ClauseList,
-  ClauseItem,
-  ClauseCheckbox,
-  ClauseTitle,
+  ClauseContainer,
+  ClauseHeader,
   ClauseContent,
+  ClauseExplanation,
   PaginationContainer,
   PaginationButton,
-  ClauseType,
+  ClauseCheckbox,
+  SummaryContent,
+  ProbabilitySection,
+  ProbabilityBar,
+  ProbabilityFill,
+  ProbabilityLabel,
+  ProbabilityContainer,
+  ExplanationTitle,
+  LawReference,
+  LawReferenceLabel,
+  LawReferenceContent,
+  CheckboxContainer,
+  Divider,
 } from './analysis.styled';
 
 interface Contract {
   con_id: number;
-  user_id: number;
   con_title: string;
   con_type: string;
   con_updatetime: string;
@@ -65,7 +72,7 @@ interface ContractIden {
   law_clause_number: number | null;
   law_subclause_number: number | null;
   law_explain: string | null;
-  checked?: boolean; // 선택적 속성 추가
+  checked: boolean;
 }
 
 const AnalysisPage = () => {
@@ -75,9 +82,9 @@ const AnalysisPage = () => {
   const [contractIdens, setContractIdens] = useState<ContractIden[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages] = useState(27);
-  const [activeTab, setActiveTab] = useState('요약');
-  const [currentClausePage, setCurrentClausePage] = useState(1);
-  const clausesPerPage = 5;
+  const [activeTab, setActiveTab] = useState<'summary' | 'unfair' | 'toxic'>('summary');
+  const [currentUnfairIndex, setCurrentUnfairIndex] = useState(0);
+  const [currentToxicIndex, setCurrentToxicIndex] = useState(0);
 
   useEffect(() => {
     const contractId = searchParams.get('contractId');
@@ -100,10 +107,9 @@ const AnalysisPage = () => {
       const data = await response.json();
       setContract(data.contract);
       setContractSummaries(data.summaries);
-      setContractIdens(data.idens);
+      setContractIdens(data.idens.map((iden: ContractIden) => ({ ...iden, checked: false })));
     } catch (error) {
       console.error('Error fetching contract data:', error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
@@ -115,13 +121,35 @@ const AnalysisPage = () => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
-  const handleClauseCheck = (id: string, type: 'unfair' | 'toxic') => {
-    setContractIdens(prev =>
-      prev.map(clause =>
-        clause.iden_id.toString() === id ? {
-          ...clause,
-          checked: !clause.checked
-        } : clause
+  const filteredUnfairClauses = contractIdens.filter(clause => clause.iden_unfair);
+  const filteredToxicClauses = contractIdens.filter(clause => clause.iden_toxic);
+
+  const currentClause = activeTab === 'unfair'
+    ? filteredUnfairClauses[currentUnfairIndex]
+    : filteredToxicClauses[currentToxicIndex];
+
+  const handlePrevClause = () => {
+    if (activeTab === 'unfair') {
+      setCurrentUnfairIndex(prev => Math.max(prev - 1, 0));
+    } else if (activeTab === 'toxic') {
+      setCurrentToxicIndex(prev => Math.max(prev - 1, 0));
+    }
+  };
+
+  const handleNextClause = () => {
+    if (activeTab === 'unfair') {
+      setCurrentUnfairIndex(prev => Math.min(prev + 1, filteredUnfairClauses.length - 1));
+    } else if (activeTab === 'toxic') {
+      setCurrentToxicIndex(prev => Math.min(prev + 1, filteredToxicClauses.length - 1));
+    }
+  };
+
+  const handleCheckClause = () => {
+    setContractIdens(prevIdens =>
+      prevIdens.map(iden =>
+        iden.iden_id === currentClause.iden_id
+          ? { ...iden, checked: !iden.checked }
+          : iden
       )
     );
   };
@@ -142,95 +170,87 @@ const AnalysisPage = () => {
     );
   };
 
-  const renderContent = () => {
-    if (!contract) return null;
+  const renderClauseContent = () => {
+    if (!currentClause) return null;
 
-    switch (activeTab) {
-      case '요약':
-        return (
-          <>
-            <AnalysisItem>
-              <ItemLabel>계약 종류</ItemLabel>
-              <ItemContent>{contract.con_type}</ItemContent>
-            </AnalysisItem>
-            <AnalysisItem>
-              <ItemLabel>계약 요약</ItemLabel>
-              <ItemContent>
-                {contractSummaries.map((summary) => (
-                  <div key={summary.sum_id}>
-                    <h4>{summary.sum_article_number}조: {summary.sum_article_title}</h4>
-                    <p>{summary.sum_summary}</p>
-                  </div>
-                ))}
-              </ItemContent>
-            </AnalysisItem>
-          </>
-        );
-      case '불공정조항':
-        return renderClauses('unfair');
-      case '독소조항':
-        return renderClauses('toxic');
-      default:
-        return null;
-    }
-  };
-
-  const renderClauses = (type: 'unfair' | 'toxic') => {
-    const clauses = contractIdens.filter(iden => type === 'unfair' ? iden.iden_unfair : iden.iden_toxic);
-    const totalClauses = clauses.length;
-    const uncheckedCount = clauses.filter(c => !c.checked).length;
-    const startIdx = (currentClausePage - 1) * clausesPerPage;
-    const endIdx = startIdx + clausesPerPage;
-    const currentClauses = clauses.slice(startIdx, endIdx);
-    const totalClausePages = Math.ceil(totalClauses / clausesPerPage);
+    const probability = activeTab === 'unfair'
+      ? currentClause.iden_unfair_percent
+      : currentClause.iden_toxic_percent;
 
     return (
       <>
-        <ClauseType>
-          {type === 'unfair' ? '불공정조항' : '독소조항'} ({uncheckedCount}/{totalClauses})
-        </ClauseType>
-        <ClauseList>
-          {currentClauses.map((clause) => (
-            <ClauseItem key={clause.iden_id}>
-              <ClauseCheckbox
-                checked={clause.checked || false}
-                onClick={() => handleClauseCheck(clause.iden_id.toString(), type)}
-              >
-                <Check size={16} />
+        <ClauseContainer $checked={currentClause.checked}>
+          <ClauseHeader $checked={currentClause.checked}>
+            <span>
+              {currentClause.iden_article_number}조
+              {currentClause.iden_clause_number && ` ${currentClause.iden_clause_number}항`}
+              {currentClause.iden_subclause_number && ` ${currentClause.iden_subclause_number}호`}
+            </span>
+            <CheckboxContainer onClick={handleCheckClause}>
+              <ClauseCheckbox $checked={currentClause.checked}>
+                {currentClause.checked && <Check size={16} />}
               </ClauseCheckbox>
-              <div>
-                <ClauseTitle>{clause.iden_article_number}조 {clause.iden_clause_number && `${clause.iden_clause_number}항`} {clause.iden_subclause_number && `${clause.iden_subclause_number}호`}</ClauseTitle>
-                <ClauseContent>{clause.iden_sentence}</ClauseContent>
-                <p>확률: {type === 'unfair' ? clause.iden_unfair_percent : clause.iden_toxic_percent}%</p>
-                {clause.law_explain && <p>설명: {clause.law_explain}</p>}
-                {type === 'unfair' && clause.law_article_number && (
-                  <p>관련 법령: {clause.law_article_number}조 {clause.law_clause_number && `${clause.law_clause_number}항`} {clause.law_subclause_number && `${clause.law_subclause_number}호`}</p>
-                )}
-              </div>
-            </ClauseItem>
-          ))}
-        </ClauseList>
-        <PaginationContainer>
-          <PaginationButton
-            onClick={() => setCurrentClausePage(prev => Math.max(prev - 1, 1))}
-            disabled={currentClausePage === 1}
-          >
-            이전
-          </PaginationButton>
-          <PageInfo>{currentClausePage} / {totalClausePages}</PageInfo>
-          <PaginationButton
-            onClick={() => setCurrentClausePage(prev => Math.min(prev + 1, totalClausePages))}
-            disabled={currentClausePage === totalClausePages}
-          >
-            다음
-          </PaginationButton>
-        </PaginationContainer>
+            </CheckboxContainer>
+          </ClauseHeader>
+          <ClauseContent $checked={currentClause.checked}>{currentClause.iden_sentence}</ClauseContent>
+        </ClauseContainer>
+        <ClauseExplanation $checked={currentClause.checked}>
+          <ProbabilitySection>
+            <ExplanationTitle $checked={currentClause.checked}>{activeTab === 'unfair' ? '불공정조항 위험도' : '독소조항 위험도'}</ExplanationTitle>
+            <ProbabilityContainer>
+              <ProbabilityBar>
+                <ProbabilityFill $percentage={probability || 0} />
+              </ProbabilityBar>
+              <ProbabilityLabel $percentage={probability || 0}>
+                {probability}%
+              </ProbabilityLabel>
+            </ProbabilityContainer>
+          </ProbabilitySection>
+          <Divider />
+          {activeTab === 'unfair' && (
+            <>
+              <ExplanationTitle $checked={currentClause.checked}>위반 법령</ExplanationTitle>
+              <LawReference>
+                <LawReferenceContent>
+                  {currentClause.law_article_number}조
+                  {currentClause.law_clause_number && ` ${currentClause.law_clause_number}항`}
+                  {currentClause.law_subclause_number && ` ${currentClause.law_subclause_number}호`}
+                </LawReferenceContent>
+              </LawReference>
+              <ExplanationTitle $checked={currentClause.checked}>설명</ExplanationTitle>
+              <p>{currentClause.law_explain}</p>
+            </>
+          )}
+          {activeTab === 'toxic' && (
+            <>
+              <ExplanationTitle $checked={currentClause.checked}>독소조항 설명</ExplanationTitle>
+              <p>이 조항은 계약 당사자 중 한쪽에게 불리한 조건을 포함하고 있습니다.</p>
+            </>
+          )}
+        </ClauseExplanation>
       </>
     );
   };
 
-  const getUnfairCount = () => contractIdens.filter(c => c.iden_unfair).length;
-  const getToxicCount = () => contractIdens.filter(c => c.iden_toxic).length;
+  const renderSummaryContent = () => {
+    if (!contract || !contractSummaries.length) return null;
+
+    return (
+      <SummaryContent>
+        <h3>계약 종류: {contract.con_type}</h3>
+        <h3>계약 요약:</h3>
+        {contractSummaries.map((summary) => (
+          <div key={summary.sum_id}>
+            <h4>{summary.sum_article_number}조: {summary.sum_article_title}</h4>
+            <p>{summary.sum_summary}</p>
+          </div>
+        ))}
+      </SummaryContent>
+    );
+  };
+
+  const getUnfairCount = () => filteredUnfairClauses.filter(c => !c.checked).length;
+  const getToxicCount = () => filteredToxicClauses.filter(c => !c.checked).length;
 
   if (!contract) {
     return <div>Loading...</div>;
@@ -258,22 +278,49 @@ const AnalysisPage = () => {
 
       <AnalysisSection>
         <TabContainer>
-          <Tab $active={activeTab === '요약'} onClick={() => setActiveTab('요약')}>
+          <Tab $active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>
             요약
           </Tab>
-          <Tab $active={activeTab === '불공정조항'} onClick={() => setActiveTab('불공정조항')}>
+          <Tab $active={activeTab === 'unfair'} onClick={() => setActiveTab('unfair')}>
             불공정조항
             {getUnfairCount() > 0 && <Badge>{getUnfairCount()}</Badge>}
           </Tab>
-          <Tab $active={activeTab === '독소조항'} onClick={() => setActiveTab('독소조항')}>
+          <Tab $active={activeTab === 'toxic'} onClick={() => setActiveTab('toxic')}>
             독소조항
             {getToxicCount() > 0 && <Badge>{getToxicCount()}</Badge>}
           </Tab>
         </TabContainer>
 
         <AnalysisContent>
-          {renderContent()}
+          {activeTab === 'summary' ? renderSummaryContent() : renderClauseContent()}
         </AnalysisContent>
+
+        {activeTab !== 'summary' && (
+          <PaginationContainer>
+            <PaginationButton
+              onClick={handlePrevClause}
+              disabled={activeTab === 'unfair' ? currentUnfairIndex === 0 : currentToxicIndex === 0}
+            >
+              이전
+            </PaginationButton>
+            <PageInfo>
+              {activeTab === 'unfair'
+                ? `${currentUnfairIndex + 1} / ${filteredUnfairClauses.length}`
+                : `${currentToxicIndex + 1} / ${filteredToxicClauses.length}`
+              }
+            </PageInfo>
+            <PaginationButton
+              onClick={handleNextClause}
+              disabled={
+                activeTab === 'unfair'
+                  ? currentUnfairIndex === filteredUnfairClauses.length - 1
+                  : currentToxicIndex === filteredToxicClauses.length - 1
+              }
+            >
+              다음
+            </PaginationButton>
+          </PaginationContainer>
+        )}
 
         <ActionButtons>
           <ActionButton className="share">

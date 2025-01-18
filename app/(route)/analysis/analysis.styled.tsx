@@ -3,14 +3,15 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 92vh;
   background: #f5f5f5;
-  padding: 20px;
+  padding: 30px;
   gap: 20px;
 `;
 
 export const PreviewSection = styled.div`
   flex: 1;
+  height: 100%;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -21,6 +22,7 @@ export const PreviewSection = styled.div`
 
 export const AnalysisSection = styled.div`
   flex: 1;
+  height: 100%;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -117,21 +119,6 @@ export const AnalysisContent = styled.div`
   overflow-y: auto;
 `;
 
-export const AnalysisItem = styled.div`
-  margin-bottom: 20px;
-`;
-
-export const ItemLabel = styled.div`
-  font-weight: 500;
-  color: #666;
-  margin-bottom: 8px;
-`;
-
-export const ItemContent = styled.div`
-  color: #333;
-  line-height: 1.5;
-`;
-
 export const ActionButtons = styled.div`
   display: flex;
   gap: 10px;
@@ -185,62 +172,43 @@ export const HancomPlaceholder = styled.div`
   }
 `;
 
-export const ClauseList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
-`;
-
-export const ClauseItem = styled.div`
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  background: #f9f9f9;
+export const ClauseContainer = styled.div<{ $checked?: boolean }>`
+  background-color: ${props => props.$checked ? '#f0f0f0' : '#f8f8f8'};
   border-radius: 8px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background: #f5f5f5;
-  }
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  opacity: ${props => props.$checked ? 0.7 : 1};
 `;
 
-export const ClauseCheckbox = styled.button<{ checked: boolean }>`
+export const ClauseHeader = styled.div<{ $checked?: boolean }>`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 2px solid ${props => props.checked ? '#333' : '#ccc'};
-  background: ${props => props.checked ? '#333' : 'white'};
-  color: white;
-  cursor: pointer;
-  flex-shrink: 0;
-  padding: 0;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: #333;
-  }
-
-  svg {
-    opacity: ${props => props.checked ? 1 : 0};
-  }
-`;
-
-export const ClauseTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   color: #333;
-  margin: 0 0 8px 0;
+  margin-bottom: 10px;
+  opacity: ${props => props.$checked ? 0.7 : 1};
 `;
 
-export const ClauseContent = styled.p`
-  font-size: 14px;
-  color: #666;
-  margin: 0;
+export const ClauseContent = styled.p<{ $checked?: boolean }>`
+  font-size: 16px;
+  color: ${props => props.$checked ? '#999' : '#333'};
   line-height: 1.5;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  opacity: ${props => props.$checked ? 0.7 : 1};
+`;
+
+export const ClauseExplanation = styled.div<{ $checked?: boolean }>`
+  background-color: ${props => props.$checked ? '#f0f0f0' : '#f8f8f8'};
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  opacity: ${props => props.$checked ? 0.7 : 1};
 `;
 
 export const PaginationContainer = styled.div`
@@ -271,10 +239,131 @@ export const PaginationButton = styled.button`
   }
 `;
 
-export const ClauseType = styled.div`
+export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #ccc;
+  background: ${props => props.$checked ? '#333' : 'white'};
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #999;
+  }
+
+  svg {
+    opacity: ${props => props.$checked ? 1 : 0};
+  }
+`;
+
+export const SummaryContent = styled.div`
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+`;
+
+export const ProbabilityBar = styled.div`
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+`;
+
+export const ProbabilityFill = styled.div<{ $percentage: number }>`
+  width: ${props => props.$percentage}%;
+  height: 100%;
+  background-color: ${props => {
+    if (props.$percentage < 33) return '#4caf50';
+    if (props.$percentage < 66) return '#ffa000';
+    return '#f44336';
+  }};
+  transition: width 0.3s ease-in-out;
+`;
+
+export const ProbabilityLabel = styled.div<{ $percentage: number }>`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: ${props => {
+    if (props.$percentage < 33) return '#4caf50';
+    if (props.$percentage < 66) return '#ffa000';
+    return '#f44336';
+  }};
+`;
+
+export const ProbabilityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const ProbabilitySection = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const ExplanationTitle = styled.h4<{ $checked?: boolean }>`
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: ${props => props.$checked ? 0.7 : 1};
+`;
+
+export const LawReference = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const LawReferenceLabel = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+`;
+
+export const LawReferenceContent = styled.div`
+  color: #333;
+  line-height: 1.5;
+`;
+
+export const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 20px 0;
 `;
 
