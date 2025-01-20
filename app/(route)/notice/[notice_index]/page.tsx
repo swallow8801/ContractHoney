@@ -30,6 +30,16 @@ interface Notice {
   flag: number;
 }
 
+const formatDate = (isoString: string) => {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
 const NoticeDetailPage = () => {
   const router = useRouter();
   const params = useParams();
@@ -140,7 +150,7 @@ const NoticeDetailPage = () => {
             <>
               {/* 요청 상태: 확인 버튼 */}
               <ConfirmButton
-                $type={notification.type === 'confirm-delete' ? 'error' : 'success'}
+                $type={notification.type === 'confirm-delete' ? 'error' : 'ok'}
                 onClick={handleConfirm}
               >
                 확인
@@ -162,7 +172,7 @@ const NoticeDetailPage = () => {
       </Sidebar>
       <Main>
         <NoticeTitle>{currentNotice.title}</NoticeTitle>
-        <NoticeInfo>작성일 : {new Date(new Date(currentNotice.date).getTime() + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19).replace("T", " ")}</NoticeInfo>
+        <NoticeInfo>작성일 : {formatDate(currentNotice.date)}</NoticeInfo>
         <Content>{currentNotice.content}</Content>
         <NavigationTable>
           <tbody>

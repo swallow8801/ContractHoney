@@ -20,6 +20,7 @@ import {
   NotificationBox,
   NotificationMessage,
   NotificationOverlay,
+  MainInfo,
 } from "./[qna_id].styled";
 
 interface QnaType {
@@ -177,14 +178,11 @@ const QnaDetailPage = () => {
       </Sidebar>
       <Main>
         <MainTitle>{qna?.qna_title}</MainTitle>
+        <MainInfo>작성일 : {qna ? formatDate(qna.qna_cont_date) : ""}</MainInfo>
         <ArchiveTable>
           <tbody>
             <tr>
-              <th>작성일</th>
-              <td>{qna ? formatDate(qna.qna_cont_date) : ""}</td>
-            </tr>
-            <tr>
-              <th>내용</th>
+              <th>질문</th>
               <td>{qna?.qna_content}</td>
             </tr>
             {qna?.qna_answer && (

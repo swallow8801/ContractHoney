@@ -42,7 +42,16 @@ export const MainTitle = styled.h2`
   font-weight: 600;
   margin-bottom: 20px;
   padding-bottom: 15px;
+  text-align: center; // 가운데 정렬 추가
+`;
+
+export const MainInfo = styled.div`
+  font-size: 15px;
+  color: #666;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   border-bottom: 2px solid #F2B024;
+  text-align: right; // 오른쪽 정렬 추가
 `;
 
 export const MenuList = styled.ul`
@@ -69,6 +78,7 @@ export const MenuItem = styled.li<{ $active?: boolean }>`
 export const ArchiveTable = styled.table`
   width: 100%; /* 테이블 전체 너비를 줄임 */
   margin: 0 auto; /* 테이블을 가운데 정렬 */
+  margin-top: 15px;
   border-collapse: collapse;
   background: #ffffff;
   border-radius: 8px;
@@ -100,23 +110,8 @@ export const ArchiveTable = styled.table`
     text-align: center;
   }
 
-  td:nth-child(2) {
+  td:nth-child(2), th:nth-child(2) {
     text-align: left;
-  }
-
-  td:nth-child(3), th:nth-child(3) {
-    width: 15%;
-    text-align: center;
-  }
-
-  td:nth-child(4), th:nth-child(4) {
-    width: 20%;
-    text-align: center;
-  }
-
-  td:nth-child(5), th:nth-child(5) {
-    width: 20%;
-    text-align: center;
   }
 `;
 
