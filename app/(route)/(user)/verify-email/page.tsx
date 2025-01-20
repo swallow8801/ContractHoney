@@ -1,40 +1,29 @@
-'use client';
+"use client"
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Container, Title, StatusMessage, Card, Button } from './verifyEmail.styled';
+import { Suspense } from "react"
+import { Container } from "./verifyEmail.styled"
 
-const VerifyEmail = () => {
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-  const [status, setStatus] = useState('');
-
-  useEffect(() => {
-    if (token) {
-      fetch(`/api/verify-email?token=${token}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            setStatus('인증 실패: ' + data.error);
-          } else {
-            setStatus('이메일 인증이 완료되었습니다!');
-          }
-        })
-        .catch(() => {
-          setStatus('서버 오류가 발생했습니다.');
-        });
-    }
-  }, [token]);
-
+// Loading component for Suspense fallback
+function LoadingState() {
   return (
     <Container>
-      <Card>
-        <Title>이메일 인증</Title>
-        <StatusMessage>{status}</StatusMessage>
-        <Button onClick={() => window.location.href = '/login'}>로그인 페이지로 돌아가기</Button>
-      </Card>
+      <div>Loading...</div>
     </Container>
-  );
-};
+  )
+}
 
-export default VerifyEmail;
+// Separate the content that uses useSearchParams into its own component
+function VerifyEmailContent() {
+  const { VerifyEmailForm } = require("./VerifyEmailForm")
+  return <VerifyEmailForm />
+}
+
+// Main component with Suspense boundary
+export default function VerifyEmail() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <VerifyEmailContent />
+    </Suspense>
+  )
+}
+
