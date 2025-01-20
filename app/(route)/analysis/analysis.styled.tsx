@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const Container = styled.div`
   display: flex;
@@ -7,7 +7,7 @@ export const Container = styled.div`
   background: #f5f5f5;
   padding: 30px;
   gap: 20px;
-`;
+`
 
 export const PreviewSection = styled.div`
   flex: 1;
@@ -18,7 +18,7 @@ export const PreviewSection = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-`;
+`
 
 export const AnalysisSection = styled.div`
   flex: 1;
@@ -29,7 +29,7 @@ export const AnalysisSection = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-`;
+`
 
 export const NavigationBar = styled.div`
   display: flex;
@@ -37,13 +37,13 @@ export const NavigationBar = styled.div`
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid #eee;
-`;
+`
 
 export const PageNavigation = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
+`
 
 export const NavButton = styled.button`
   background: none;
@@ -60,18 +60,18 @@ export const NavButton = styled.button`
     color: #ccc;
     cursor: not-allowed;
   }
-`;
+`
 
 export const PageInfo = styled.span`
   color: #666;
   font-size: 14px;
-`;
+`
 
 export const DocumentTitle = styled.h1`
   font-size: 18px;
   color: #333;
   margin: 0;
-`;
+`
 
 export const PreviewContent = styled.div`
   flex: 1;
@@ -83,27 +83,27 @@ export const PreviewContent = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`;
+`
 
 export const TabContainer = styled.div`
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
-`;
+`
 
 export const Tab = styled.button<{ $active?: boolean }>`
   padding: 10px 20px;
   background: none;
   border: none;
-  border-bottom: 2px solid ${props => props.$active ? '#333' : 'transparent'};
-  color: ${props => props.$active ? '#333' : '#666'};
-  font-weight: ${props => props.$active ? '600' : 'normal'};
+  border-bottom: 2px solid ${(props) => (props.$active ? "#333" : "transparent")};
+  color: ${(props) => (props.$active ? "#333" : "#666")};
+  font-weight: ${(props) => (props.$active ? "600" : "normal")};
   cursor: pointer;
 
   &:hover {
     color: #333;
   }
-`;
+`
 
 export const Badge = styled.span`
   background: #ff4444;
@@ -112,18 +112,18 @@ export const Badge = styled.span`
   padding: 2px 6px;
   border-radius: 10px;
   margin-left: 5px;
-`;
+`
 
 export const AnalysisContent = styled.div`
   flex: 1;
   overflow-y: auto;
-`;
+`
 
 export const ActionButtons = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 20px;
-`;
+`
 
 export const ActionButton = styled.button`
   padding: 10px 20px;
@@ -148,7 +148,7 @@ export const ActionButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
-`;
+`
 
 export const HancomPlaceholder = styled.div`
   display: flex;
@@ -170,17 +170,17 @@ export const HancomPlaceholder = styled.div`
   button {
     margin-top: 16px;
   }
-`;
+`
 
 export const ClauseContainer = styled.div<{ $checked?: boolean }>`
-  background-color: ${props => props.$checked ? '#f0f0f0' : '#f8f8f8'};
+  background-color: ${(props) => (props.$checked ? "#f0f0f0" : "#f8f8f8")};
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
   border: 1px solid #e0e0e0;
   transition: all 0.3s ease;
-  opacity: ${props => props.$checked ? 0.7 : 1};
-`;
+  opacity: ${(props) => (props.$checked ? 0.7 : 1)};
+`
 
 export const ClauseHeader = styled.div<{ $checked?: boolean }>`
   display: flex;
@@ -190,26 +190,26 @@ export const ClauseHeader = styled.div<{ $checked?: boolean }>`
   font-weight: 600;
   color: #333;
   margin-bottom: 10px;
-  opacity: ${props => props.$checked ? 0.7 : 1};
-`;
+  opacity: ${(props) => (props.$checked ? 0.7 : 1)};
+`
 
 export const ClauseContent = styled.p<{ $checked?: boolean }>`
   font-size: 16px;
-  color: ${props => props.$checked ? '#999' : '#333'};
+  color: ${(props) => (props.$checked ? "#999" : "#333")};
   line-height: 1.5;
   transition: color 0.3s ease, opacity 0.3s ease;
-  opacity: ${props => props.$checked ? 0.7 : 1};
-`;
+  opacity: ${(props) => (props.$checked ? 0.7 : 1)};
+`
 
 export const ClauseExplanation = styled.div<{ $checked?: boolean }>`
-  background-color: ${props => props.$checked ? '#f0f0f0' : '#f8f8f8'};
+  background-color: ${(props) => (props.$checked ? "#f0f0f0" : "#f8f8f8")};
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
   border: 1px solid #e0e0e0;
   transition: all 0.3s ease;
-  opacity: ${props => props.$checked ? 0.7 : 1};
-`;
+  opacity: ${(props) => (props.$checked ? 0.7 : 1)};
+`
 
 export const PaginationContainer = styled.div`
   display: flex;
@@ -217,7 +217,7 @@ export const PaginationContainer = styled.div`
   align-items: center;
   gap: 12px;
   margin-top: 24px;
-`;
+`
 
 export const PaginationButton = styled.button`
   padding: 8px 16px;
@@ -237,7 +237,7 @@ export const PaginationButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
-`;
+`
 
 export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
   display: flex;
@@ -247,7 +247,7 @@ export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
   height: 24px;
   border-radius: 4px;
   border: 2px solid #ccc;
-  background: ${props => props.$checked ? '#333' : 'white'};
+  background: ${(props) => (props.$checked ? "#333" : "white")};
   color: white;
   cursor: pointer;
   padding: 0;
@@ -258,9 +258,9 @@ export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
   }
 
   svg {
-    opacity: ${props => props.$checked ? 1 : 0};
+    opacity: ${(props) => (props.$checked ? 1 : 0)};
   }
-`;
+`
 
 export const SummaryContent = styled.div`
   h3 {
@@ -284,7 +284,7 @@ export const SummaryContent = styled.div`
     line-height: 1.5;
     margin-bottom: 15px;
   }
-`;
+`
 
 export const ProbabilityBar = styled.div`
   width: 100%;
@@ -293,18 +293,18 @@ export const ProbabilityBar = styled.div`
   border-radius: 5px;
   overflow: hidden;
   margin-top: 5px;
-`;
+`
 
 export const ProbabilityFill = styled.div<{ $percentage: number }>`
-  width: ${props => props.$percentage}%;
+  width: ${(props) => props.$percentage}%;
   height: 100%;
-  background-color: ${props => {
-    if (props.$percentage < 33) return '#4caf50';
-    if (props.$percentage < 66) return '#ffa000';
-    return '#f44336';
+  background-color: ${(props) => {
+    if (props.$percentage < 33) return "#4caf50"
+    if (props.$percentage < 66) return "#ffa000"
+    return "#f44336"
   }};
   transition: width 0.3s ease-in-out;
-`;
+`
 
 export const ProbabilityLabel = styled.div<{ $percentage: number }>`
   display: flex;
@@ -313,22 +313,22 @@ export const ProbabilityLabel = styled.div<{ $percentage: number }>`
   margin-top: 5px;
   font-size: 14px;
   font-weight: bold;
-  color: ${props => {
-    if (props.$percentage < 33) return '#4caf50';
-    if (props.$percentage < 66) return '#ffa000';
-    return '#f44336';
+  color: ${(props) => {
+    if (props.$percentage < 33) return "#4caf50"
+    if (props.$percentage < 66) return "#ffa000"
+    return "#f44336"
   }};
-`;
+`
 
 export const ProbabilityContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
+`
 
 export const ProbabilitySection = styled.div`
   margin-bottom: 20px;
-`;
+`
 
 export const ExplanationTitle = styled.h4<{ $checked?: boolean }>`
   font-size: 18px;
@@ -336,34 +336,34 @@ export const ExplanationTitle = styled.h4<{ $checked?: boolean }>`
   color: #333;
   margin-top: 10px;
   margin-bottom: 10px;
-  opacity: ${props => props.$checked ? 0.7 : 1};
-`;
+  opacity: ${(props) => (props.$checked ? 0.7 : 1)};
+`
 
 export const LawReference = styled.div`
   margin-bottom: 10px;
-`;
+`
 
 export const LawReferenceLabel = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #333;
   margin-bottom: 8px;
-`;
+`
 
 export const LawReferenceContent = styled.div`
   color: #333;
   line-height: 1.5;
-`;
+`
 
 export const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
+`
 
 export const Divider = styled.hr`
   border: none;
   border-top: 1px solid #e0e0e0;
   margin: 20px 0;
-`;
+`
 
