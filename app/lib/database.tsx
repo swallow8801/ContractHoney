@@ -1,28 +1,17 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
-// 환경 변수 로드
 dotenv.config();
 
-// Azure에서 설정한 연결 문자열 환경 변수 사용
-const connectionString = process.env.AZURE_MYSQL_CONNECTIONSTRING;
-
-if (connectionString) {
-  const { Database, Server, UserId, Password } = connectionString.split(';').reduce((acc, pair) => {
-    const [key, value] = pair.split('=');
-    acc[key] = value;
-    return acc;
-  }, {} as { [key: string]: string });
-
-  // MySQL 연결 설정
-  const db = await mysql.createConnection({
-    host: Server,
-    user: UserId,
-    password: Password,
-    database: Database,
+// 비동기 함수로 DB 연결 설정
+export async function createDbConnection() {
+  const connection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,  // DB_PORT 환경변수가 설정되지 않으면 기본 포트 3306 사용
   });
 
-  console.log('MySQL connected successfully!');
-} else {
-  console.error('Connection string not found!');
+  return connection;
 }
