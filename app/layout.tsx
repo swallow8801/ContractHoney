@@ -27,7 +27,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
       suppressHydrationWarning>
         <body>
         <Nav />
-        <div style={{ height: "92vh" }}>
+        <div style={{ height: "calc(100vh - 90px)" }}>
             {children}
         </div>
         </body>

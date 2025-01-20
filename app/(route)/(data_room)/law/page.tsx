@@ -89,6 +89,17 @@ const LawsAndRegulationsPage = () => {
     router.push(`/law?search=${searchTerm}`);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setSearchTerm(value);
+    
+      // 검색어가 비어 있으면 전체 목록 표시
+      if (value.trim() === '') {
+        setSearchKeyword('');
+        setCurrentPage(1);
+      }
+    };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -169,7 +180,7 @@ const LawsAndRegulationsPage = () => {
             type="text"
             placeholder="검색어를 입력하세요"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
           />
           <SearchButton onClick={handleSearch}>검색</SearchButton>
