@@ -43,6 +43,9 @@ interface Contract {
   con_updatetime: string
   con_summary: string | null
   con_version: number
+  unfair_count: number
+  toxic_count: number
+  selectedVersion?: number
 }
 
 interface GroupedContract {
@@ -52,7 +55,10 @@ interface GroupedContract {
     con_id: number
     con_version: number
     con_updatetime: string
+    unfair_count: number
+    toxic_count: number
   }[]
+  selectedVersion?: number
 }
 
 const groupContracts = (contracts: Contract[]): GroupedContract[] => {
@@ -69,6 +75,8 @@ const groupContracts = (contracts: Contract[]): GroupedContract[] => {
         con_id: contract.con_id,
         con_version: contract.con_version,
         con_updatetime: contract.con_updatetime,
+        unfair_count: contract.unfair_count,
+        toxic_count: contract.toxic_count,
       })
       return acc
     },
@@ -78,6 +86,7 @@ const groupContracts = (contracts: Contract[]): GroupedContract[] => {
   return Object.values(grouped).map((group) => ({
     ...group,
     versions: group.versions.sort((a, b) => b.con_version - a.con_version),
+    selectedVersion: group.versions[0].con_version,
   }))
 }
 
@@ -91,6 +100,7 @@ export default function ManageContracts() {
   const [currentPage, setCurrentPage] = useState(1)
   const [windowWidth, setWindowWidth] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [filteredAndSortedContracts, setFilteredAndSortedContracts] = useState<GroupedContract[]>([])
   const itemsPerPage = 5
 
   useEffect(() => {
@@ -104,7 +114,7 @@ export default function ManageContracts() {
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {
-      router.push("/login?redirect=/manage_cont");
+      router.push("/login")
       return
     }
 
@@ -144,9 +154,13 @@ export default function ManageContracts() {
     fetchContracts()
   }, [router])
 
-  const filteredAndSortedContracts = useMemo(() => {
+  useEffect(() => {
     const grouped = groupContracts(contracts)
-    return grouped
+    setFilteredAndSortedContracts(grouped)
+  }, [contracts])
+
+  const currentItems = useMemo(() => {
+    return filteredAndSortedContracts
       .filter((contract) => contract.con_title.toLowerCase().includes(searchTerm.toLowerCase()))
       .sort((a, b) => {
         if (sortField === "con_title") {
@@ -158,10 +172,10 @@ export default function ManageContracts() {
         }
         return 0
       })
-  }, [contracts, searchTerm, sortField, sortOrder])
+      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  }, [filteredAndSortedContracts, searchTerm, sortField, sortOrder, currentPage, itemsPerPage])
 
   const pageCount = Math.ceil(filteredAndSortedContracts.length / itemsPerPage)
-  const currentItems = filteredAndSortedContracts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
@@ -182,10 +196,38 @@ export default function ManageContracts() {
     setCurrentPage(newPage)
   }
 
-  const handleViewResults = (contractTitle: string, version: number) => {
-    const contract = contracts.find((c) => c.con_title === contractTitle && c.con_version === version)
+  const handleVersionChange = (contractTitle: string, version: number) => {
+    setFilteredAndSortedContracts((prevContracts) => {
+      return prevContracts.map((contract) => {
+        if (contract.con_title === contractTitle) {
+          return { ...contract, selectedVersion: version }
+        }
+        return contract
+      })
+    })
+
+    // Update selectedDoc when version changes
+    setSelectedDoc((prevDoc) => {
+      if (prevDoc && prevDoc.con_title === contractTitle) {
+        const selectedVersionData = prevDoc.versions.find((v) => v.con_version === version)
+        return {
+          ...prevDoc,
+          selectedVersion: version,
+          versions: [selectedVersionData!, ...prevDoc.versions.filter((v) => v.con_version !== version)],
+        }
+      }
+      return prevDoc
+    })
+  }
+
+  const handleViewResults = (contractTitle: string) => {
+    const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle)
     if (contract) {
-      router.push(`/analysis?contractId=${contract.con_id}`)
+      const selectedVersion = contract.selectedVersion || contract.versions[0].con_version
+      const selectedContractVersion = contract.versions.find((v) => v.con_version === selectedVersion)
+      if (selectedContractVersion) {
+        router.push(`/analysis?contractId=${selectedContractVersion.con_id}`)
+      }
     }
   }
 
@@ -251,12 +293,16 @@ export default function ManageContracts() {
               <SummaryTd>{selectedDoc?.con_title || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 종류</SummaryTh>
+              <SummaryTh>확장자명</SummaryTh>
               <SummaryTd>{selectedDoc?.con_type || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 요약</SummaryTh>
-              <SummaryTd>{selectedDoc?.versions[0]?.con_updatetime || "-"}</SummaryTd>
+              <SummaryTh>불공정조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.versions[0]?.unfair_count || 0}</SummaryTd>
+            </tr>
+            <tr>
+              <SummaryTh>독소조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.versions[0]?.toxic_count || 0}</SummaryTd>
             </tr>
           </tbody>
         </SummaryBox>
@@ -270,7 +316,7 @@ export default function ManageContracts() {
                   <SortIcon>{sortOrder === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</SortIcon>
                 )}
               </Th>
-              <Th>계약 종류</Th>
+              <Th>확장자명</Th>
               <Th $sortable onClick={() => handleSort("con_updatetime")}>
                 최근 분석날짜
                 {sortField === "con_updatetime" && (
@@ -278,11 +324,14 @@ export default function ManageContracts() {
                 )}
               </Th>
               <Th>버전</Th>
+              <Th>불공정조항</Th>
+              <Th>독소조항</Th>
+              <Th>결과창</Th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((contract) => (
-              <tr key={contract.con_title}>
+            {currentItems.map((contract, index) => (
+              <tr key={`${contract.con_title}-${index}`}>
                 <Td className="title">
                   <DocumentName onClick={() => setSelectedDoc(contract)}>{contract.con_title}</DocumentName>
                 </Td>
@@ -292,15 +341,30 @@ export default function ManageContracts() {
                 </Td>
                 <Td className="version">
                   <VersionSelect
-                    onChange={(e) => handleViewResults(contract.con_title, Number(e.target.value))}
-                    defaultValue={contract.versions[0].con_version}
+                    onChange={(e) => handleVersionChange(contract.con_title, Number(e.target.value))}
+                    value={contract.selectedVersion || contract.versions[0].con_version}
                   >
-                    {contract.versions.map((version) => (
-                      <option key={version.con_version} value={version.con_version}>
+                    {contract.versions.map((version, index) => (
+                      <option key={`${contract.con_title}-${version.con_version}-${index}`} value={version.con_version}>
                         ver {version.con_version}
                       </option>
                     ))}
                   </VersionSelect>
+                </Td>
+                <Td>
+                  {contract.versions.find(
+                    (v) => v.con_version === (contract.selectedVersion || contract.versions[0].con_version),
+                  )?.unfair_count || 0}
+                </Td>
+                <Td>
+                  {contract.versions.find(
+                    (v) => v.con_version === (contract.selectedVersion || contract.versions[0].con_version),
+                  )?.toxic_count || 0}
+                </Td>
+                <Td>
+                  <ActionButton onClick={() => handleViewResults(contract.con_title)}>
+                    <FileText size={20} />
+                  </ActionButton>
                 </Td>
               </tr>
             ))}
