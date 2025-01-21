@@ -197,7 +197,7 @@ const MainPage = () => {
           formData.append("newContractTitle", selectedContract.title)
         } else {
           formData.append("contractId", selectedContract.id.toString())
-          formData.append("version", (selectedContract.version + 1).toString())
+          formData.append("version", selectedContract.version.toString())
         }
       }
 
