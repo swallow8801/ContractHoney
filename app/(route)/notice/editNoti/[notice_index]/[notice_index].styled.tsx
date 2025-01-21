@@ -19,21 +19,21 @@ export const Sidebar = styled.aside`
   overflow-y: auto;
 `;
 
-export const Main = styled.main`
-  width: 80%;
-  padding: 20px 30px 30px 30px;
-  display: flex;
-  flex-direction: column;
-  margin-top: 3vh;
-  margin-left: 20%;
-`;
-
 export const Title = styled.h1`
   font-size: 24px;
   font-weight: 600;
   color: #333;
   text-align: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
+`;
+
+export const Main = styled.main`
+  width: 70%;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+  margin-left: 25%;
 `;
 
 export const NoticeTitle = styled.h2`
@@ -48,7 +48,7 @@ export const NoticeTitle = styled.h2`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   width: 80%;
   margin: 0 auto;
 `;
@@ -61,20 +61,44 @@ export const FormLabel = styled.label`
 
 export const FormInput = styled.input`
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 15px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+  }
 `;
 
 export const FormTextarea = styled.textarea`
   width: 100%;
   height: 300px;
-  padding: 10px;
-  font-size: 16px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 15px;
   resize: vertical;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -84,31 +108,29 @@ export const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-export const Button = styled.button`
+export const SubmitButton = styled.button`
   padding: 10px 20px;
+  background: #F2B024;
+  color: white;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
-`;
-
-export const SubmitButton = styled(Button)`
-  background-color: #F2B024;
-  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: #e0a00f;
+    background: #e0a00f;
   }
 
   &:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    opacity: 0.6;
   }
 `;
 
-export const CancelButton = styled(Button)`
+export const CancelButton = styled(SubmitButton)`
   background-color: #f0f0f0;
   color: #333;
 

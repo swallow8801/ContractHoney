@@ -83,7 +83,7 @@ const MainPage = () => {
   }, [router]);
 
   const handleDeleteClick = (qnaId: number) => {
-    setNotification({ type: "confirm-delete", message: "정말 삭제하시겠습니까?", qnaId });
+    setNotification({ type: "confirm-delete", message: "삭제하시겠습니까?", qnaId });
   };
 
   const handleConfirm = async () => {
@@ -110,7 +110,7 @@ const MainPage = () => {
 
         setNotification({ type: "success", message: "삭제가 완료되었습니다." });
         setQnas((prevQnas) => prevQnas.filter((qna) => qna.qna_id !== notification.qnaId));
-        setTimeout(() => setNotification(null), 1500);
+        
       } catch (error) {
         console.error("Error deleting Q&A:", error);
         setNotification({ type: "error", message: "삭제 중 오류가 발생했습니다." });
@@ -176,7 +176,7 @@ const MainPage = () => {
           <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
         ) : currentItems.length > 0 ? (
           <>
-            <Table>
+            <Table $isAdmin={isAdmin}>
               <thead>
                 <tr>
                   <th>번호</th>

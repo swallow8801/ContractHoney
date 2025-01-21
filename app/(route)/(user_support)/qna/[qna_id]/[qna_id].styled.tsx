@@ -141,6 +141,14 @@ export const Button = styled.button`
   transition: background-color 0.3s;
 `;
 
+export const DeleteButton = styled.button`
+background-color: #ff4444;
+
+&:hover {
+  background-color:rgb(181, 49, 49);
+}
+`;
+
 export const BackButton = styled(Button)`
   background-color: #f0f0f0;
   color: #333;

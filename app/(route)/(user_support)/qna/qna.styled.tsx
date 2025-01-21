@@ -83,7 +83,7 @@ export const MenuItem = styled.li<{ $active?: boolean }>`
   }
 `;
 
-export const Table = styled.table`
+export const Table = styled.table<{ $isAdmin: boolean }>`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -122,17 +122,17 @@ export const Table = styled.table`
   }
 
   td:nth-child(3), th:nth-child(3) {
-    width: 13%;
+    width: 12%;
     text-align: center;
   }
 
   td:nth-child(4), th:nth-child(4) {
-    width: 13%;
+    width: 12%;
     text-align: center;
   }
 
   td:nth-child(5), th:nth-child(5) {
-    width: 13%;
+    width: ${(props) => (props.$isAdmin ? "13%" : "6%")};
     text-align: center;
   }
 `;

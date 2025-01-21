@@ -115,7 +115,7 @@ const WriteNoti = () => {
             required
           />
 
-          <FormLabel htmlFor="notice_content">내용</FormLabel>
+          <FormLabel htmlFor="notice_content" style={{marginTop:'20px'}}>내용</FormLabel>
           <FormTextarea
             id="content"
             placeholder="내용을 입력하세요."
