@@ -147,17 +147,26 @@ export default function MyPage() {
           user_phone: editedPhone,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         setAlert({ type: 'success', message: '정보가 성공적으로 업데이트되었습니다.' });
         setIsEditing(false);
+  
+        // 프로필 업데이트
         setProfile(prevProfile => ({
-          ...prevProfile ? prevProfile : { user_id: 0, user_name: '', user_email: '', user_phone: '' },
+          ...prevProfile!,
           user_name: editedName,
-          user_phone: editedPhone
+          user_phone: editedPhone,
         }));
+  
+        // authChange 이벤트 발생
+        const userInfoUpdateEvent = new CustomEvent('authChange', {
+          detail: { userName: editedName },
+        });
+        window.dispatchEvent(userInfoUpdateEvent);
+  
         setTimeout(() => {
           setAlert(null);
         }, 3000);
@@ -168,6 +177,7 @@ export default function MyPage() {
       setAlert({ type: 'error', message: '서버 오류가 발생했습니다.' });
     }
   };
+  
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^\d]/g, '').slice(0, 11);

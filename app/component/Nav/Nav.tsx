@@ -17,47 +17,54 @@ const Nav = () => {
   // 로그인 상태 확인 (로컬 스토리지에서 확인)
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token); // 토큰이 있으면 true, 없으면 false
-    
+    setIsLoggedIn(!!token); // 토큰 존재 여부로 로그인 상태 확인
+  
     if (token) {
       // Fetch user data
       fetch('/api/user', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+        },
       })
-      .then(response => response.json())
-      .then(data => {
-        setUserName(data.userName);
-      })
-      .catch(error => console.error('Error fetching user data:', error));
-    }
-
-    const handleAuthChange = () => {
-      const token = localStorage.getItem('authToken');
-      setIsLoggedIn(!!token);
-      if (token) {
-        fetch('/api/user', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
         .then(response => response.json())
         .then(data => {
           setUserName(data.userName);
         })
         .catch(error => console.error('Error fetching user data:', error));
+    }
+  
+    const handleAuthChange = (event: CustomEvent) => {
+      const token = localStorage.getItem('authToken');
+      setIsLoggedIn(!!token);
+  
+      if (token) {
+        if (event.detail?.userName) {
+          setUserName(event.detail.userName);
+        } else {
+          // Fetch user data if userName not provided in event
+          fetch('/api/user', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          })
+            .then(response => response.json())
+            .then(data => {
+              setUserName(data.userName);
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+        }
       } else {
         setUserName('');
       }
     };
-
-    window.addEventListener('authChange', handleAuthChange);
-
+  
+    window.addEventListener('authChange', handleAuthChange as EventListener);
+  
     return () => {
-      window.removeEventListener('authChange', handleAuthChange);
+      window.removeEventListener('authChange', handleAuthChange as EventListener);
     };
-  }, []); // 컴포넌트가 처음 마운트될 때 한 번만 실행
+  }, []);
+  
 
   // 로그아웃 기능
   const handleLogout = () => {
