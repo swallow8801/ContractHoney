@@ -1,7 +1,8 @@
-'use client';
+"use client"
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import type React from "react"
+import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import {
   Container,
   Group,
@@ -24,165 +25,243 @@ import {
   LoadingSpinner,
   LoadingText,
   LoginMessage,
-} from './main.styled';
+  DropdownContainer,
+  DropdownSearch,
+  NewContractButton,
+  ContractList,
+  ContractItem,
+  ContractTitle,
+  ContractVersion,
+  NewContractInput,
+  CustomSelect,
+  SelectTrigger,
+  WarningMessage,
+} from "./main.styled"
+import { Plus, ChevronDown } from "lucide-react"
 
 interface NoticeType {
-  notice_id: number;
-  notice_title: string;
-  notice_date: string;
+  notice_id: number
+  notice_title: string
+  notice_date: string
 }
 
 interface UserContractType {
-  id: number;
-  title: string;
-  version: number;
+  id: number | string
+  title: string
+  version: number
 }
 
 const MainPage = () => {
-  const router = useRouter();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [searchType, setSearchType] = useState('법령');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [notices, setNotices] = useState<NoticeType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [userContracts, setUserContracts] = useState<UserContractType[]>([]);
-  const [selectedContract, setSelectedContract] = useState<UserContractType | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter()
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [searchType, setSearchType] = useState("법령")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [notices, setNotices] = useState<NoticeType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [userContracts, setUserContracts] = useState<UserContractType[]>([])
+  const [selectedContract, setSelectedContract] = useState<UserContractType | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [contractSearch, setContractSearch] = useState("")
+  const [isCreatingNew, setIsCreatingNew] = useState(false)
+  const [newContractName, setNewContractName] = useState("")
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [isContractSelected, setIsContractSelected] = useState(false)
+  const [duplicateNameWarning, setDuplicateNameWarning] = useState<string | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token);
+    const token = localStorage.getItem("authToken")
+    setIsLoggedIn(!!token)
 
     if (token) {
-      fetchUserContracts();
+      fetchUserContracts()
     }
 
     const fetchNotices = async () => {
       try {
-        const response = await fetch('/api/mainpage_notices');
+        const response = await fetch("/api/mainpage_notices")
         if (!response.ok) {
-          throw new Error('Failed to fetch notices');
+          throw new Error("Failed to fetch notices")
         }
-        const data: NoticeType[] = await response.json();
-        setNotices(data);
+        const data: NoticeType[] = await response.json()
+        setNotices(data)
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message)
       }
-    };
+    }
 
-    fetchNotices();
-  }, []);
+    fetchNotices()
+  }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+        setIsCreatingNew(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const fetchUserContracts = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/user-contracts', {
+      const token = localStorage.getItem("authToken")
+      const response = await fetch("/api/user-contracts", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-      });
+      })
       if (!response.ok) {
-        throw new Error('Failed to fetch user contracts');
+        throw new Error("Failed to fetch user contracts")
       }
-      const data = await response.json();
-      setUserContracts(data);
+      const data = await response.json()
+      setUserContracts(data)
     } catch (err: any) {
-      console.error('Error fetching user contracts:', err);
+      console.error("Error fetching user contracts:", err)
     }
-  };
+  }
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
+    const file = event.target.files?.[0]
+    if (file && selectedContract) {
+      const fileExtension = file.name.split(".").pop() || ""
+      const newFileName = `${selectedContract.title}.${fileExtension}`
+      const newFile = new File([file], newFileName, { type: file.type })
+      setSelectedFile(newFile)
     }
-  };
+  }
 
   const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-    setIsDragging(true);
-  };
+    event.preventDefault()
+    setIsDragging(true)
+  }
 
   const handleDragLeave = (event: React.DragEvent) => {
-    event.preventDefault();
-    setIsDragging(false);
-  };
+    event.preventDefault()
+    setIsDragging(false)
+  }
 
   const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    setIsDragging(false);
-    if (isLoggedIn) {
-      const file = event.dataTransfer.files?.[0];
-      if (file) {
-        setSelectedFile(file);
+    event.preventDefault()
+    setIsDragging(false)
+    if (isLoggedIn && isContractSelected) {
+      const file = event.dataTransfer.files?.[0]
+      if (file && selectedContract) {
+        const fileExtension = file.name.split(".").pop() || ""
+        const newFileName = `${selectedContract.title}.${fileExtension}`
+        const newFile = new File([file], newFileName, { type: file.type })
+        setSelectedFile(newFile)
       }
     }
-  };
+  }
 
   const handleUploadClick = () => {
-    if (isLoggedIn) {
-      fileInputRef.current?.click();
+    if (isLoggedIn && isContractSelected) {
+      fileInputRef.current?.click()
     }
-  };
+  }
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      if (searchType === '법령') {
-        router.push(`/law?search=${searchQuery}`);
-      } else if (searchType === '표준계약서') {
-        router.push(`/archive?search=${searchQuery}`);
+      if (searchType === "법령") {
+        router.push(`/law?search=${searchQuery}`)
+      } else if (searchType === "표준계약서") {
+        router.push(`/archive?search=${searchQuery}`)
       }
     }
-  };
+  }
 
   const handleReview = async () => {
-    if (isLoggedIn && selectedFile) {
-      setIsLoading(true);
-      const fileName = selectedFile.name;
-      const fileExtension = fileName.split('.').pop() || '';
-      const fileNameWithoutExtension = fileName.replace(`.${fileExtension}`, '');
+    if (isLoggedIn && selectedFile && isContractSelected) {
+      setIsLoading(true)
+      const fileName = selectedFile.name
+      const fileExtension = fileName.split(".").pop() || ""
+      const fileNameWithoutExtension = fileName.replace(`.${fileExtension}`, "")
 
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('fileName', fileNameWithoutExtension);
-      formData.append('fileType', fileExtension);
+      const formData = new FormData()
+      formData.append("file", selectedFile)
+      formData.append("fileName", fileNameWithoutExtension)
+      formData.append("fileType", fileExtension)
 
       if (selectedContract) {
-        formData.append('contractId', selectedContract.id.toString());
+        if (selectedContract.id === "new") {
+          formData.append("newContractTitle", selectedContract.title)
+        } else {
+          formData.append("contractId", selectedContract.id.toString())
+          formData.append("version", (selectedContract.version + 1).toString())
+        }
       }
 
       try {
-        const token = localStorage.getItem('authToken');
-        const response = await fetch('/api/upload-contract', {
-          method: 'POST',
+        const token = localStorage.getItem("authToken")
+        const response = await fetch("/api/upload-contract", {
+          method: "POST",
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
-        });
+        })
 
         if (!response.ok) {
-          throw new Error('Failed to upload contract');
+          throw new Error("Failed to upload contract")
         }
 
-        const data = await response.json();
-        setIsLoading(false);
-        router.push(`/analysis?contractId=${data.contractId}`);
-
+        const data = await response.json()
+        setIsLoading(false)
+        router.push(`/analysis?contractId=${data.contractId}`)
       } catch (error) {
-        console.error('Error uploading contract:', error);
-        setIsLoading(false);
-        setError('Failed to upload contract. Please try again.');
+        console.error("Error uploading contract:", error)
+        setIsLoading(false)
+        setError("Failed to upload contract. Please try again.")
       }
     }
-  };
+  }
 
   const handleNoticeClick = (id: number) => {
-    router.push(`/notice/${id}`);
-  };
+    router.push(`/notice/${id}`)
+  }
+
+  const filteredContracts = userContracts
+    .filter((contract) => contract.title.toLowerCase().includes(contractSearch.toLowerCase()))
+    .reduce((acc, contract) => {
+      const existingContract = acc.find((c) => c.title === contract.title)
+      if (!existingContract || existingContract.version < contract.version) {
+        return [...acc.filter((c) => c.title !== contract.title), contract]
+      }
+      return acc
+    }, [] as UserContractType[])
+
+  const handleNewContractSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (newContractName.trim()) {
+      const isDuplicate = userContracts.some(
+        (contract) => contract.title.toLowerCase() === newContractName.trim().toLowerCase(),
+      )
+      if (isDuplicate) {
+        setDuplicateNameWarning("이미 사용 중인 계약서 이름입니다. 다른 이름을 선택해주세요.")
+      } else {
+        const newContract = {
+          id: "new",
+          title: newContractName.trim(),
+          version: 0, // Change this to 0 to indicate it's a new contract
+        }
+        setSelectedContract(newContract)
+        setIsContractSelected(true)
+        setSelectedFile(null)
+        setIsCreatingNew(false)
+        setIsDropdownOpen(false)
+        setNewContractName("")
+        setDuplicateNameWarning(null)
+      }
+    }
+  }
 
   return (
     <Container>
@@ -195,38 +274,98 @@ const MainPage = () => {
       <Group $backgroundImage="/images/메인.png">
         <Title>계약서 검토 AI 어시스턴트</Title>
         <InputContainer>
+          {isLoggedIn && (
+            <CustomSelect>
+              <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
+                <span>
+                  {selectedContract
+                    ? selectedContract.id === "new"
+                      ? `${selectedContract.title} (New)`
+                      : `${selectedContract.title} (ver.${selectedContract.version})`
+                    : "계약서 선택"}
+                </span>
+                <ChevronDown size={20} />
+              </SelectTrigger>
+
+              {isDropdownOpen && (
+                <DropdownContainer ref={dropdownRef}>
+                  <DropdownSearch
+                    placeholder="기존 계약서 검색..."
+                    value={contractSearch}
+                    onChange={(e) => setContractSearch(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+
+                  {isCreatingNew && (
+                    <form onSubmit={handleNewContractSubmit}>
+                      <NewContractInput
+                        placeholder="새 계약서 이름 입력"
+                        value={newContractName}
+                        onChange={(e) => setNewContractName(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                        $hasWarning={!!duplicateNameWarning}
+                      />
+                      {duplicateNameWarning && <WarningMessage>{duplicateNameWarning}</WarningMessage>}
+                    </form>
+                  )}
+                  {!isCreatingNew && (
+                    <NewContractButton
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsCreatingNew(true)
+                      }}
+                    >
+                      <Plus size={16} />
+                      새로 만들기
+                    </NewContractButton>
+                  )}
+
+                  <ContractList>
+                    {filteredContracts.map((contract) => (
+                      <ContractItem
+                        key={contract.id}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedContract(contract)
+                          setIsContractSelected(true)
+                          setSelectedFile(null)
+                          setIsDropdownOpen(false)
+                        }}
+                        className={contract.id === "new" ? "new" : ""}
+                      >
+                        <ContractTitle>{contract.title}</ContractTitle>
+                        <ContractVersion className={contract.id === "new" ? "new" : ""}>
+                          {contract.id === "new" ? "New" : `ver.${contract.version}`}
+                        </ContractVersion>
+                      </ContractItem>
+                    ))}
+                  </ContractList>
+                </DropdownContainer>
+              )}
+            </CustomSelect>
+          )}
           <FileUploadContainer>
-            {isLoggedIn && userContracts.length > 0 && (
-              <Select
-                value={selectedContract ? selectedContract.id : ''}
-                onChange={(e) => {
-                  const selected = userContracts.find(c => c.id === parseInt(e.target.value));
-                  setSelectedContract(selected || null);
-                }}
-              >
-                <option value="">새 계약서 업로드</option>
-                {userContracts.map((contract) => (
-                  <option key={contract.id} value={contract.id}>
-                    {contract.title} (v{contract.version})
-                  </option>
-                ))}
-              </Select>
-            )}
             <FileUploadArea
               $isDragging={isDragging}
               onClick={handleUploadClick}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              $disabled={!isContractSelected}
             >
               {isLoggedIn ? (
-                selectedFile ? (
-                  <FileName>{selectedFile.name}</FileName>
+                isContractSelected ? (
+                  selectedFile ? (
+                    <FileName>{selectedFile.name}</FileName>
+                  ) : (
+                    "클릭하거나 파일을 드래그하여 업로드하세요"
+                  )
                 ) : (
-                  '클릭하거나 파일을 드래그하여 업로드하세요'
+                  "계약서를 선택해주세요"
                 )
               ) : (
-                '로그인 후 이용 가능합니다'
+                "로그인 후 이용 가능합니다"
               )}
             </FileUploadArea>
             <FileInput
@@ -237,24 +376,17 @@ const MainPage = () => {
               disabled={!isLoggedIn}
             />
           </FileUploadContainer>
-          <Button onClick={handleReview} disabled={!isLoggedIn || !selectedFile || isLoading}>
+          <Button onClick={handleReview} disabled={!isLoggedIn || !isContractSelected || !selectedFile || isLoading}>
             검토하기
           </Button>
-          {!isLoggedIn && (
-            <LoginMessage>
-              로그인 후 이용 가능한 서비스입니다.
-            </LoginMessage>
-          )}
+          {!isLoggedIn && <LoginMessage>로그인 후 이용 가능한 서비스입니다.</LoginMessage>}
         </InputContainer>
       </Group>
 
       <Group $backgroundImage="/images/자료실.png">
         <Title>법령 & 표준계약서 조회</Title>
         <InputContainer>
-          <Select
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
+          <Select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
             <option>법령</option>
             <option>표준계약서</option>
           </Select>
@@ -283,12 +415,12 @@ const MainPage = () => {
               </NoticeItem>
             ))
           )}
-          <ViewAll onClick={() => router.push('/notice')}>전체보기</ViewAll>
+          <ViewAll onClick={() => router.push("/notice")}>전체보기</ViewAll>
         </Notice>
       </Group>
     </Container>
-  );
-};
+  )
+}
 
-export default MainPage;
+export default MainPage
 
