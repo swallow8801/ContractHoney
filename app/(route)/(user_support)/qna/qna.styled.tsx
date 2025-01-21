@@ -122,17 +122,17 @@ export const Table = styled.table`
   }
 
   td:nth-child(3), th:nth-child(3) {
-    width: 15%;
+    width: 13%;
     text-align: center;
   }
 
   td:nth-child(4), th:nth-child(4) {
-    width: 15%;
+    width: 13%;
     text-align: center;
   }
 
   td:nth-child(5), th:nth-child(5) {
-    width: 15%;
+    width: 13%;
     text-align: center;
   }
 `;
@@ -154,33 +154,13 @@ export const WriteButton = styled.button`
 `;
 
 export const DeleteButton = styled.button`
-  background: none;
-  border: none;
-  color: red;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  text-align: right;
-  padding: 0;
-  transition: color 0.2s ease;
+color: #ff4444;
 
-  &:hover {
-    color: darkred;
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: none;
-    color: darkred;
-    text-decoration: underline;
-  }
-
-  &:disabled {
-    color: #ccc;
-    cursor: not-allowed;
-    text-decoration: none;
-  }
+&:hover {
+  color:rgb(181, 49, 49);
+}
 `;
+
 
 export const SearchSection = styled.div`
   display: flex;
@@ -240,5 +220,64 @@ export const PageButton = styled.button<{ $active?: boolean }>`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.2;
+  }
+`;
+
+export const NotificationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const NotificationBox = styled.div`
+  width: 350px;
+  height: 150px;
+  padding: 20px 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+`;
+
+export const NotificationMessage = styled.p`
+  margin-top: 12.5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+`;
+
+export const ConfirmButton = styled.button<{ $type: 'success' | 'error' | 'norm' | 'ok' }>`
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: ${props =>
+    props.$type === 'success'
+      ? '#4caf50'
+      : props.$type === 'error'
+      ? '#ff4444'
+      : props.$type === 'ok'
+      ? '#F2B024'
+      : '#f0f0f0'};
+  color: ${props => (props.$type === 'norm' ? '#333' : 'white')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$type === 'success'
+        ? '#45a049'
+        : props.$type === 'error'
+        ? '#ff3333'
+        : props.$type === 'ok'
+        ? '#e0a00f'
+        : '#e0e0e0'};
   }
 `;

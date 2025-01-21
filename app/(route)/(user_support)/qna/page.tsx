@@ -1,7 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import {
   Container,
   Sidebar,
@@ -14,6 +16,10 @@ import {
   WriteButton,
   Pagination,
   PageButton,
+  NotificationBox,
+  NotificationMessage,
+  ConfirmButton,
+  NotificationOverlay,
   DeleteButton,
 } from "./qna.styled";
 
@@ -36,6 +42,7 @@ const MainPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [notification, setNotification] = useState<{ type: string; message: string; qnaId?: number } | null>(null);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -75,35 +82,46 @@ const MainPage = () => {
     checkLoginAndFetchQnas();
   }, [router]);
 
-  const handleDelete = async (qnaId: number) => {
-    if (!window.confirm("삭제하시겠습니까?")) return;
+  const handleDeleteClick = (qnaId: number) => {
+    setNotification({ type: "confirm-delete", message: "정말 삭제하시겠습니까?", qnaId });
+  };
 
-    try {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        router.push("/login");
-        return;
+  const handleConfirm = async () => {
+    if (notification?.type === "confirm-delete" && notification.qnaId) {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+
+        const response = await fetch(`/api/qna/deleteQnA`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ qnaId: notification.qnaId }),
+        });
+
+        if (!response.ok) {
+          throw new Error("삭제 요청에 실패했습니다.");
+        }
+
+        setNotification({ type: "success", message: "삭제가 완료되었습니다." });
+        setQnas((prevQnas) => prevQnas.filter((qna) => qna.qna_id !== notification.qnaId));
+        setTimeout(() => setNotification(null), 1500);
+      } catch (error) {
+        console.error("Error deleting Q&A:", error);
+        setNotification({ type: "error", message: "삭제 중 오류가 발생했습니다." });
       }
-
-      const response = await fetch(`/api/qna/deleteQnA`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ qnaId }),
-      });
-
-      if (!response.ok) {
-        throw new Error("삭제 요청에 실패했습니다.");
-      }
-
-      alert("삭제가 완료되었습니다.");
-      setQnas((prevQnas) => prevQnas.filter((qna) => qna.qna_id !== qnaId));
-    } catch (error) {
-      console.error("Error deleting Q&A:", error);
-      alert("삭제 중 오류가 발생했습니다.");
+    } else {
+      setNotification(null);
     }
+  };
+
+  const handleCancel = () => {
+    setNotification(null);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -112,6 +130,27 @@ const MainPage = () => {
 
   return (
     <Container>
+      {notification && (
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            {notification.type === "success" ? (
+              <ConfirmButton $type="ok" onClick={handleCancel}>
+                확인
+              </ConfirmButton>
+            ) : (
+              <>
+                <ConfirmButton $type="error" onClick={handleConfirm}>
+                  확인
+                </ConfirmButton>
+                <ConfirmButton $type="norm" onClick={handleCancel}>
+                  취소
+                </ConfirmButton>
+              </>
+            )}
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Sidebar>
         <SidebarTitle>고객지원</SidebarTitle>
         <MenuList>
@@ -166,10 +205,10 @@ const MainPage = () => {
                         <DeleteButton
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDelete(qna.qna_id);
+                            handleDeleteClick(qna.qna_id);
                           }}
                         >
-                          삭제
+                          <FontAwesomeIcon icon={faTrashCan} />
                         </DeleteButton>
                       </td>
                     )}
