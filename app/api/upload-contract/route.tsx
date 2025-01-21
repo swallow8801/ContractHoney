@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/app/lib/database';
-import jwt from 'jsonwebtoken';
+import { type NextRequest, NextResponse } from "next/server"
+import { db } from "@/app/lib/database"
+import jwt from "jsonwebtoken"
 import { BlobServiceClient } from '@azure/storage-blob';
 import fs from 'fs'; // 파일 처리용
+
 export async function POST(request: NextRequest) {
   const token = request.headers.get('Authorization')?.split(' ')[1];
 

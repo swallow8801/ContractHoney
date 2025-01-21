@@ -21,6 +21,7 @@ import {
   NotificationMessage,
   NotificationOverlay,
   MainInfo,
+  DeleteButton,
 } from "./[qna_id].styled";
 
 interface QnaType {
@@ -32,7 +33,6 @@ interface QnaType {
   qna_answ_date: string | null;
 }
 
-// 날짜 포맷팅 함수
 const formatDate = (isoString: string) => {
   const date = new Date(isoString);
   const year = date.getFullYear();
@@ -45,7 +45,7 @@ const formatDate = (isoString: string) => {
 
 const QnaDetailPage = () => {
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로 가져오기
+  const pathname = usePathname();
   const params = useParams();
   const [qna, setQna] = useState<QnaType | null>(null);
   const [reply, setReply] = useState("");
@@ -62,7 +62,6 @@ const QnaDetailPage = () => {
           throw new Error("로그인이 필요합니다.");
         }
 
-        // 관리자 여부 확인 및 QnA 데이터 가져오기
         const adminResponse = await fetch(`/api/qna/qna_admin`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,9 +73,8 @@ const QnaDetailPage = () => {
         }
 
         const adminData = await adminResponse.json();
-        setIsAdmin(adminData.isAdmin); // 관리자인지 여부 설정
+        setIsAdmin(adminData.isAdmin);
 
-        // 단일 Q&A 데이터 가져오기
         const qnaResponse = await fetch(`/api/qna/${params.qna_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -99,9 +97,52 @@ const QnaDetailPage = () => {
     fetchQnaDetail();
   }, [params.qna_id]);
 
+  const handleDeleteClick = () => {
+    setNotification({ type: "confirm-delete", message: "삭제하시겠습니까?" });
+  };
+
+  const handleConfirm = async () => {
+    if (notification?.type === "confirm-delete" && qna) {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+
+        const response = await fetch(`/api/qna/deleteQnA`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ qnaId: qna.qna_id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("삭제 요청에 실패했습니다.");
+        }
+
+        setNotification({ type: "success", message: "삭제가 완료되었습니다." });
+        setTimeout(() => {
+          router.push("/qna");
+        }, 1500);
+      } catch (error) {
+        console.error("Error deleting Q&A:", error);
+        setNotification({ type: "error", message: "삭제 중 오류가 발생했습니다." });
+      }
+    } else {
+      setNotification(null);
+    }
+  };
+
+  const handleCancel = () => {
+    setNotification(null);
+  };
+
   const handleReplySubmit = async () => {
     if (!reply.trim()) {
-      setNotification({ type: 'error', message: '답변 내용을 입력하세요.' });
+      setNotification({ type: "error", message: "답변 내용을 입력하세요." });
       return;
     }
   
@@ -110,7 +151,7 @@ const QnaDetailPage = () => {
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        setNotification({ type: 'error', message: '로그인이 필요합니다.' });
+        setNotification({ type: "error", message: "로그인이 필요합니다." });
         router.push("/login");
         return;
       }
@@ -125,20 +166,20 @@ const QnaDetailPage = () => {
       });
   
       if (!response.ok) {
-        throw new Error("API 요청에 실패했습니다.");
+        throw new Error("답변 등록에 실패했습니다.");
       }
   
       const updatedQna = await response.json();
       setQna(updatedQna.qna);
       setReply("");
-      setNotification({ type: 'ok', message: '답변이 등록되었습니다.' });
+      setNotification({ type: "ok", message: "답변이 등록되었습니다." });
     } catch (error) {
       console.error("Error submitting reply:", error);
-      setNotification({ type: 'error', message: '답변 등록 중 오류가 발생했습니다.' });
+      setNotification({ type: "error", message: "답변 등록 중 오류가 발생했습니다." });
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -147,18 +188,27 @@ const QnaDetailPage = () => {
   return (
     <Container>
       {notification && (
-        <NotificationOverlay>
-          <NotificationBox>
-            <NotificationMessage>{notification.message}</NotificationMessage>
-            <ConfirmButton
-              $type={notification.type === 'ok' ? 'ok' : 'error'}
-              onClick={() => setNotification(null)}
-            >
-              확인
-            </ConfirmButton>
-          </NotificationBox>
-        </NotificationOverlay>
+  <NotificationOverlay>
+    <NotificationBox>
+      <NotificationMessage>{notification.message}</NotificationMessage>
+      {notification.type === "ok" ? (
+        <ConfirmButton $type="ok" onClick={handleCancel}>
+          확인
+        </ConfirmButton>
+      ) : (
+        <>
+          <ConfirmButton $type="error" onClick={handleConfirm}>
+            확인
+          </ConfirmButton>
+          <ConfirmButton $type="norm" onClick={handleCancel}>
+            취소
+          </ConfirmButton>
+        </>
       )}
+    </NotificationBox>
+  </NotificationOverlay>
+)}
+
       <Sidebar>
         <SidebarTitle>Q&A</SidebarTitle>
         <MenuList>
@@ -193,7 +243,7 @@ const QnaDetailPage = () => {
             )}
           </tbody>
         </ArchiveTable>
-        {!qna?.qna_answer && isAdmin && (
+        {isAdmin && !qna?.qna_answer && (
           <ReplySection>
             <TextareaContainer>
               <textarea
@@ -209,7 +259,10 @@ const QnaDetailPage = () => {
           </ReplySection>
         )}
         <ButtonContainer>
-          <BackButton onClick={() => router.push('/qna')}>목록</BackButton>
+          {!isAdmin && !qna?.qna_answer && (
+            <DeleteButton onClick={handleDeleteClick}>삭제</DeleteButton>
+          )}
+          <BackButton onClick={() => router.push("/qna")}>목록</BackButton>
         </ButtonContainer>
       </Main>
     </Container>

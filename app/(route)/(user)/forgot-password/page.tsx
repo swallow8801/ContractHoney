@@ -120,6 +120,7 @@ const ForgotPasswordPage = () => {
                 placeholder="전화번호를 입력하세요"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                maxLength={11}
                 required
               />
               <SubmitButton type="submit">

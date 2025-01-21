@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
   Main,
@@ -23,20 +23,22 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState<'success' | 'error' | ''>(''); 
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/"; // 기본값은 "/"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<"success" | "error" | "">("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken');
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("authToken");
       if (token) {
-        router.push('/');
+        router.push(redirectPath); // 토큰이 있으면 원래 경로로 리다이렉트
       }
     }
-  }, [router]);
+  }, [router, redirectPath]);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -45,10 +47,10 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ user_email: email, user_password: password }),
       });
@@ -57,28 +59,27 @@ const LoginPage = () => {
 
       if (response.ok) {
         if (data.error) {
-          // 이메일 인증이 안 된 경우 처리
-          setAlertMessage('이메일 인증을 완료해주세요.');
-          setAlertType('error');
+          setAlertMessage("이메일 인증을 완료해주세요.");
+          setAlertType("error");
         } else {
-          localStorage.setItem('authToken', data.token);
+          localStorage.setItem("authToken", data.token);
           if (data.userAdmin === 1) {
-            localStorage.setItem('admin', '1');
+            localStorage.setItem("admin", "1");
           }
-          setAlertMessage('로그인에 성공했습니다.');
-          setAlertType('success');
-          window.dispatchEvent(new Event('authChange'));
+          setAlertMessage("로그인에 성공했습니다.");
+          setAlertType("success");
+          window.dispatchEvent(new Event("authChange"));
           setTimeout(() => {
-            router.push('/');
+            router.push(redirectPath); // 로그인 후 원래 경로로 이동
           }, 2000);
         }
       } else {
-        setAlertMessage(data.error || '로그인에 실패했습니다.');
-        setAlertType('error');
+        setAlertMessage(data.error || "로그인에 실패했습니다.");
+        setAlertType("error");
       }
     } catch (error) {
-      setAlertMessage('서버와의 통신에 실패했습니다.');
-      setAlertType('error');
+      setAlertMessage("서버와의 통신에 실패했습니다.");
+      setAlertType("error");
     }
   };
 

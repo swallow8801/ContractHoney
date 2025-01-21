@@ -19,15 +19,6 @@ export const Sidebar = styled.aside`
   overflow-y: auto;
 `;
 
-export const Main = styled.main`
-  width: 80%;
-  padding: 20px 30px 30px 30px;
-  display: flex;
-  flex-direction: column;
-  margin-top: 3vh;
-  margin-left: 20%;
-`;
-
 export const SidebarTitle = styled.h2`
   font-size: 24px;
   font-weight: 600;
@@ -36,11 +27,13 @@ export const SidebarTitle = styled.h2`
   margin: 20px 0;
 `;
 
-export const Title = styled.h1`
-    font-size: 30px;
-    font-weight: 600;
-    color: rgb(75, 75, 75);
-    text-align: center; /* 제목 중앙 정렬 */
+export const Main = styled.main`
+  width: 70%;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vh;
+  margin-left: 25%;
 `;
 
 export const NoticeTitle = styled.h2`
@@ -82,9 +75,9 @@ export const Form = styled.form`
 `;
 
 export const FormLabel = styled.label`
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
 `;
 
 export const FormInput = styled.input`
@@ -92,7 +85,7 @@ export const FormInput = styled.input`
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 15px;
   transition: border-color 0.3s;
 
   &:focus {
@@ -113,7 +106,7 @@ export const FormTextarea = styled.textarea`
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 15px;
   resize: vertical;
   transition: border-color 0.3s;
 
@@ -131,9 +124,9 @@ export const FormTextarea = styled.textarea`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 24px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 `;
 
 export const SubmitButton = styled.button`
