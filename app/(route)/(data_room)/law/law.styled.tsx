@@ -111,13 +111,10 @@ export const Table = styled.table`
     border-bottom: 1px solid #eee;
     font-size: 14.5px;
     &:first-child {
-      width: 15%;
-    }
-    &:nth-child(2) {
-      width: 65%;
+      width: 170px;
     }
     &:last-child {
-      width: 20%;
+      width: 170px;
     }
   }
 

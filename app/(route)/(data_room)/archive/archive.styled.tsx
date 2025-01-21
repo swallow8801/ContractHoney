@@ -111,19 +111,16 @@ export const ArchiveTable = styled.table`
     border-bottom: 1px solid #eee;
     font-size: 14.5px;
     &:first-child {
-      width: 10%;
-    }
-    &:nth-child(2) {
-      width: 48%;
+      width: 90px;
     }
     &:nth-child(3) {
-      width: 17%;
+      width: 170px;
     }
     &:nth-child(4) {
-      width: 15%;
+      width: 170px;
     }
     &:last-child {
-      width: 10%;
+      width: 90px;
     }
   }
 

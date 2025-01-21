@@ -113,7 +113,7 @@ export const Table = styled.table<{ $isAdmin: boolean }>`
   }
 
   td:nth-child(1), th:nth-child(1) {
-    width: 10%;
+    width: 90px;
     text-align: center;
   }
 
@@ -122,17 +122,17 @@ export const Table = styled.table<{ $isAdmin: boolean }>`
   }
 
   td:nth-child(3), th:nth-child(3) {
-    width: 12%;
+    width: 150px;
     text-align: center;
   }
 
   td:nth-child(4), th:nth-child(4) {
-    width: 12%;
+    width: 120px;
     text-align: center;
   }
 
   td:nth-child(5), th:nth-child(5) {
-    width: ${(props) => (props.$isAdmin ? "13%" : "0%")};
+    width: ${(props) => (props.$isAdmin ? "120px" : "0")};
     text-align: center;
   }
 `;

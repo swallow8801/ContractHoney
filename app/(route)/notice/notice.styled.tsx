@@ -125,7 +125,7 @@ export const BoardTable = styled.table`
   }
 
   td:nth-child(1), th:nth-child(1) {
-    width: 10%;
+    width: 90px;
     text-align: center;
   }
 
@@ -134,7 +134,7 @@ export const BoardTable = styled.table`
   }
 
   td:nth-child(3), th:nth-child(3) {
-    width: 20%;
+    width: 170px;
     text-align: center;
   }
 
