@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "계꿀",
-  description: "계약서 분석 AI 어시스턴스",
+  description: "계약서 분석 AI 어시스턴트",
 };
 
 export default function RootLayout({ children, }: { children: React.ReactNode })
