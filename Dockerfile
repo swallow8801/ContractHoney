@@ -41,6 +41,10 @@ ENV EMAIL_USER="sundaegugbab0@gmail.com"
 ENV EMAIL_PASS="dmbh oqsx whfg xhch"
 ENV FRONTEND_URL="conhoney-edfcc7adbrgwb9ac.koreacentral-01.azurewebsites.net"
 ENV BACKEND_URL="https://your-backend-domain.com"
+ENV AZURE_STORAGE_ACCOUNT_NAME="conhoneystorage"
+ENV AZURE_STORAGE_ACCOUNT_KEY="9jS+1zxRCHjdDJRjiqUZFWLXdrRrcIsPAx6h+AfVFAbeWj8XmAVHU02cHrT7S7DoNIvRTS7eLQnl+AStZL4QNw=="
+ENV AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=conhoneystorage;AccountKey=9jS+1zxRCHjdDJRjiqUZFWLXdrRrcIsPAx6h+AfVFAbeWj8XmAVHU02cHrT7S7DoNIvRTS7eLQnl+AStZL4QNw==;EndpointSuffix=core.windows.net"
+ENV AZURE_STORAGE_CONTAINER_NAME="contract"
 
 # Expose port
 EXPOSE 3000

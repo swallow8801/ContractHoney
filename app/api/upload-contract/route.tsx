@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/database';
 import jwt from 'jsonwebtoken';
+import { BlobServiceClient } from '@azure/storage-blob';
+import fs from 'fs'; // 파일 처리용
 
 export async function POST(request: NextRequest) {
   const token = request.headers.get('Authorization')?.split(' ')[1];
@@ -22,11 +24,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing file information' }, { status: 400 });
     }
 
-    // Here you would typically upload the file to a storage service
-    // For this example, we'll just use the file name and type
-    // TODO: Implement actual file upload logic
-    console.log(`File ${fileName} of type ${fileType} would be uploaded here.`);
+    // Azure Blob Storage 연결
+    const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING!);
+    const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME!);
 
+    // 파일을 Blob으로 업로드
+    const blobClient = containerClient.getBlockBlobClient(fileName);
+    
+    // 파일을 읽어 Blob Storage에 업로드
+    const buffer = Buffer.from(await file.arrayBuffer()); // 파일을 Buffer로 변환
+    await blobClient.upload(buffer, buffer.length, {
+      blobHTTPHeaders: { blobContentType: fileType }, // MIME 타입 설정
+    });
+
+    // DB에 파일 정보 저장
     const [result] = await db.query(
       'INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)',
       [userId, fileName, fileType, 1]
@@ -45,4 +56,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
