@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import styled from 'styled-components'
+import styled from "styled-components"
 
 export const Container = styled.div`
   display: flex;
@@ -64,41 +64,48 @@ export const Table = styled.table`
   font-size: 0.8rem;
 
   th, td {
-    &:nth-child(1) { width: 30%; }
-    &:nth-child(2) { width: 20%; }
-    &:nth-child(3) { width: 20%; }
-    &:nth-child(4) { width: 15%; }
-    &:nth-child(5) { width: 15%; }
+    &:nth-child(1) { width: 25%; }
+    &:nth-child(2) { width: 10%; }
+    &:nth-child(3) { width: 15%; }
+    &:nth-child(4) { width: 10%; }
+    &:nth-child(5) { width: 10%; }
+    &:nth-child(6) { width: 10%; }
+    &:nth-child(7) { width: 10%; }
   }
 
   @media (max-width: 768px) {
     font-size: 0.7rem;
 
     th, td {
-      &:nth-child(1) { width: 35%; }
-      &:nth-child(2) { width: 25%; }
+      &:nth-child(1) { width: 30%; }
+      &:nth-child(2) { width: 15%; }
       &:nth-child(3) { display: none; }
-      &:nth-child(4) { width: 20%; }
-      &:nth-child(5) { width: 20%; }
+      &:nth-child(4) { width: 15%; }
+      &:nth-child(5) { width: 10%; }
+      &:nth-child(6) { width: 10%; }
+      &:nth-child(7) { width: 10%; }
     }
   }
 `
 
 export const Th = styled.th<{ $sortable?: boolean }>`
-  text-align: left;
+  text-align: center;
   padding: 0.3rem 0.5rem;
   color: #666;
   font-weight: normal;
   border-bottom: 1px solid #eee;
   background-color: #f0f0f0;
-  cursor: ${props => props.$sortable ? 'pointer' : 'default'};
+  cursor: ${(props) => (props.$sortable ? "pointer" : "default")};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.8rem;
 
   &:hover {
-    background-color: ${props => props.$sortable ? '#e0e0e0' : '#f0f0f0'};
+    background-color: ${(props) => (props.$sortable ? "#e0e0e0" : "#f0f0f0")};
+  }
+  &:first-child {
+    text-align: left;
   }
 `
 
@@ -112,6 +119,7 @@ export const Td = styled.td`
   height: auto;
   min-height: 40px;
   font-size: 0.8rem;
+  text-align: center;
 
   &.title {
     max-width: 200px;
@@ -129,14 +137,25 @@ export const Td = styled.td`
   &.version {
     min-width: 80px;
   }
-`;
+`
 
 export const VersionSelect = styled.select`
+  width: 80px; // 가로 길이를 줄임
   padding: 0.25rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   background: white;
-  min-width: 80px;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #aaa;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+  }
 `
 
 export const ActionButton = styled.button`
@@ -149,11 +168,12 @@ export const ActionButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: color 0.3s ease;
+  margin: 0 auto;
 
   &:hover {
     color: #333;
   }
-`;
+`
 
 export const FileInfo = styled.div`
   display: flex;
@@ -188,6 +208,7 @@ export const SummaryTh = styled(Th)`
 
 export const SummaryTd = styled(Td)`
   padding: 0.75rem 0.5rem;
+  text-align: left;
 `
 
 export const DocumentName = styled.button`
@@ -199,7 +220,7 @@ export const DocumentName = styled.button`
   text-align: left;
   cursor: pointer;
   margin-right: 0.5rem;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -220,11 +241,11 @@ export const PaginationButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  
+
   &:hover {
     background: #f0f0f0;
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -312,26 +333,26 @@ export const EmptyStateContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   margin-top: 2rem;
-`;
+`
 
 export const EmptyStateIcon = styled.div`
   font-size: 4rem;
   color: #ccc;
   margin-bottom: 1rem;
-`;
+`
 
 export const EmptyStateTitle = styled.h3`
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 0.5rem;
-`;
+`
 
 export const EmptyStateDescription = styled.p`
   font-size: 1rem;
   color: #666;
   margin-bottom: 1.5rem;
   max-width: 400px;
-`;
+`
 
 export const EmptyStateButton = styled.button`
   background-color: #000000;
@@ -346,7 +367,7 @@ export const EmptyStateButton = styled.button`
   &:hover {
     background-color: #333333;
   }
-`;
+`
 
 export const LoadingContainer = styled.div`
   display: flex;
@@ -355,7 +376,7 @@ export const LoadingContainer = styled.div`
   justify-content: center;
   min-height: 400px;
   width: 100%;
-`;
+`
 
 export const LoadingSpinner = styled.div`
   width: 50px;
@@ -370,17 +391,17 @@ export const LoadingSpinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-`;
+`
 
 export const LoadingText = styled.p`
   color: #666;
   font-size: 1rem;
   margin: 0;
-`;
+`
 
 export const ActionButtonsContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-`;
+`
 

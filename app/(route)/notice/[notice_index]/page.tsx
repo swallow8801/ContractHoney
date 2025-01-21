@@ -92,10 +92,10 @@ const NoticeDetailPage = () => {
   const handleEdit = () => {
     setNotification({ type: 'confirm', message: '수정하시겠습니까?' });
   };
-  
+
   const handleConfirm = async () => {
-    if (notification?.type === 'success' || notification?.type === 'error') {
-      setNotification(null);
+    if (notification?.type === 'ok') {
+      router.push('/notice'); // "확인" 버튼 클릭 시 목록으로 이동
     } else if (notification?.type === 'confirm') {
       if (currentNotice) {
         router.push(`/notice/editNoti/${currentNotice.id}`);
@@ -106,10 +106,7 @@ const NoticeDetailPage = () => {
           method: 'DELETE',
         });
         if (response.ok) {
-          setNotification({ type: 'ok', message: '공지사항이 삭제되었습니다.' }); // 삭제 완료 메시지로 변경
-          setTimeout(() => {
-            router.push('/notice');
-          }, 1500);
+          setNotification({ type: 'ok', message: '공지사항이 삭제되었습니다.' });
         } else {
           const result = await response.json();
           setNotification({ type: 'error', message: result.error || '삭제 중 오류가 발생했습니다.' });
@@ -122,51 +119,48 @@ const NoticeDetailPage = () => {
       setNotification(null);
     }
   };
-  
+
   const handleCancel = () => {
     setNotification(null);
   };
-  
+
   if (!currentNotice) {
     return <p>Loading...</p>;
   }
-  
+
   return (
     <Container>
       {notification && (
-      <NotificationOverlay>
-        <NotificationBox>
-          <NotificationMessage>{notification.message}</NotificationMessage>
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
 
-          {notification.type === 'ok' ? ( 
-            // 삭제 완료 상태: 확인 버튼만 표시
-            <ConfirmButton
-              $type="ok"
-              onClick={handleCancel}
-            >
-              확인
-            </ConfirmButton>
-          ) : (
-            <>
-              {/* 요청 상태: 확인 버튼 */}
+            {notification.type === 'ok' ? (
               <ConfirmButton
-                $type={notification.type === 'confirm-delete' ? 'error' : 'ok'}
+                $type="ok"
                 onClick={handleConfirm}
               >
                 확인
               </ConfirmButton>
-              {/* 요청 상태: 취소 버튼 */}
-              <ConfirmButton
-                $type="norm"
-                onClick={handleCancel}
-              >
-                취소
-              </ConfirmButton>
-            </>
-          )}
-        </NotificationBox>
-      </NotificationOverlay>
-    )}
+            ) : (
+              <>
+                <ConfirmButton
+                  $type={notification.type === 'confirm-delete' ? 'error' : 'ok'}
+                  onClick={handleConfirm}
+                >
+                  확인
+                </ConfirmButton>
+                <ConfirmButton
+                  $type="norm"
+                  onClick={handleCancel}
+                >
+                  취소
+                </ConfirmButton>
+              </>
+            )}
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Sidebar>
         <SidebarTitle>공지사항</SidebarTitle>
       </Sidebar>
@@ -181,7 +175,7 @@ const NoticeDetailPage = () => {
               <td>다음글</td>
               <td
                 style={{
-                  color: !nextNotice ? '#999' : 'initial', // '다음글이 없습니다.'일 경우 색상 지정
+                  color: !nextNotice ? '#999' : 'initial',
                 }}
               >
                 {nextNotice ? (
@@ -197,7 +191,7 @@ const NoticeDetailPage = () => {
               <td>이전글</td>
               <td
                 style={{
-                  color: !prevNotice ? '#999' : 'initial', // '이전글이 없습니다.'일 경우 색상 지정
+                  color: !prevNotice ? '#999' : 'initial',
                 }}
               >
                 {prevNotice ? (
@@ -227,4 +221,3 @@ const NoticeDetailPage = () => {
 };
 
 export default NoticeDetailPage;
-

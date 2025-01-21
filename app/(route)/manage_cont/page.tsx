@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { Share, ChevronUp, ChevronDown, FileText } from 'lucide-react'
-import { useState, useMemo, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Share, ChevronUp, ChevronDown, FileText } from "lucide-react"
+import { useState, useMemo, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import {
   Container,
   MainContent,
@@ -34,116 +34,160 @@ import {
   LoadingContainer,
   LoadingSpinner,
   LoadingText,
-} from './manage_cont.styled'
+} from "./manage_cont.styled"
 
 interface Contract {
-  con_id: number;
-  con_title: string;
-  con_type: string;
-  con_updatetime: string;
-  con_summary: string | null;
-  con_version: number;
+  con_id: number
+  con_title: string
+  con_type: string
+  con_updatetime: string
+  con_summary: string | null
+  con_version: number
+  unfair_count: number
+  toxic_count: number
+  selectedVersion?: number
+}
+
+interface GroupedContract {
+  con_title: string
+  con_type: string
+  versions: {
+    con_id: number
+    con_version: number
+    con_updatetime: string
+    unfair_count: number
+    toxic_count: number
+  }[]
+  selectedVersion?: number
+}
+
+const groupContracts = (contracts: Contract[]): GroupedContract[] => {
+  const grouped = contracts.reduce(
+    (acc, contract) => {
+      if (!acc[contract.con_title]) {
+        acc[contract.con_title] = {
+          con_title: contract.con_title,
+          con_type: contract.con_type,
+          versions: [],
+        }
+      }
+      acc[contract.con_title].versions.push({
+        con_id: contract.con_id,
+        con_version: contract.con_version,
+        con_updatetime: contract.con_updatetime,
+        unfair_count: contract.unfair_count,
+        toxic_count: contract.toxic_count,
+      })
+      return acc
+    },
+    {} as Record<string, GroupedContract>,
+  )
+
+  return Object.values(grouped).map((group) => ({
+    ...group,
+    versions: group.versions.sort((a, b) => b.con_version - a.con_version),
+    selectedVersion: group.versions[0].con_version,
+  }))
 }
 
 export default function ManageContracts() {
   const router = useRouter()
-  const [contracts, setContracts] = useState<Contract[]>([]);
-  const [selectedDoc, setSelectedDoc] = useState<Contract | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<'con_title' | 'con_updatetime'>('con_updatetime')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [contracts, setContracts] = useState<Contract[]>([])
+  const [selectedDoc, setSelectedDoc] = useState<GroupedContract | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [sortField, setSortField] = useState<"con_title" | "con_updatetime">("con_updatetime")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   const [currentPage, setCurrentPage] = useState(1)
   const [windowWidth, setWindowWidth] = useState(0)
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
+  const [filteredAndSortedContracts, setFilteredAndSortedContracts] = useState<GroupedContract[]>([])
   const itemsPerPage = 5
 
   useEffect(() => {
     setWindowWidth(window.innerWidth)
-    
+
     const handleResize = () => setWindowWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
   }, [])
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken")
     if (!token) {
-      router.push('/login');
-      return;
+      router.push("/login?redirect=/manage_cont");
+      return
     }
 
     const fetchContracts = async () => {
-      setIsLoading(true);
-      const startTime = Date.now();
-      
+      setIsLoading(true)
+      const startTime = Date.now()
+
       try {
-        const response = await fetch('/api/contracts', {
+        const response = await fetch("/api/contracts", {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+            Authorization: `Bearer ${token}`,
+          },
+        })
         if (response.status === 401) {
-          localStorage.removeItem('authToken');
-          router.push('/login');
-          return;
+          localStorage.removeItem("authToken")
+          router.push("/login")
+          return
         }
         if (!response.ok) {
-          throw new Error('Failed to fetch contracts');
+          throw new Error("Failed to fetch contracts")
         }
-        const data = await response.json();
-        setContracts(data);
+        const data = await response.json()
+        setContracts(data)
       } catch (error) {
-        console.error('Error fetching contracts:', error);
+        console.error("Error fetching contracts:", error)
       } finally {
-        const endTime = Date.now();
-        const loadingTime = endTime - startTime;
-        const remainingTime = Math.max(2000 - loadingTime, 0);
-        
+        const endTime = Date.now()
+        const loadingTime = endTime - startTime
+        const remainingTime = Math.max(2000 - loadingTime, 0)
+
         setTimeout(() => {
-          setIsLoading(false);
-        }, remainingTime);
+          setIsLoading(false)
+        }, remainingTime)
       }
-    };
+    }
 
-    fetchContracts();
-  }, [router]);
+    fetchContracts()
+  }, [router])
 
-  const filteredAndSortedContracts = useMemo(() => {
-    return contracts
-      .filter(contract => 
-        contract.con_title.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+  useEffect(() => {
+    const grouped = groupContracts(contracts)
+    setFilteredAndSortedContracts(grouped)
+  }, [contracts])
+
+  const currentItems = useMemo(() => {
+    return filteredAndSortedContracts
+      .filter((contract) => contract.con_title.toLowerCase().includes(searchTerm.toLowerCase()))
       .sort((a, b) => {
-        if (sortField === 'con_title') {
-          return sortOrder === 'asc' 
-            ? a.con_title.localeCompare(b.con_title)
-            : b.con_title.localeCompare(a.con_title)
-        } else if (sortField === 'con_updatetime') {
-          return sortOrder === 'asc'
-            ? new Date(a.con_updatetime).getTime() - new Date(b.con_updatetime).getTime()
-            : new Date(b.con_updatetime).getTime() - new Date(a.con_updatetime).getTime()
+        if (sortField === "con_title") {
+          return sortOrder === "asc" ? a.con_title.localeCompare(b.con_title) : b.con_title.localeCompare(a.con_title)
+        } else if (sortField === "con_updatetime") {
+          return sortOrder === "asc"
+            ? new Date(a.versions[0].con_updatetime).getTime() - new Date(b.versions[0].con_updatetime).getTime()
+            : new Date(b.versions[0].con_updatetime).getTime() - new Date(a.versions[0].con_updatetime).getTime()
         }
         return 0
       })
-  }, [contracts, searchTerm, sortField, sortOrder])
+      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  }, [filteredAndSortedContracts, searchTerm, sortField, sortOrder, currentPage, itemsPerPage])
 
   const pageCount = Math.ceil(filteredAndSortedContracts.length / itemsPerPage)
-  const currentItems = filteredAndSortedContracts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
     setCurrentPage(1)
   }
 
-  const handleSort = (field: 'con_title' | 'con_updatetime') => {
+  const handleSort = (field: "con_title" | "con_updatetime") => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
     } else {
       setSortField(field)
-      setSortOrder('asc')
+      setSortOrder("asc")
     }
     setCurrentPage(1)
   }
@@ -152,8 +196,39 @@ export default function ManageContracts() {
     setCurrentPage(newPage)
   }
 
-  const handleViewResults = (contractId: number) => {
-    router.push(`/analysis?contractId=${contractId}`);
+  const handleVersionChange = (contractTitle: string, version: number) => {
+    setFilteredAndSortedContracts((prevContracts) => {
+      return prevContracts.map((contract) => {
+        if (contract.con_title === contractTitle) {
+          return { ...contract, selectedVersion: version }
+        }
+        return contract
+      })
+    })
+
+    // Update selectedDoc when version changes
+    setSelectedDoc((prevDoc) => {
+      if (prevDoc && prevDoc.con_title === contractTitle) {
+        const selectedVersionData = prevDoc.versions.find((v) => v.con_version === version)
+        return {
+          ...prevDoc,
+          selectedVersion: version,
+          versions: [selectedVersionData!, ...prevDoc.versions.filter((v) => v.con_version !== version)],
+        }
+      }
+      return prevDoc
+    })
+  }
+
+  const handleViewResults = (contractTitle: string) => {
+    const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle)
+    if (contract) {
+      const selectedVersion = contract.selectedVersion || contract.versions[0].con_version
+      const selectedContractVersion = contract.versions.find((v) => v.con_version === selectedVersion)
+      if (selectedContractVersion) {
+        router.push(`/analysis?contractId=${selectedContractVersion.con_id}`)
+      }
+    }
   }
 
   if (isLoading) {
@@ -171,7 +246,7 @@ export default function ManageContracts() {
           </LoadingContainer>
         </MainContent>
       </Container>
-    );
+    )
   }
 
   if (contracts.length === 0) {
@@ -191,13 +266,11 @@ export default function ManageContracts() {
             <EmptyStateDescription>
               계약서를 업로드하고 분석을 시작해보세요. 분석된 계약서의 결과를 여기서 확인할 수 있습니다.
             </EmptyStateDescription>
-            <EmptyStateButton onClick={() => router.push('/')}>
-              메인으로 돌아가기
-            </EmptyStateButton>
+            <EmptyStateButton onClick={() => router.push("/")}>메인으로 돌아가기</EmptyStateButton>
           </EmptyStateContainer>
         </MainContent>
       </Container>
-    );
+    )
   }
 
   return (
@@ -209,12 +282,7 @@ export default function ManageContracts() {
             <TotalCount>총 {filteredAndSortedContracts.length}건</TotalCount>
           </TitleContainer>
           <SearchContainer>
-            <SearchInput
-              type="text"
-              placeholder="계약서 이름으로 검색"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
+            <SearchInput type="text" placeholder="계약서 이름으로 검색" value={searchTerm} onChange={handleSearch} />
           </SearchContainer>
         </HeaderContainer>
 
@@ -222,15 +290,19 @@ export default function ManageContracts() {
           <tbody>
             <tr>
               <SummaryTh>계약서 이름</SummaryTh>
-              <SummaryTd>{selectedDoc?.con_title || '-'}</SummaryTd>
+              <SummaryTd>{selectedDoc?.con_title || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 종류</SummaryTh>
-              <SummaryTd>{selectedDoc?.con_type || '-'}</SummaryTd>
+              <SummaryTh>확장자명</SummaryTh>
+              <SummaryTd>{selectedDoc?.con_type || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>계약 요약</SummaryTh>
-              <SummaryTd>{selectedDoc?.con_summary || '-'}</SummaryTd>
+              <SummaryTh>불공정조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.versions[0]?.unfair_count || 0}</SummaryTd>
+            </tr>
+            <tr>
+              <SummaryTh>독소조항</SummaryTh>
+              <SummaryTd>{selectedDoc?.versions[0]?.toxic_count || 0}</SummaryTd>
             </tr>
           </tbody>
         </SummaryBox>
@@ -238,50 +310,59 @@ export default function ManageContracts() {
         <Table>
           <thead>
             <tr>
-              <Th $sortable onClick={() => handleSort('con_title')}>
+              <Th $sortable onClick={() => handleSort("con_title")}>
                 계약서 이름
-                {sortField === 'con_title' && (
-                  <SortIcon>
-                    {sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </SortIcon>
+                {sortField === "con_title" && (
+                  <SortIcon>{sortOrder === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</SortIcon>
                 )}
               </Th>
-              <Th>계약 종류</Th>
-              <Th $sortable onClick={() => handleSort('con_updatetime')}>
-                분석날짜
-                {sortField === 'con_updatetime' && (
-                  <SortIcon>
-                    {sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </SortIcon>
+              <Th>확장자명</Th>
+              <Th $sortable onClick={() => handleSort("con_updatetime")}>
+                최근 분석날짜
+                {sortField === "con_updatetime" && (
+                  <SortIcon>{sortOrder === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</SortIcon>
                 )}
               </Th>
               <Th>버전</Th>
-              <Th>결과창 이동</Th>
+              <Th>불공정조항</Th>
+              <Th>독소조항</Th>
+              <Th>결과창</Th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((contract) => (
-              <tr key={contract.con_id}>
+            {currentItems.map((contract, index) => (
+              <tr key={`${contract.con_title}-${index}`}>
                 <Td className="title">
-                  <DocumentName onClick={() => setSelectedDoc(contract)}>
-                    {contract.con_title}
-                  </DocumentName>
+                  <DocumentName onClick={() => setSelectedDoc(contract)}>{contract.con_title}</DocumentName>
                 </Td>
                 <Td className="type">{contract.con_type}</Td>
                 <Td className="date">
-                  <FileDate>{new Date(contract.con_updatetime).toLocaleDateString()}</FileDate>
+                  <FileDate>{new Date(contract.versions[0].con_updatetime).toLocaleDateString()}</FileDate>
                 </Td>
                 <Td className="version">
-                  <VersionSelect defaultValue={contract.con_version}>
-                    {Array.from({ length: contract.con_version }, (_, i) => (
-                      <option key={i + 1} value={i + 1}>
-                        ver {i + 1}
+                  <VersionSelect
+                    onChange={(e) => handleVersionChange(contract.con_title, Number(e.target.value))}
+                    value={contract.selectedVersion || contract.versions[0].con_version}
+                  >
+                    {contract.versions.map((version, index) => (
+                      <option key={`${contract.con_title}-${version.con_version}-${index}`} value={version.con_version}>
+                        ver {version.con_version}
                       </option>
                     ))}
                   </VersionSelect>
                 </Td>
                 <Td>
-                  <ActionButton onClick={() => handleViewResults(contract.con_id)}>
+                  {contract.versions.find(
+                    (v) => v.con_version === (contract.selectedVersion || contract.versions[0].con_version),
+                  )?.unfair_count || 0}
+                </Td>
+                <Td>
+                  {contract.versions.find(
+                    (v) => v.con_version === (contract.selectedVersion || contract.versions[0].con_version),
+                  )?.toxic_count || 0}
+                </Td>
+                <Td>
+                  <ActionButton onClick={() => handleViewResults(contract.con_title)}>
                     <FileText size={20} />
                   </ActionButton>
                 </Td>
@@ -291,19 +372,13 @@ export default function ManageContracts() {
         </Table>
 
         <PaginationContainer>
-          <PaginationButton 
-            onClick={() => handlePageChange(currentPage - 1)} 
-            disabled={currentPage === 1}
-          >
+          <PaginationButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
             이전
           </PaginationButton>
           <PaginationInfo>
             {currentPage} / {pageCount}
           </PaginationInfo>
-          <PaginationButton 
-            onClick={() => handlePageChange(currentPage + 1)} 
-            disabled={currentPage === pageCount}
-          >
+          <PaginationButton onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pageCount}>
             다음
           </PaginationButton>
         </PaginationContainer>
