@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    image: pince3120/contracthoney:latest  # 이미 Docker Hub에 푸시된 이미지
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env  # .env 파일을 통해 환경 변수를 가져옵니다
+    depends_on:
+      - db  # db 서비스가 준비된 후 app 서비스 시작
+
+  db:
+    image: mysql:8  # MySQL 8.x 버전 사용
+    environment:
+      MYSQL_ROOT_PASSWORD: Aivle627  # 루트 비밀번호
+      MYSQL_DATABASE: contract  # 기본 데이터베이스
+    ports:
+      - "3306:3306"  # MySQL의 기본 포트 3306을 열어줌
