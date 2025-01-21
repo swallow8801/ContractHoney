@@ -115,8 +115,6 @@ export const DropdownContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 0 0 8px 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 300px;
-  overflow-y: auto;
   z-index: 10;
   margin-top: 5px;
 `
@@ -160,10 +158,13 @@ export const NewContractButton = styled.button`
 export const NewContractInput = styled.input<{ $hasWarning?: boolean }>`
   width: 100%;
   padding: 12px;
-  border: none;
-  border-bottom: 1px solid ${(props) => (props.$hasWarning ? "red" : "#eee")};
+  border: 1px solid ${(props) => (props.$hasWarning ? "red" : "#ddd")};
   font-size: 14px;
   outline: none;
+  &:focus {
+    outline: none;
+    border-color: ${(props) => (props.$hasWarning ? "red" : "#007bff")};
+  }
 
   &::placeholder {
     color: #999;
@@ -173,6 +174,21 @@ export const NewContractInput = styled.input<{ $hasWarning?: boolean }>`
 export const ContractList = styled.div`
   max-height: 200px;
   overflow-y: auto;
+
+  /* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 `
 
 export const ContractItem = styled.button`

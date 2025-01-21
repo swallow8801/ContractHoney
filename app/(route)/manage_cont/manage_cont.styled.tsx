@@ -64,26 +64,32 @@ export const Table = styled.table`
   font-size: 0.8rem;
 
   th, td {
-    &:nth-child(1) { width: 35%; }
-    &:nth-child(2) { width: 25%; }
-    &:nth-child(3) { width: 25%; }
-    &:nth-child(4) { width: 15%; }
+    &:nth-child(1) { width: 25%; }
+    &:nth-child(2) { width: 10%; }
+    &:nth-child(3) { width: 15%; }
+    &:nth-child(4) { width: 10%; }
+    &:nth-child(5) { width: 10%; }
+    &:nth-child(6) { width: 10%; }
+    &:nth-child(7) { width: 10%; }
   }
 
   @media (max-width: 768px) {
     font-size: 0.7rem;
 
     th, td {
-      &:nth-child(1) { width: 40%; }
-      &:nth-child(2) { width: 30%; }
+      &:nth-child(1) { width: 30%; }
+      &:nth-child(2) { width: 15%; }
       &:nth-child(3) { display: none; }
-      &:nth-child(4) { width: 30%; }
+      &:nth-child(4) { width: 15%; }
+      &:nth-child(5) { width: 10%; }
+      &:nth-child(6) { width: 10%; }
+      &:nth-child(7) { width: 10%; }
     }
   }
 `
 
 export const Th = styled.th<{ $sortable?: boolean }>`
-  text-align: left;
+  text-align: center;
   padding: 0.3rem 0.5rem;
   color: #666;
   font-weight: normal;
@@ -98,6 +104,9 @@ export const Th = styled.th<{ $sortable?: boolean }>`
   &:hover {
     background-color: ${(props) => (props.$sortable ? "#e0e0e0" : "#f0f0f0")};
   }
+  &:first-child {
+    text-align: left;
+  }
 `
 
 export const Td = styled.td`
@@ -110,6 +119,7 @@ export const Td = styled.td`
   height: auto;
   min-height: 40px;
   font-size: 0.8rem;
+  text-align: center;
 
   &.title {
     max-width: 200px;
@@ -130,7 +140,7 @@ export const Td = styled.td`
 `
 
 export const VersionSelect = styled.select`
-  width: 100%;
+  width: 80px; // 가로 길이를 줄임
   padding: 0.25rem;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -158,6 +168,7 @@ export const ActionButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: color 0.3s ease;
+  margin: 0 auto;
 
   &:hover {
     color: #333;
@@ -197,6 +208,7 @@ export const SummaryTh = styled(Th)`
 
 export const SummaryTd = styled(Td)`
   padding: 0.75rem 0.5rem;
+  text-align: left;
 `
 
 export const DocumentName = styled.button`
@@ -208,7 +220,7 @@ export const DocumentName = styled.button`
   text-align: left;
   cursor: pointer;
   margin-right: 0.5rem;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -229,11 +241,11 @@ export const PaginationButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  
+
   &:hover {
     background: #f0f0f0;
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;

@@ -101,6 +101,8 @@ const MainPage = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false)
         setIsCreatingNew(false)
+        setNewContractName("") // Reset the new contract name
+        setDuplicateNameWarning(null) // Clear any existing warning
       }
     }
 
