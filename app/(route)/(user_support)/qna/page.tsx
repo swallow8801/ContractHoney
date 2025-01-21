@@ -200,18 +200,6 @@ const MainPage = () => {
                     {isAdmin && <td>{qna.user_name || "알 수 없음"}</td>}
                     <td>{new Date(qna.qna_cont_date).toLocaleDateString()}</td>
                     <td>{qna.qna_answer ? "답변 완료" : "답변 대기 중"}</td>
-                    {!isAdmin && !qna.qna_answer && (
-                      <td>
-                        <DeleteButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(qna.qna_id);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTrashCan} />
-                        </DeleteButton>
-                      </td>
-                    )}
                   </tr>
                 ))}
               </tbody>

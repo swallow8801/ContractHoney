@@ -132,7 +132,7 @@ export const Table = styled.table<{ $isAdmin: boolean }>`
   }
 
   td:nth-child(5), th:nth-child(5) {
-    width: ${(props) => (props.$isAdmin ? "13%" : "6%")};
+    width: ${(props) => (props.$isAdmin ? "13%" : "0%")};
     text-align: center;
   }
 `;

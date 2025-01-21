@@ -122,7 +122,7 @@ const WriteQnA = () => {
           <FormLabel htmlFor="title">제목</FormLabel>
           <FormInput id="title" type="text" placeholder="제목을 입력하세요." />
 
-          <FormLabel htmlFor="content">내용</FormLabel>
+          <FormLabel htmlFor="content" style={{marginTop:'20px'}}>내용</FormLabel>
           <FormTextarea id="content" placeholder="내용을 입력하세요." />
 
           <ButtonContainer>
