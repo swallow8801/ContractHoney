@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const Container = styled.div`
     height: calc(100vh - 90px);
@@ -18,7 +18,7 @@ export const Container = styled.div`
 
     /* Smooth scroll on iOS */
     -webkit-overflow-scrolling: touch;
-`;
+`
 
 export const Group = styled.div<{ $backgroundImage: string }>`
     position: relative;
@@ -49,7 +49,7 @@ export const Group = styled.div<{ $backgroundImage: string }>`
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1;
     }
-`;
+`
 
 export const Title = styled.h1`
     font-size: 48px;
@@ -67,7 +67,7 @@ export const Title = styled.h1`
             transform: translateY(0);
         }
     }
-`;
+`
 
 export const InputContainer = styled.div`
     display: flex;
@@ -79,25 +79,141 @@ export const InputContainer = styled.div`
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards 0.2s;
-`;
+`
 
-export const Select = styled.select`
-    padding: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
+export const CustomSelect = styled.div`
+  position: relative;
+  width: 100%;
+`
 
-    &:hover {
-        border-color: rgba(255, 255, 255, 0.4);
-    }
+export const SelectTrigger = styled.button`
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    &:focus {
-        outline: none;
-        border-color: rgba(255, 255, 255, 0.6);
-    }
-`;
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+`
+
+export const DropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+  margin-top: 5px;
+`
+
+export const DropdownSearch = styled.input`
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  outline: none;
+
+  &::placeholder {
+    color: #999;
+  }
+`
+
+export const NewContractButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  svg {
+    color: #666;
+  }
+`
+
+export const NewContractInput = styled.input<{ $hasWarning?: boolean }>`
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 1px solid ${(props) => (props.$hasWarning ? "red" : "#eee")};
+  font-size: 14px;
+  outline: none;
+
+  &::placeholder {
+    color: #999;
+  }
+`
+
+export const ContractList = styled.div`
+  max-height: 200px;
+  overflow-y: auto;
+`
+
+export const ContractItem = styled.button`
+  width: 100%;
+  padding: 12px 15px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.new {
+    font-style: italic;
+  }
+`
+
+export const ContractTitle = styled.span`
+  color: #333;
+  font-weight: 500;
+`
+
+export const ContractVersion = styled.span`
+  color: #666;
+  font-size: 12px;
+  flex-shrink: 0;
+  font-weight: 400;
+  
+  &.new {
+    color: #4caf50;
+    font-weight: 600;
+  }
+`
 
 export const Button = styled.button`
     padding: 15px 30px;
@@ -119,7 +235,7 @@ export const Button = styled.button`
         cursor: not-allowed;
         transform: none;
     }
-`;
+`
 
 export const Notice = styled.div`
     display: flex;
@@ -131,7 +247,7 @@ export const Notice = styled.div`
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards 0.2s;
-`;
+`
 
 export const NoticeItem = styled.div`
   display: flex;
@@ -143,24 +259,24 @@ export const NoticeItem = styled.div`
   font-size: 16px;
   color: #333;
   cursor: pointer;
-`;
+`
 
 export const NoticeItemTitle = styled.span`
   text-align: left;
   flex: 1;
   padding-right: 20px; /* 제목 오른쪽에 패딩 추가 */
-`;
+`
 
 export const NoticeItemAuthor = styled.span`
   text-align: right;
   margin-right: 10px; /* 글쓴이와 날짜 사이 간격 추가 */
   color: #555; /* 글쓴이 색상 */
-`;
+`
 
 export const NoticeItemDate = styled.span`
   text-align: right;
   color: #888; /* 날짜 색상 */
-`;
+`
 
 export const ViewAll = styled.button`
     align-self: flex-end;
@@ -177,45 +293,47 @@ export const ViewAll = styled.button`
     &:hover {
         transform: translateX(5px);
     }
-`;
+`
 
 export const FileUploadContainer = styled.div`
     width: 100%;
     max-width: 400px;
+    margin-top: 20px;
     margin-bottom: 20px;
-`;
+`
 
-export const FileUploadArea = styled.div<{ $isDragging?: boolean }>`
+export const FileUploadArea = styled.div<{ $isDragging?: boolean; $disabled?: boolean }>`
     padding: 20px;
-    border: 2px dashed ${props => props.$isDragging ? '#ffffff' : 'rgba(255, 255, 255, 0.3)'};
+    border: 2px dashed ${(props) => (props.$isDragging ? "#ffffff" : "rgba(255, 255, 255, 0.3)")};
     border-radius: 8px;
-    background: ${props => props.$isDragging ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)'};
+    background: ${(props) => (props.$isDragging ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)")};
     color: white;
     text-align: center;
-    cursor: pointer;
+    cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
     transition: all 0.3s ease;
+    opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
 
     &:hover {
-        border-color: rgba(255, 255, 255, 0.5);
-        background: rgba(255, 255, 255, 0.1);
+        border-color: ${(props) => (props.$disabled ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.5)")};
+        background: ${(props) => (props.$disabled ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.1)")};
     }
-`;
+`
 
 export const FileInput = styled.input`
     display: none;
-`;
+`
 
 export const FileName = styled.div`
     color: white;
     margin-top: 10px;
     font-size: 14px;
     word-break: break-all;
-`;
+`
 
 export const SearchableSelect = styled.div`
   position: relative;
   width: 100%;
-`;
+`
 
 export const SearchInput = styled.input`
   width: 100%;
@@ -230,7 +348,29 @@ export const SearchInput = styled.input`
     border-color: rgba(255, 255, 255, 0.6);
     outline: none;
   }
-`;
+`
+
+export const Select = styled.select`
+  width: 100%;
+  padding: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  color: #333;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    border-color: rgba(255, 255, 255, 0.6);
+    outline: none;
+  }
+
+  option {
+    color: #333;
+    background: white;
+  }
+`
 
 export const DropdownList = styled.ul`
   position: absolute;
@@ -244,7 +384,7 @@ export const DropdownList = styled.ul`
   border-radius: 0 0 8px 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
-`;
+`
 
 export const DropdownItem = styled.li`
   padding: 10px 15px;
@@ -254,7 +394,7 @@ export const DropdownItem = styled.li`
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
-`;
+`
 
 export const LoadingOverlay = styled.div`
   position: fixed;
@@ -268,7 +408,7 @@ export const LoadingOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
-`;
+`
 
 export const LoadingSpinner = styled.div`
   width: 50px;
@@ -283,13 +423,13 @@ export const LoadingSpinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-`;
+`
 
 export const LoadingText = styled.div`
   color: #333;
   font-size: 16px;
   margin-top: 10px;
-`;
+`
 
 export const LoginMessage = styled.div`
   color: white;
@@ -297,5 +437,12 @@ export const LoginMessage = styled.div`
   margin-top: 20px;
   text-align: center;
   z-index: 2;
-`;
+`
+
+export const WarningMessage = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 0 12px;
+`
 
