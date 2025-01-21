@@ -32,6 +32,12 @@ interface NoticeType {
   notice_date: string;
 }
 
+interface UserContractType {
+  id: number;
+  title: string;
+  version: number;
+}
+
 const MainPage = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -42,11 +48,17 @@ const MainPage = () => {
   const [notices, setNotices] = useState<NoticeType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userContracts, setUserContracts] = useState<UserContractType[]>([]);
+  const [selectedContract, setSelectedContract] = useState<UserContractType | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     setIsLoggedIn(!!token);
+
+    if (token) {
+      fetchUserContracts();
+    }
 
     const fetchNotices = async () => {
       try {
@@ -63,6 +75,24 @@ const MainPage = () => {
 
     fetchNotices();
   }, []);
+
+  const fetchUserContracts = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/user-contracts', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user contracts');
+      }
+      const data = await response.json();
+      setUserContracts(data);
+    } catch (err: any) {
+      console.error('Error fetching user contracts:', err);
+    }
+  };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -120,6 +150,10 @@ const MainPage = () => {
       formData.append('fileName', fileNameWithoutExtension);
       formData.append('fileType', fileExtension);
 
+      if (selectedContract) {
+        formData.append('contractId', selectedContract.id.toString());
+      }
+
       try {
         const token = localStorage.getItem('authToken');
         const response = await fetch('/api/upload-contract', {
@@ -162,6 +196,22 @@ const MainPage = () => {
         <Title>계약서 검토 AI 어시스턴트</Title>
         <InputContainer>
           <FileUploadContainer>
+            {isLoggedIn && userContracts.length > 0 && (
+              <Select
+                value={selectedContract ? selectedContract.id : ''}
+                onChange={(e) => {
+                  const selected = userContracts.find(c => c.id === parseInt(e.target.value));
+                  setSelectedContract(selected || null);
+                }}
+              >
+                <option value="">새 계약서 업로드</option>
+                {userContracts.map((contract) => (
+                  <option key={contract.id} value={contract.id}>
+                    {contract.title} (v{contract.version})
+                  </option>
+                ))}
+              </Select>
+            )}
             <FileUploadArea
               $isDragging={isDragging}
               onClick={handleUploadClick}
