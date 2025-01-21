@@ -33,7 +33,7 @@ interface QnaType {
   isOwner: boolean;
 }
 
-const MainPage = () => {
+const QnAPage = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [qnas, setQnas] = useState<QnaType[]>([]);
@@ -50,7 +50,7 @@ const MainPage = () => {
       const token = localStorage.getItem("authToken");
 
       if (!token) {
-        router.push("/login");
+        router.push("/login?redirect=/qna");
         return;
       }
 
@@ -261,4 +261,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default QnAPage;

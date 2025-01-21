@@ -104,7 +104,7 @@ export default function ManageContracts() {
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {
-      router.push("/login")
+      router.push("/login?redirect=/manage_cont");
       return
     }
 
