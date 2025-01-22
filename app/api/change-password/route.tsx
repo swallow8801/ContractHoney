@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest) {
   const { currentPassword, newPassword }: { currentPassword: string; newPassword: string } = await request.json();
 
   try {
-    // JWT 토큰에서 사용자 이메일 추출
+    // JWT 토큰에서 사용자 ID 추출
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
       return NextResponse.json({ error: '인증 정보가 없습니다.' }, { status: 401 });
@@ -28,12 +28,12 @@ export async function PUT(request: NextRequest) {
 
     const token = authHeader.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY!);
-    const userEmail = (decodedToken as { userEmail: string }).userEmail;
+    const userId = (decodedToken as { userId: number }).userId;
 
-    console.log('Decoded Token Email:', userEmail);
+    console.log('Decoded Token User ID:', userId);
 
     // 사용자 정보 조회
-    const [rows]: [any[], any] = await pool.query('SELECT * FROM user WHERE user_email = ?', [userEmail]);
+    const [rows]: [any[], any] = await pool.query('SELECT * FROM user WHERE user_id = ?', [userId]);
 
     if (rows.length === 0) {
       return NextResponse.json({ error: '사용자를 찾을 수 없습니다.' }, { status: 404 });
@@ -51,8 +51,8 @@ export async function PUT(request: NextRequest) {
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     const [result] = await pool.query(
-      'UPDATE user SET user_password = ? WHERE user_email = ?',
-      [hashedNewPassword, userEmail]
+      'UPDATE user SET user_password = ? WHERE user_id = ?',
+      [hashedNewPassword, userId]
     );
 
     if ((result as any).affectedRows === 0) {
