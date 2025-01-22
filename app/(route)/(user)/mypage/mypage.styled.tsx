@@ -58,11 +58,11 @@ export const EditButton = styled.button`
 
 export const ChangeButton = styled.button`
   width: 20%;
-  padding: 4px 12px;
+  padding: 6px 12px;
   background: #808080;
   border: none;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 13px;
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s ease;

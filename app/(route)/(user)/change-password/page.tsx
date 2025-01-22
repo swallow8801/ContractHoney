@@ -144,7 +144,7 @@ const ChangePassword = () => {
                 </ShowPassword>
               </PasswordField>
               {newPassword !== confirmPassword && confirmPassword !== '' && (
-                  <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+                  <ErrorText>새 비밀번호가 일치하지 않습니다.</ErrorText>
                 )}
             </FormGroup>
 
