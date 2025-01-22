@@ -108,11 +108,45 @@ const StandardContractsPage = () => {
     return d.toLocaleDateString("ko-KR");
   };
 
-  const handleDownload = (e: React.MouseEvent, ar_id: number) => {
+  const handleDownload = async (e: React.MouseEvent, ar_id: number) => {
     e.stopPropagation();
-    console.log("Downloading document:", ar_id);
+  
+    // 선택된 계약서 정보 가져오기
+    const contract = contracts.find((c) => c.ar_id === ar_id);
+    if (!contract) {
+      console.error("Contract not found.");
+      return;
+    }
+  
+    try {
+      // API 호출하여 파일 다운로드
+      const response = await fetch(`/api/download?fileId=${contract.ar_id}`);
+  
+      if (!response.ok) {
+        throw new Error(`Failed to download file: ${response.statusText}`);
+      }
+  
+      // Blob 데이터를 생성하여 브라우저에서 다운로드 처리
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      // 파일 이름을 안전하게 처리
+      const fileName = contract.ar_file_url.split("/").pop() || "downloaded_file";
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+  
+      // 다운로드 후 URL 해제
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("파일 다운로드에 실패했습니다. 다시 시도해주세요.");
+    }
   };
-
+  
   return (
     <Container>
       <Sidebar>
