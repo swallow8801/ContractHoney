@@ -97,23 +97,6 @@ export const ErrorText = styled.p`
   color: #dc3545; /* 붉은색 */
 `;
 
-export const SaveButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  background: #808080; // 회색으로 변경
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background: #666666; // 호버 시 더 어두운 회색
-  }
-`;
-
 export const FormDescription = styled.p`
   font-size: 14px;
   color: #666;
@@ -148,16 +131,51 @@ export const NotificationMessage = styled.p`
   color: #333;
 `;
 
-export const ConfirmButton = styled.button`
-  background: #f2b024;
-  color: white;
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+export const SaveButton = styled.button`
+  width: 48%;
+  padding: 12px;
+  background: #808080; // 회색으로 변경
+  color: #ffffff;
   border: none;
-  padding: 8px 16px;
   border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
+  transition: background-color 0.3s;
 
   &:hover {
-    background: #e0a00f;
+    background: #666666; // 호버 시 더 어두운 회색
   }
+`;
+
+
+export const CancelButton = styled(SaveButton)`
+  background-color: #f0f0f0;
+  color: #333;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;
+
+export const Alert = styled.div<{ type: 'success' | 'error' | '' }>`
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  color: ${(props) =>
+    props.type === 'success' ? '#155724' : props.type === 'error' ? '#721c24' : '#383d41'};
+  background-color: ${(props) =>
+    props.type === 'success' ? '#d4edda' : props.type === 'error' ? '#f8d7da' : '#e9ecef'};
+  border: 1px solid
+    ${(props) =>
+      props.type === 'success' ? '#c3e6cb' : props.type === 'error' ? '#f5c6cb' : '#d6d8db'};
 `;
