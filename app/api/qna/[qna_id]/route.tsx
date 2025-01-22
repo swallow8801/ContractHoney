@@ -79,11 +79,17 @@ export async function POST(req: NextRequest) {
     }
 
     // 답변을 데이터베이스에 업데이트
+    const now = new Date();
+    const kstTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const answer_date = kstTime.toISOString().slice(0, 19).replace('T', ' ');
+
+    console.log("answer_date:", answer_date);
+
     const [result] = await pool.query(
       `UPDATE qna 
-       SET qna_answer = ?, qna_answ_date = NOW() 
+       SET qna_answer = ?, qna_answ_date = ? 
        WHERE qna_id = ?`,
-      [answer, qnaId]
+      [answer, answer_date, qnaId]
     );
 
     // 업데이트된 행이 없으면 404 반환

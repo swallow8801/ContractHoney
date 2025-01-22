@@ -43,14 +43,18 @@ export async function POST(req: NextRequest) {
     // 요청 본문에서 데이터 추출
     const { title, content } = await req.json();
 
+    const now = new Date();
+    const kstTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const qna_date = kstTime.toISOString().slice(0, 19).replace('T', ' ');
+
     if (!title || !content) {
       return NextResponse.json({ error: '모든 필드를 입력하세요.' }, { status: 400 });
     }
 
     // 데이터베이스에 Q&A 삽입
     const [result] = await pool.query(
-      'INSERT INTO qna (user_id, qna_title, qna_content, qna_cont_date, qna_answer, qna_answ_date) VALUES (?, ?, ?, NOW(), NULL, NULL)',
-      [userId, title, content]
+      'INSERT INTO qna (user_id, qna_title, qna_content, qna_cont_date, qna_answer, qna_answ_date) VALUES (?, ?, ?, ?, NULL, NULL)',
+      [userId, title, content, qna_date]
     );
 
     const insertId = (result as mysql.ResultSetHeader).insertId;
