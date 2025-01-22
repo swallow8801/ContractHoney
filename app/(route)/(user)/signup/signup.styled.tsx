@@ -58,7 +58,7 @@ export const Input = styled.input<{ $error?: boolean; $verified?: boolean }>`
 
   &:focus {
     outline: none;
-    border-color: ${props => props.$error ? '#dc3545' : props.$verified ? '#28a745' : '#007bff'};
+    border-color: ${props => props.$error ? '#dc3545' : props.$verified ? '#28a745' : '#F2B024'};
   }
 
   &:disabled {
@@ -156,7 +156,7 @@ export const ErrorMessage = styled.span`
 export const VerifyButton = styled.button`
   padding: 10px 12px;
   height: 40px; // 입력창과 동일한 높이로 설정
-  background: #007bff;
+  background: #F2B024;
   color: white;
   border: none;
   border-radius: 4px;
@@ -167,7 +167,7 @@ export const VerifyButton = styled.button`
   min-width: 80px; // 최소 너비 설정
 
   &:hover {
-    background: #0056b3;
+    background:rgb(220, 163, 39);
   }
 
   &:disabled {

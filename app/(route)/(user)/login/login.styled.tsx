@@ -57,7 +57,7 @@ export const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #F2B024;
   }
 `;
 

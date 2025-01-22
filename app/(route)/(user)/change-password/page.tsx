@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Container,
   Main,
-  ProfileCard,
+  ChangePWCard,
   Form,
   FormGroup,
   Label,
@@ -89,7 +89,7 @@ const ChangePassword = () => {
         </NotificationOverlay>
       )}
       <Main>
-        <ProfileCard>
+        <ChangePWCard>
           <Title>비밀번호 변경</Title> {/* 추가된 부분 */}
           <FormDescription>
             비밀번호 변경을 위해 현재 비밀번호를 입력한 뒤, 새 비밀번호를 설정해주세요.
@@ -107,7 +107,7 @@ const ChangePassword = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label>새 비밀번호</Label>
+              <Label style={{marginTop:"15px"}}>새 비밀번호</Label>
               <Input
                 type="password"
                 value={newPassword}
@@ -117,7 +117,7 @@ const ChangePassword = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label>새 비밀번호 확인</Label>
+              <Label style={{marginTop:"15px"}}>새 비밀번호 확인</Label>
               <Input
                 type="password"
                 value={confirmPassword}
@@ -131,11 +131,11 @@ const ChangePassword = () => {
 
             {error && <ErrorText>{error}</ErrorText>}
 
-            <SaveButton type="submit" disabled={isSubmitting}>
+            <SaveButton type="submit" disabled={isSubmitting} style={{marginTop:"10px"}}>
               {isSubmitting ? '변경 중...' : '비밀번호 변경'}
             </SaveButton>
           </Form>
-        </ProfileCard>
+        </ChangePWCard>
       </Main>
     </Container>
   );

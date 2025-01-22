@@ -142,7 +142,7 @@ const ForgotPasswordPage = () => {
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="새 비밀번호 확인인"
+                placeholder="새 비밀번호 확인"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required

@@ -55,10 +55,10 @@ export const Input = styled.input`
   font-size: 14px;
   transition: border-color 0.3s;
 
-  &:focus {
+   &:focus {
     outline: none;
-    border-color: #007bff;
-  }
+    border-color: #F2B024;
+    }
 `;
 
 export const SubmitButton = styled.button`
