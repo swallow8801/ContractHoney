@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     if (newContractTitle) {
       // New contract
       newVersion = 1
-      newFileName = `${newContractTitle}_ver${newVersion}.${fileType}`
+      newFileName = `${newContractTitle}_ver${newVersion}_user${userId}.${fileType}`
 
       const [result] = await db.query(
         "INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)",
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { con_title, con_type } = existingContract[0]
-      newFileName = `${con_title}_ver${newVersion}.${fileType}`
+      newFileName = `${con_title}_ver${newVersion}_user${userId}.${fileType}`
 
       const [result] = await db.query(
         "INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)",
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       blobHTTPHeaders: { blobContentType: fileType },
     })
 
-    console.log(`File ${newFileName} uploaded to Azure Blob Storage`)
+    console.log(`File ${newFileName} uploaded to Azure Blob Storage for user ${userId}`)
 
     // Insert file information into database
     await db.query(
