@@ -27,6 +27,15 @@ export const ProfileCard = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -74,17 +83,19 @@ export const ErrorText = styled.p`
 `;
 
 export const SaveButton = styled.button`
-  padding: 4px 12px;
-  background: #e0e0e0;
+  width: 100%;
+  padding: 12px;
+  background: #808080; // 회색으로 변경
+  color: #ffffff;
   border: none;
   border-radius: 4px;
-  font-size: 12px;
-  color: #666;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 
   &:hover {
-    background: #d0d0d0;
+    background: #666666; // 호버 시 더 어두운 회색
   }
 `;
 
@@ -93,4 +104,45 @@ export const FormDescription = styled.p`
   color: #666;
   margin-bottom: 20px;
   line-height: 1.6;
+`;
+
+export const NotificationOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const NotificationBox = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+export const NotificationMessage = styled.p`
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+export const ConfirmButton = styled.button`
+  background: #f2b024;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background: #e0a00f;
+  }
 `;

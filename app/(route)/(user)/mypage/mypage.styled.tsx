@@ -56,6 +56,23 @@ export const EditButton = styled.button`
   }
 `;
 
+export const ChangeButton = styled.button`
+  width: 20%;
+  padding: 4px 12px;
+  background: #808080;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: auto;
+
+  &:hover {
+    background: #666666;
+  }
+`;
+
 export const UserEmail = styled.p`
   font-size: 16px;
   color: #666;

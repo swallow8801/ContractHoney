@@ -23,6 +23,7 @@ import {
   StatLabel,
   StatValue,
   DeleteButton,
+  ChangeButton,
   Modal,
   ModalContent,
   ModalTitle,
@@ -236,9 +237,9 @@ export default function MyPage() {
               />
             </FormGroup>
 
-            <EditButton type="button" onClick={() => router.push('/change-password')}>
+            <ChangeButton type="button" onClick={() => router.push('/change-password')}>
               비밀번호 변경
-            </EditButton>
+            </ChangeButton>
 
             {alert && <Alert type={alert.type}>{alert.message}</Alert>}
 

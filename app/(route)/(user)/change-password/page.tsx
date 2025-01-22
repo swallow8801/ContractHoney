@@ -13,6 +13,11 @@ import {
   SaveButton,
   ErrorText,
   FormDescription,
+  NotificationOverlay,
+  NotificationBox,
+  NotificationMessage,
+  ConfirmButton,
+  Title, // 추가된 스타일
 } from './change-password.styled';
 
 const ChangePassword = () => {
@@ -22,13 +27,13 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
+    setNotification(null);
 
     if (newPassword !== confirmPassword) {
       setError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
@@ -54,7 +59,7 @@ const ChangePassword = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('비밀번호가 성공적으로 변경되었습니다.');
+        setNotification({ type: 'success', message: '비밀번호가 성공적으로 변경되었습니다.' });
         setTimeout(() => {
           router.push('/mypage');
         }, 2000); // 2초 뒤 리다이렉트
@@ -68,10 +73,24 @@ const ChangePassword = () => {
     }
   };
 
+  const handleNotificationConfirm = () => {
+    setNotification(null);
+    router.push('/mypage');
+  };
+
   return (
     <Container>
+      {notification && (
+        <NotificationOverlay>
+          <NotificationBox>
+            <NotificationMessage>{notification.message}</NotificationMessage>
+            <ConfirmButton onClick={handleNotificationConfirm}>확인</ConfirmButton>
+          </NotificationBox>
+        </NotificationOverlay>
+      )}
       <Main>
         <ProfileCard>
+          <Title>비밀번호 변경</Title> {/* 추가된 부분 */}
           <FormDescription>
             비밀번호 변경을 위해 현재 비밀번호를 입력한 뒤, 새 비밀번호를 설정해주세요.
           </FormDescription>
@@ -111,7 +130,6 @@ const ChangePassword = () => {
             </FormGroup>
 
             {error && <ErrorText>{error}</ErrorText>}
-            {success && <ErrorText style={{ color: '#2e7d32' }}>{success}</ErrorText>}
 
             <SaveButton type="submit" disabled={isSubmitting}>
               {isSubmitting ? '변경 중...' : '비밀번호 변경'}
