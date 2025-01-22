@@ -46,11 +46,12 @@ const SignupPage = () => {
   const [modalError, setModalError] = useState('');
 
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const isValidEmail = (email: string): boolean => {
+    // RFC 5322 기반 정규식
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email.trim()); // 앞뒤 공백 제거 후 검사
   };
-
+  
   const handleEmailVerify = async () => {
     if (!isValidEmail(user_email)) {
       setEmailError('올바른 이메일 형식이 아닙니다.');
@@ -168,12 +169,12 @@ const SignupPage = () => {
               type="text"
               value={user_name}
               onChange={(e) => setUserName(e.target.value)}
-              placeholder="이름을 입력하세요"
+              placeholder="이름"
               maxLength={12}
               required
             />
 
-            <Label htmlFor="user_email">이메일</Label>
+            <Label htmlFor="user_email" style={{marginTop:"15px"}}>이메일</Label>
             <InputGroup>
               <Input
                 id="user_email"
@@ -190,7 +191,7 @@ const SignupPage = () => {
                     setEmailError('');
                   }
                 }}
-                placeholder="이메일을 입력하세요"
+                placeholder="이메일"
                 required
                 $error={!!emailError}
                 $verified={isEmailVerified}
@@ -203,14 +204,14 @@ const SignupPage = () => {
             {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
             {emailSuccess && <SuccessMessage>{emailSuccess}</SuccessMessage>}
 
-            <Label htmlFor="user_password">비밀번호</Label>
+            <Label htmlFor="user_password" style={{marginTop:"15px"}}>비밀번호</Label>
             <PasswordField>
               <Input
                 id="user_password"
                 type={showPassword ? "text" : "password"}
                 value={user_password}
                 onChange={(e) => setUserPassword(e.target.value)}
-                placeholder="비밀번호를 입력하세요"
+                placeholder="비밀번호"
                 required
               />
               <ShowPassword type="button" onClick={() => setShowPassword(!showPassword)}>
@@ -218,14 +219,14 @@ const SignupPage = () => {
               </ShowPassword>
             </PasswordField>
 
-            <Label htmlFor="confirm_password">비밀번호 확인</Label>
+            <Label htmlFor="confirm_password" style={{marginTop:"15px"}}>비밀번호 확인</Label>
             <PasswordField>
               <Input
                 id="confirm_password"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirm_password}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="비밀번호를 다시 입력하세요"
+                placeholder="비밀번호 확인"
                 required
                 $error={!!passwordError}
               />
@@ -235,18 +236,18 @@ const SignupPage = () => {
             </PasswordField>
             {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
-            <Label htmlFor="user_phone">전화번호</Label>
+            <Label htmlFor="user_phone" style={{marginTop:"15px"}}>전화번호</Label>
             <Input
               id="user_phone"
               type="tel"
               value={user_phone}
               onChange={(e) => setUserPhone(e.target.value)}
-              placeholder="전화번호를 입력하세요"
+              placeholder="전화번호"
               maxLength={11}
               required
             />
 
-            <SubmitButton type="submit">
+            <SubmitButton type="submit" style={{marginTop:"10px"}}>
               회원가입
             </SubmitButton>
           </Form>

@@ -42,7 +42,7 @@ const ForgotPasswordPage = () => {
       if (response.ok) {
         setIsVerified(true);
         setAlertType('success');
-        setAlertMessage('사용자 정보가 확인되었습니다. 새 비밀번호를 입력해주세요.');
+        setAlertMessage('사용자 정보가 확인되었습니다.\n 새 비밀번호를 입력해주세요.');
       } else {
         setAlertType('error');
         setAlertMessage(data.error || '사용자 정보 확인에 실패했습니다.');
@@ -99,31 +99,31 @@ const ForgotPasswordPage = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="이메일을 입력하세요"
+                placeholder="이메일"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <Label htmlFor="name">이름</Label>
+              <Label htmlFor="name" style={{marginTop:"15px"}}>이름</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="이름을 입력하세요"
+                placeholder="이름"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-              <Label htmlFor="phone">전화번호</Label>
+              <Label htmlFor="phone" style={{marginTop:"15px"}}>전화번호</Label>
               <Input
                 id="phone"
                 type="tel"
-                placeholder="전화번호를 입력하세요"
+                placeholder="전화번호"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 maxLength={11}
                 required
               />
-              <SubmitButton type="submit">
+              <SubmitButton type="submit" style={{marginTop:"10px"}}>
                 사용자 정보 확인
               </SubmitButton>
             </Form>
@@ -133,27 +133,27 @@ const ForgotPasswordPage = () => {
               <Input
                 id="newPassword"
                 type="password"
-                placeholder="새 비밀번호를 입력하세요"
+                placeholder="새 비밀번호"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
-              <Label htmlFor="confirmPassword">새 비밀번호 확인</Label>
+              <Label htmlFor="confirmPassword" style={{marginTop:"15px"}}>새 비밀번호 확인</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="새 비밀번호를 다시 입력하세요"
+                placeholder="새 비밀번호 확인인"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
-              <SubmitButton type="submit">
+              <SubmitButton type="submit" style={{marginTop:"10px"}}>
                 비밀번호 변경
               </SubmitButton>
             </Form>
           )}
           {alertMessage && (
-            <Alert type={alertType}>{alertMessage}</Alert>
+            <Alert type={alertType} style={{ whiteSpace: 'pre-line' }}>{alertMessage}</Alert>
           )}
           <BackToLogin href="/login">로그인 페이지로 돌아가기</BackToLogin>
         </ForgotPasswordCard>

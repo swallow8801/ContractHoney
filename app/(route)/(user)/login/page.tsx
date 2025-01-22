@@ -93,18 +93,18 @@ const LoginPage = () => {
             <Input
               id="email"
               type="email"
-              placeholder="이메일을 입력하세요"
+              placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
 
-            <Label htmlFor="password">비밀번호</Label>
+            <Label htmlFor="password" style={{marginTop:"15px"}}>비밀번호</Label>
             <PasswordField>
               <Input
                 id="password"
                 type={passwordVisible ? "text" : "password"}
-                placeholder="비밀번호를 입력하세요"
+                placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -114,7 +114,7 @@ const LoginPage = () => {
               </ShowPassword>
             </PasswordField>
 
-            <SubmitButton type="submit">
+            <SubmitButton type="submit" style={{marginTop:"10px"}}>
               로그인
             </SubmitButton>
           </Form>
