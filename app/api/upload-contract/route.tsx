@@ -38,32 +38,33 @@ export async function POST(request: NextRequest) {
       newVersion = 1
       newFileName = `${newContractTitle}_ver${newVersion}_user${userId}.${fileType}`
 
-      const [result] = await db.query(
+      const [result] = (await db.query(
         "INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)",
         [userId, newContractTitle, fileType, newVersion],
-      )
+      )) as [any[], any]
       newContractId = (result as any).insertId
     } else if (contractId && version) {
       // Existing contract
       const currentVersion = Number.parseInt(version, 10)
       newVersion = currentVersion + 1
 
-      const [existingContract] = await db.query(
+      const [existingContract] = (await db.query(
         "SELECT con_title, con_type FROM contract WHERE con_id = ? AND user_id = ?",
         [Number.parseInt(contractId), userId],
-      )
+      )) as [any[], any]
 
-      if (existingContract.length === 0) {
+      if (!Array.isArray(existingContract) || existingContract.length === 0) {
         return NextResponse.json({ error: "Contract not found" }, { status: 404 })
       }
 
-      const { con_title, con_type } = existingContract[0]
+      const { con_title, con_type } = existingContract[0] as { con_title: string; con_type: string }
+
       newFileName = `${con_title}_ver${newVersion}_user${userId}.${fileType}`
 
-      const [result] = await db.query(
+      const [result] = (await db.query(
         "INSERT INTO contract (user_id, con_title, con_type, con_updatetime, con_version) VALUES (?, ?, ?, NOW(), ?)",
         [userId, con_title, con_type, newVersion],
-      )
+      )) as [any[], any]
       newContractId = (result as any).insertId
     } else {
       return NextResponse.json({ error: "Invalid contract information" }, { status: 400 })
@@ -79,10 +80,10 @@ export async function POST(request: NextRequest) {
     console.log(`File ${newFileName} uploaded to Azure Blob Storage for user ${userId}`)
 
     // Insert file information into database
-    await db.query(
+    ;(await db.query(
       "INSERT INTO contract_postfile (con_id, con_filetype, con_datetype, con_filename) VALUES (?, ?, NOW(), ?)",
       [newContractId, fileType, newFileName],
-    )
+    )) as [any[], any]
 
     return NextResponse.json({ contractId: newContractId, version: newVersion })
   } catch (error) {
