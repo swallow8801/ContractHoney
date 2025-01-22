@@ -17,20 +17,35 @@ const Nav = () => {
   // 로그인 상태 확인 (로컬 스토리지에서 확인)
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token); // 토큰 존재 여부로 로그인 상태 확인
+    setIsLoggedIn(!!token);
   
     if (token) {
-      // Fetch user data
       fetch('/api/user', {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
-        .then(response => response.json())
-        .then(data => {
-          setUserName(data.userName);
+        .then((response) => {
+          if (!response.ok) {
+            // 토큰이 만료되었거나 유효하지 않을 때
+            if (response.status === 401) {
+              console.log('토큰이 만료되어 로그아웃되었습니다.');
+              handleLogout(); // 강제 로그아웃 처리
+            }
+            // 에러를 던지지 않음으로써 추가적인 에러 로그 방지
+            return null;
+          }
+          return response.json();
         })
-        .catch(error => console.error('Error fetching user data:', error));
+        .then((data) => {
+          if (data) {
+            setUserName(data.userName);
+          }
+        })
+        .catch(() => {
+          // 명시적으로 에러를 무시
+          console.log('유저 데이터를 가져오는 중 에러가 발생했습니다.');
+        });
     }
   
     const handleAuthChange = (event: CustomEvent) => {
@@ -41,19 +56,31 @@ const Nav = () => {
         if (event.detail?.userName) {
           setUserName(event.detail.userName);
         } else {
-          // Fetch user data if userName not provided in event
           fetch('/api/user', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           })
-            .then(response => response.json())
-            .then(data => {
-              setUserName(data.userName);
+            .then((response) => {
+              if (!response.ok) {
+                if (response.status === 401) {
+                  handleLogout(); // 강제 로그아웃 처리
+                }
+                return null;
+              }
+              return response.json();
             })
-            .catch(error => console.error('Error fetching user data:', error));
+            .then((data) => {
+              if (data) {
+                setUserName(data.userName);
+              }
+            })
+            .catch(() => {
+              console.log('유저 데이터를 가져오는 중 에러가 발생했습니다.');
+            });
         }
       } else {
+        setIsLoggedIn(false);
         setUserName('');
       }
     };
@@ -72,7 +99,6 @@ const Nav = () => {
     setUserName(''); // Clear the user name
     localStorage.removeItem('authToken'); // 토큰 제거
     localStorage.removeItem('admin'); // Remove the admin key
-    router.push('/'); // 로그아웃 후 홈 페이지로 이동
     window.dispatchEvent(new Event('authChange'));
   };
 
