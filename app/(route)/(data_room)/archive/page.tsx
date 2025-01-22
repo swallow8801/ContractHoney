@@ -32,7 +32,7 @@ interface Archive {
   ar_title: string;
   ar_part: string;
   ar_date: string;
-  ar_file_url: string;
+  ar_filename: string;
 }
 
 const StandardContractsPage = () => {
@@ -131,7 +131,7 @@ const StandardContractsPage = () => {
       const url = window.URL.createObjectURL(blob);
   
       // 파일 이름을 안전하게 처리
-      const fileName = contract.ar_file_url.split("/").pop() || "downloaded_file";
+      const fileName = contract.ar_filename.split("/").pop() || "downloaded_file";
       const a = document.createElement("a");
       a.href = url;
       a.download = fileName;

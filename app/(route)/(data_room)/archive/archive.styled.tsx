@@ -162,6 +162,7 @@ export const AttachmentIcon = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 5px;
+    cursor: pointer;
 `;
 
 export const Pagination = styled.div`
