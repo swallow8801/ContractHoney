@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, FileText, AlertTriangle, Zap } from 'lucide-react';
+import { CheckCircle, FileText, AlertTriangle } from 'lucide-react';
 import {
   Container,
   ProfileCard,
@@ -33,7 +33,7 @@ import {
   StatGroup,
   StatGroupLabel,
   StatGroupItem,
-  Main,
+  Main
 } from './mypage.styled';
 
 interface UserProfile {
@@ -74,7 +74,7 @@ export default function MyPage() {
       try {
         const response = await fetch('/api/user', {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         if (response.ok) {
@@ -83,14 +83,14 @@ export default function MyPage() {
             user_id: data.userId,
             user_name: data.userName,
             user_email: data.userEmail,
-            user_phone: data.userPhone
+            user_phone: data.userPhone,
           });
           setEditedName(data.userName);
           setEditedPhone(data.userPhone.replace(/-/g, ''));
 
           const statsResponse = await fetch('/api/contracts', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           });
           if (statsResponse.ok) {
@@ -116,7 +116,7 @@ export default function MyPage() {
       const response = await fetch('/api/user/delete', {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -139,7 +139,7 @@ export default function MyPage() {
       const response = await fetch('/api/user/update', {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -147,26 +147,24 @@ export default function MyPage() {
           user_phone: editedPhone,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setAlert({ type: 'success', message: '정보가 성공적으로 업데이트되었습니다.' });
         setIsEditing(false);
-  
-        // 프로필 업데이트
-        setProfile(prevProfile => ({
+
+        setProfile((prevProfile) => ({
           ...prevProfile!,
           user_name: editedName,
           user_phone: editedPhone,
         }));
-  
-        // authChange 이벤트 발생
+
         const userInfoUpdateEvent = new CustomEvent('authChange', {
           detail: { userName: editedName },
         });
         window.dispatchEvent(userInfoUpdateEvent);
-  
+
         setTimeout(() => {
           setAlert(null);
         }, 3000);
@@ -177,7 +175,6 @@ export default function MyPage() {
       setAlert({ type: 'error', message: '서버 오류가 발생했습니다.' });
     }
   };
-  
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^\d]/g, '').slice(0, 11);
@@ -194,7 +191,7 @@ export default function MyPage() {
         <ProfileCard>
           <ProfileHeader>
             <UserName>{profile.user_name} 님</UserName>
-            <EditButton onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}>
+            <EditButton onClick={() => (isEditing ? handleSave() : setIsEditing(!isEditing))}>
               {isEditing ? '저장' : 'EDIT'}
             </EditButton>
           </ProfileHeader>
@@ -238,11 +235,12 @@ export default function MyPage() {
                 maxLength={11}
               />
             </FormGroup>
-            {alert && (
-              <Alert type={alert.type}>
-                {alert.message}
-              </Alert>
-            )}
+
+            <EditButton type="button" onClick={() => router.push('/change-password')}>
+              비밀번호 변경
+            </EditButton>
+
+            {alert && <Alert type={alert.type}>{alert.message}</Alert>}
 
             <StatsContainer>
               <StatItem>
@@ -284,13 +282,9 @@ export default function MyPage() {
           <Modal>
             <ModalContent>
               <ModalTitle>회원 탈퇴</ModalTitle>
-              <ModalText>
-                정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없으며, 모든 데이터가 삭제됩니다.
-              </ModalText>
+              <ModalText>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없으며, 모든 데이터가 삭제됩니다.</ModalText>
               <ModalButtons>
-                <ModalButton onClick={() => setShowDeleteModal(false)}>
-                  취소
-                </ModalButton>
+                <ModalButton onClick={() => setShowDeleteModal(false)}>취소</ModalButton>
                 <ModalButton $danger onClick={handleDeleteAccount}>
                   탈퇴하기
                 </ModalButton>
@@ -302,4 +296,3 @@ export default function MyPage() {
     </Container>
   );
 }
-
