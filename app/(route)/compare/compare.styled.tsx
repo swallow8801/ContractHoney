@@ -27,6 +27,7 @@ export const VersionSelector = styled.div`
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
+  cursor: pointer;
 `
 
 export const Select = styled.select`
@@ -89,6 +90,20 @@ export const VersionTitle = styled.h2`
   text-align: center;
   padding-bottom: 10px;
   border-bottom: 2px solid #F2B024;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:after {
+    content: '▼';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+  }
 `
 
 export const Section = styled.div`
@@ -101,6 +116,10 @@ export const SectionTitle = styled.h3`
   margin-bottom: 15px;
   border-bottom: 1px solid #eee;
   padding-bottom: 5px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const ContentItem = styled.div`
@@ -156,5 +175,48 @@ export const BackButton = styled.button`
 export const DiffHighlight = styled.span<{ $added: boolean }>`
   background-color: ${(props) => (props.$added ? "#e6ffec" : "#ffeef0")};
   padding: 2px 0;
+`
+
+export const VersionDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+`
+
+export const DropdownItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`
+
+export const ClauseCount = styled.div`
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+  }
 `
 
