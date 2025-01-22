@@ -73,12 +73,28 @@ export const Input = styled.input<{ $error?: boolean }>`
     cursor: not-allowed;
   }
 `;
+export const PasswordField = styled.div`
+  position: relative;
+`;
+
+export const ShowPassword = styled.button`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+`;
 
 export const ErrorText = styled.p`
-  font-size: 12px;
+  font-size: 13px;
   color: #dc3545; /* 붉은색 */
-  margin-top: -8px;
-  margin-bottom: 16px;
 `;
 
 export const SaveButton = styled.button`

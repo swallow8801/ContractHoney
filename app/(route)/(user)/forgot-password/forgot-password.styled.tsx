@@ -61,6 +61,25 @@ export const Input = styled.input`
     }
 `;
 
+export const PasswordField = styled.div`
+  position: relative;
+`;
+
+export const ShowPassword = styled.button`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+`;
+
 export const SubmitButton = styled.button`
   width: 100%;
   padding: 12px;
