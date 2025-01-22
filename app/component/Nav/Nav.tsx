@@ -21,6 +21,7 @@ const Nav = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('admin');
     window.dispatchEvent(new Event('authChange'));
+    router.push('/')
   };
 
   // 토큰 유효성 확인
@@ -87,7 +88,7 @@ const Nav = () => {
         <NavItem $active={pathname === '/'}>
           <Link href="/">홈</Link>
         </NavItem>
-        <NavItem $active={pathname === '/manage_cont'}>
+        <NavItem $active={pathname === '/manage_cont' || pathname.startsWith('/analysis') || pathname.startsWith('/compare')}>
           <Link href="/manage_cont">계약서 관리</Link>
         </NavItem>
         <NavItem $active={pathname === '/archive' || pathname === '/law'}>
