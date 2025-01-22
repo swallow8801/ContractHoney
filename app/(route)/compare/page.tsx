@@ -20,9 +20,6 @@ import {
   TabContainer,
   Tab,
   DiffHighlight,
-  ClauseTypeLabel,
-  ClauseCount,
-  ContentItemHeader,
 } from "./compare.styled"
 
 interface ContractVersion {
@@ -62,7 +59,7 @@ export default function ComparePage() {
   const router = useRouter()
   const [versions, setVersions] = useState<ContractVersion[]>([])
   const [selectedVersions, setSelectedVersions] = useState<[number, number]>([0, 0])
-  const [activeTab, setActiveTab] = useState<"summary" | "comparison">("summary")
+  const [activeTab, setActiveTab] = useState<"summary" | "unfair" | "toxic">("summary")
 
   useEffect(() => {
     const contractId = searchParams.get("contractId")
@@ -104,7 +101,7 @@ export default function ComparePage() {
     return versions.find((v) => v.con_version === version)
   }
 
-  const highlightDifferences = (text1: string, text2: string, type: "unfair" | "toxic") => {
+  const highlightDifferences = (text1: string, text2: string) => {
     const words1 = text1.split(" ")
     const words2 = text2.split(" ")
     const result: JSX.Element[] = []
@@ -112,7 +109,7 @@ export default function ComparePage() {
     words1.forEach((word, index) => {
       if (word !== words2[index]) {
         result.push(
-          <DiffHighlight key={index} $added={false} $type={type}>
+          <DiffHighlight key={index} $added={false}>
             {word}{" "}
           </DiffHighlight>,
         )
@@ -185,40 +182,31 @@ export default function ComparePage() {
       <Header>
         <Title>계약서 버전 비교</Title>
         <VersionSelector>
-          <div>
-            <Select value={selectedVersions[0]} onChange={(e) => handleVersionChange(0, Number(e.target.value))}>
-              {versions.map((version) => (
-                <option key={version.con_version} value={version.con_version}>
-                  버전 {version.con_version}
-                </option>
-              ))}
-            </Select>
-            <ClauseCount>
-              불공정: {version1.idens.filter((i) => i.iden_unfair).length}
-              독소: {version1.idens.filter((i) => i.iden_toxic).length}
-            </ClauseCount>
-          </div>
+          <Select value={selectedVersions[0]} onChange={(e) => handleVersionChange(0, Number(e.target.value))}>
+            {versions.map((version) => (
+              <option key={version.con_version} value={version.con_version}>
+                버전 {version.con_version}
+              </option>
+            ))}
+          </Select>
           <span>vs</span>
-          <div>
-            <Select value={selectedVersions[1]} onChange={(e) => handleVersionChange(1, Number(e.target.value))}>
-              {versions.map((version) => (
-                <option key={version.con_version} value={version.con_version}>
-                  버전 {version.con_version}
-                </option>
-              ))}
-            </Select>
-            <ClauseCount>
-              불공정: {version2.idens.filter((i) => i.iden_unfair).length}
-              독소: {version2.idens.filter((i) => i.iden_toxic).length}
-            </ClauseCount>
-          </div>
+          <Select value={selectedVersions[1]} onChange={(e) => handleVersionChange(1, Number(e.target.value))}>
+            {versions.map((version) => (
+              <option key={version.con_version} value={version.con_version}>
+                버전 {version.con_version}
+              </option>
+            ))}
+          </Select>
         </VersionSelector>
         <TabContainer>
           <Tab $active={activeTab === "summary"} onClick={() => setActiveTab("summary")}>
             요약
           </Tab>
-          <Tab $active={activeTab === "comparison"} onClick={() => setActiveTab("comparison")}>
-            조항 비교
+          <Tab $active={activeTab === "unfair"} onClick={() => setActiveTab("unfair")}>
+            불공정 조항
+          </Tab>
+          <Tab $active={activeTab === "toxic"} onClick={() => setActiveTab("toxic")}>
+            독소 조항
           </Tab>
         </TabContainer>
       </Header>
@@ -235,9 +223,7 @@ export default function ComparePage() {
                     <strong>
                       {summary.sum_article_number}조: {summary.sum_article_title}
                     </strong>
-                    <p>
-                      {highlightDifferences(summary.sum_summary, version2.summaries[i]?.sum_summary || "", "unfair")}
-                    </p>
+                    <p>{highlightDifferences(summary.sum_summary, version2.summaries[i]?.sum_summary || "")}</p>
                   </ContentItem>
                 ))}
               </Section>
@@ -251,73 +237,73 @@ export default function ComparePage() {
                     <strong>
                       {summary.sum_article_number}조: {summary.sum_article_title}
                     </strong>
-                    <p>
-                      {highlightDifferences(summary.sum_summary, version1.summaries[i]?.sum_summary || "", "unfair")}
-                    </p>
+                    <p>{highlightDifferences(summary.sum_summary, version1.summaries[i]?.sum_summary || "")}</p>
                   </ContentItem>
                 ))}
               </Section>
             </VersionColumn>
           </>
         )}
-        {activeTab === "comparison" && (
+        {(activeTab === "unfair" || activeTab === "toxic") && (
           <>
             <VersionColumn>
               <VersionTitle>버전 {selectedVersions[0]}</VersionTitle>
               <Section>
-                <SectionTitle>조항 비교</SectionTitle>
-                {groupedClauses.map((group, i) => {
-                  const versionData = group.versions.find((v) => v.version === selectedVersions[0])
-                  if (!versionData) return null
-                  return (
-                    <ContentItem key={i}>
-                      <ContentItemHeader>
+                <SectionTitle>{activeTab === "unfair" ? "불공정 조항" : "독소 조항"}</SectionTitle>
+                {groupedClauses
+                  .filter((group) =>
+                    group.versions.some(
+                      (v) => v.version === selectedVersions[0] && (activeTab === "unfair" ? v.unfair : v.toxic),
+                    ),
+                  )
+                  .map((group, i) => {
+                    const versionData = group.versions.find((v) => v.version === selectedVersions[0])
+                    if (!versionData) return null
+                    return (
+                      <ContentItem key={i}>
                         <strong>
                           {group.article}조{group.clause !== null && ` ${group.clause}항`}
                           {group.subclause !== null && ` ${group.subclause}호`}
                         </strong>
-                        {versionData.unfair && <ClauseTypeLabel $type="unfair">불공정</ClauseTypeLabel>}
-                        {versionData.toxic && <ClauseTypeLabel $type="toxic">독소</ClauseTypeLabel>}
-                      </ContentItemHeader>
-                      <p>
-                        {highlightDifferences(
-                          versionData.sentence,
-                          group.versions.find((v) => v.version === selectedVersions[1])?.sentence || "",
-                          versionData.unfair ? "unfair" : "toxic",
-                        )}
-                      </p>
-                    </ContentItem>
-                  )
-                })}
+                        <p>
+                          {highlightDifferences(
+                            versionData.sentence,
+                            group.versions.find((v) => v.version === selectedVersions[1])?.sentence || "",
+                          )}
+                        </p>
+                      </ContentItem>
+                    )
+                  })}
               </Section>
             </VersionColumn>
             <VersionColumn>
               <VersionTitle>버전 {selectedVersions[1]}</VersionTitle>
               <Section>
-                <SectionTitle>조항 비교</SectionTitle>
-                {groupedClauses.map((group, i) => {
-                  const versionData = group.versions.find((v) => v.version === selectedVersions[1])
-                  if (!versionData) return null
-                  return (
-                    <ContentItem key={i}>
-                      <ContentItemHeader>
+                <SectionTitle>{activeTab === "unfair" ? "불공정 조항" : "독소 조항"}</SectionTitle>
+                {groupedClauses
+                  .filter((group) =>
+                    group.versions.some(
+                      (v) => v.version === selectedVersions[1] && (activeTab === "unfair" ? v.unfair : v.toxic),
+                    ),
+                  )
+                  .map((group, i) => {
+                    const versionData = group.versions.find((v) => v.version === selectedVersions[1])
+                    if (!versionData) return null
+                    return (
+                      <ContentItem key={i}>
                         <strong>
                           {group.article}조{group.clause !== null && ` ${group.clause}항`}
                           {group.subclause !== null && ` ${group.subclause}호`}
                         </strong>
-                        {versionData.unfair && <ClauseTypeLabel $type="unfair">불공정</ClauseTypeLabel>}
-                        {versionData.toxic && <ClauseTypeLabel $type="toxic">독소</ClauseTypeLabel>}
-                      </ContentItemHeader>
-                      <p>
-                        {highlightDifferences(
-                          versionData.sentence,
-                          group.versions.find((v) => v.version === selectedVersions[0])?.sentence || "",
-                          versionData.unfair ? "unfair" : "toxic",
-                        )}
-                      </p>
-                    </ContentItem>
-                  )
-                })}
+                        <p>
+                          {highlightDifferences(
+                            versionData.sentence,
+                            group.versions.find((v) => v.version === selectedVersions[0])?.sentence || "",
+                          )}
+                        </p>
+                      </ContentItem>
+                    )
+                  })}
               </Section>
             </VersionColumn>
           </>

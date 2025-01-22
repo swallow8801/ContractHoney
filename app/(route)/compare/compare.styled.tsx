@@ -51,9 +51,6 @@ export const TabContainer = styled.div`
   background-color: #f0f0f0;
   border-radius: 8px;
   padding: 5px;
-  width: 300px; // 너비 지정
-  margin-left: auto;
-  margin-right: auto;
 `
 
 export const Tab = styled.button<{ $active: boolean }>`
@@ -156,32 +153,8 @@ export const BackButton = styled.button`
   }
 `
 
-export const DiffHighlight = styled.span<{ $added: boolean; $type: "unfair" | "toxic" }>`
-  background-color: ${
-    (props) =>
-      props.$type === "unfair"
-        ? (props.$added ? "#ffeaa7" : "#fab1a0") // 불공정조항: 노란색(추가), 연한 빨간색(삭제)
-        : (props.$added ? "#81ecec" : "#a29bfe") // 독소조항: 연한 파란색(추가), 연한 보라색(삭제)
-  };
+export const DiffHighlight = styled.span<{ $added: boolean }>`
+  background-color: ${(props) => (props.$added ? "#e6ffec" : "#ffeef0")};
   padding: 2px 0;
-`
-
-export const ClauseTypeLabel = styled.span<{ $type: "unfair" | "toxic" }>`
-  font-weight: bold;
-  color: ${(props) => (props.$type === "unfair" ? "#e74c3c" : "#3498db")};
-  margin-right: 10px;
-`
-
-export const ClauseCount = styled.span`
-  font-size: 14px;
-  color: #666;
-  margin-left: 10px;
-`
-
-export const ContentItemHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
 `
 
