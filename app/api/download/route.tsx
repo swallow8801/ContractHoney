@@ -60,13 +60,13 @@ export async function GET(req: Request) {
 // DB에서 파일 URL을 조회하는 함수
 async function getFileUrlFromDB(fileId: string) {
   try {
-    const [rows] = await db.execute('SELECT ar_file_url FROM archive WHERE ar_id = ?', [fileId]);
+    const [rows] = await db.execute('SELECT ar_filename FROM archive WHERE ar_id = ?', [fileId]);
 
     // MySQL2에서 반환하는 타입을 명시적으로 지정합니다.
-    const row = rows as { ar_file_url: string }[];
+    const row = rows as { ar_filename: string }[];
 
     if (row.length > 0) {
-      return row[0].ar_file_url; // 첫 번째 행에서 URL 가져오기
+      return row[0].ar_filename; // 첫 번째 행에서 URL 가져오기
     } else {
       return null;
     }
