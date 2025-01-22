@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const searchTerm = request.nextUrl.searchParams.get('searchTerm');
   const searchType = request.nextUrl.searchParams.get('searchType');
 
-  let query = 'SELECT * FROM archive WHERE 1 = 1';
+  let query = 'SELECT * FROM archive WHERE 1 = 1 ORDER BY ar_id DESC';
   const params: string[] = [];
 
   // 검색 조건 적용
