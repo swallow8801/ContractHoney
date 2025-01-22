@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, usePathname } from 'next/navigation'; // useRouter 추가
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,98 +9,69 @@ import { NavContainer, NavItemsContainer, LoginContainer, NavItem, Logo, LoginBu
 import Image from 'next/image';
 
 const Nav = () => {
-  const router = useRouter(); // router 추가
-  const pathname = usePathname(); // 현재 경로 가져오기
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
-  const [userName, setUserName] = useState(''); // Add userName state
-
-  // 로그인 상태 확인 (로컬 스토리지에서 확인)
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token);
-  
-    if (token) {
-      fetch('/api/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            // 토큰이 만료되었거나 유효하지 않을 때
-            if (response.status === 401) {
-              console.log('토큰이 만료되어 로그아웃되었습니다.');
-              handleLogout(); // 강제 로그아웃 처리
-            }
-            // 에러를 던지지 않음으로써 추가적인 에러 로그 방지
-            return null;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            setUserName(data.userName);
-          }
-        })
-        .catch(() => {
-          // 명시적으로 에러를 무시
-          console.log('유저 데이터를 가져오는 중 에러가 발생했습니다.');
-        });
-    }
-  
-    const handleAuthChange = (event: CustomEvent) => {
-      const token = localStorage.getItem('authToken');
-      setIsLoggedIn(!!token);
-  
-      if (token) {
-        if (event.detail?.userName) {
-          setUserName(event.detail.userName);
-        } else {
-          fetch('/api/user', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                if (response.status === 401) {
-                  handleLogout(); // 강제 로그아웃 처리
-                }
-                return null;
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data) {
-                setUserName(data.userName);
-              }
-            })
-            .catch(() => {
-              console.log('유저 데이터를 가져오는 중 에러가 발생했습니다.');
-            });
-        }
-      } else {
-        setIsLoggedIn(false);
-        setUserName('');
-      }
-    };
-  
-    window.addEventListener('authChange', handleAuthChange as EventListener);
-  
-    return () => {
-      window.removeEventListener('authChange', handleAuthChange as EventListener);
-    };
-  }, []);
-  
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   // 로그아웃 기능
   const handleLogout = () => {
-    setIsLoggedIn(false); // 로그인 상태 업데이트
-    setUserName(''); // Clear the user name
-    localStorage.removeItem('authToken'); // 토큰 제거
-    localStorage.removeItem('admin'); // Remove the admin key
+    setIsLoggedIn(false);
+    setUserName('');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('admin');
     window.dispatchEvent(new Event('authChange'));
   };
+
+  // 토큰 유효성 확인
+  const checkTokenValidity = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      handleLogout();
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/user', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.log('토큰이 만료되었습니다. 로그아웃 처리합니다.');
+          handleLogout();
+        }
+      } else {
+        const data = await response.json();
+        setUserName(data.userName);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error('토큰 확인 중 오류 발생:', error);
+      handleLogout();
+    }
+  };
+
+  useEffect(() => {
+    checkTokenValidity(); // 초기 확인
+
+    // 주기적으로 토큰 확인
+    const intervalId = setInterval(() => {
+      checkTokenValidity();
+    }, 5 * 60 * 1000);
+
+    // 상태 변경 즉시 확인
+    const handleAuthChange = () => {
+      checkTokenValidity();
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+
+    return () => {
+      clearInterval(intervalId); // interval 제거
+      window.removeEventListener('authChange', handleAuthChange); // 이벤트 제거
+    };
+  }, [isLoggedIn, userName]); // 상태 변경 감시 추가
 
   return (
     <NavContainer>
@@ -132,26 +103,18 @@ const Nav = () => {
 
       {/* 로그인 / 유저 정보 */}
       <LoginContainer>
-        {!isLoggedIn ? ( // 로그인 버튼을 상단에 배치
-          <LoginButton
-            onClick={() => {
-              router.push('/login');
-            }}
-          >
-            로그인
-          </LoginButton>
+        {!isLoggedIn ? (
+          <LoginButton onClick={() => router.push('/login')}>로그인</LoginButton>
         ) : (
           <UserInfo>
             <span>{userName} 님</span>
             <span
-              onClick={() => router.push('/mypage')} 
+              onClick={() => router.push('/mypage')}
               style={{ cursor: 'pointer', fontSize: '1.6em' }}
             >
               <FontAwesomeIcon icon={faCircleUser} size="lg" />
             </span>
-            <LogoutButton onClick={handleLogout}>
-              로그아웃
-            </LogoutButton>
+            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
           </UserInfo>
         )}
       </LoginContainer>
@@ -160,4 +123,3 @@ const Nav = () => {
 };
 
 export default Nav;
-

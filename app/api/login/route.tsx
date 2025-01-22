@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const token = jwt.sign(
       { userId: user.user_id, userEmail: user.user_email, userAdmin: user.user_admin },
       process.env.JWT_SECRET_KEY!,
-      { expiresIn: '1h' }
+      { expiresIn: '4h' }
     );
 
     // 로그인 성공 시 토큰을 반환
