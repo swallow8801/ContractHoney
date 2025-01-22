@@ -21,7 +21,6 @@ const Nav = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('admin');
     window.dispatchEvent(new Event('authChange'));
-    router.push('/')
   };
 
   // 토큰 유효성 확인
