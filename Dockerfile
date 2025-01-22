@@ -39,7 +39,7 @@ ENV EMAIL_HOST="smtp.gmail.com"
 ENV EMAIL_PORT=587
 ENV EMAIL_USER="sundaegugbab0@gmail.com"
 ENV EMAIL_PASS="dmbh oqsx whfg xhch"
-ENV FRONTEND_URL="conhoney-edfcc7adbrgwb9ac.koreacentral-01.azurewebsites.net"
+ENV FRONTEND_URL="https://conhoney-edfcc7adbrgwb9ac.koreacentral-01.azurewebsites.net"
 ENV BACKEND_URL="https://your-backend-domain.com"
 ENV AZURE_STORAGE_ACCOUNT_NAME="conhoneystorage"
 ENV AZURE_STORAGE_ACCOUNT_KEY="9jS+1zxRCHjdDJRjiqUZFWLXdrRrcIsPAx6h+AfVFAbeWj8XmAVHU02cHrT7S7DoNIvRTS7eLQnl+AStZL4QNw=="
