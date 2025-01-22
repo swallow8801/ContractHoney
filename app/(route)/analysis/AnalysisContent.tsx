@@ -121,6 +121,41 @@ export function AnalysisPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
   }
 
+  const handleDownload = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+  
+      if (!contract) {
+        console.error("No contract to download");
+        return;
+      }
+  
+      const response = await fetch(
+        `/api/download-contract?contractId=${contract.con_id}&fileName=${contract.con_title}_ver${contract.con_version}.${contract.con_type}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+  
+      link.href = url;
+      link.download = `${contract.con_title}_ver${contract.con_version}.${contract.con_type}`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
+  };
+
   const filteredUnfairClauses = contractIdens.filter((clause) => clause.iden_unfair)
   const filteredToxicClauses = contractIdens.filter((clause) => clause.iden_toxic)
 
@@ -157,7 +192,7 @@ export function AnalysisPage() {
         <FileText size={48} />
         <p>{contract.con_title}</p>
         <p>계약서 미리보기는 현재 지원되지 않습니다.</p>
-        <ActionButton className="download">
+        <ActionButton className="download" onClick={handleDownload}>
           <Download size={16} />
           파일 다운로드
         </ActionButton>
