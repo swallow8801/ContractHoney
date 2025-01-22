@@ -18,12 +18,12 @@ export const Main = styled.main`
   padding: 40px;
 `;
 
-export const ProfileCard = styled.div`
+export const ChangePWCard = styled.div`
   width: 100%;
-  max-width: 600px;
+  max-width: 400px;
   padding: 40px;
-  background: #f8f8f8;
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
@@ -39,33 +39,32 @@ export const Title = styled.h1`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 `;
 
 export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 `;
 
 export const Label = styled.label`
   font-size: 14px;
   color: #333;
-  font-weight: 500;
+  margin-bottom: 4px;
 `;
 
 export const Input = styled.input<{ $error?: boolean }>`
   width: 100%;
-  padding: 12px;
+  padding: 10px 12px;
   border: 1px solid ${props => props.$error ? '#dc3545' : '#ddd'};
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 14px;
-  background: white;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: ${props => props.$error ? '#dc3545' : '#999'};
+    border-color: ${props => props.$error ? '#dc3545' : '#F2B024'};
   }
 
   &:disabled {
@@ -74,12 +73,28 @@ export const Input = styled.input<{ $error?: boolean }>`
     cursor: not-allowed;
   }
 `;
+export const PasswordField = styled.div`
+  position: relative;
+`;
+
+export const ShowPassword = styled.button`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+`;
 
 export const ErrorText = styled.p`
-  font-size: 12px;
+  font-size: 13px;
   color: #dc3545; /* 붉은색 */
-  margin-top: -8px;
-  margin-bottom: 16px;
 `;
 
 export const SaveButton = styled.button`

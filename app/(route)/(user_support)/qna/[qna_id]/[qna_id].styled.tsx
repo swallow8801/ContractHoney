@@ -203,6 +203,11 @@ export const TextareaContainer = styled.div`
     box-sizing: border-box;
   }
 
+  textarea:focus {
+    outline: none;
+    border-color: #F2B024;
+  }
+
   button {
     position: absolute;
     bottom: 20px;

@@ -13,7 +13,10 @@ import {
   SubmitButton,
   BackToLogin,
   Alert,
+  PasswordField,
+  ShowPassword,
 } from './forgot-password.styled';
+import { Eye, EyeOff } from 'lucide-react';
 
 const ForgotPasswordPage = () => {
   const router = useRouter();
@@ -25,6 +28,8 @@ const ForgotPasswordPage = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState<'success' | 'error' | ''>('');
   const [isVerified, setIsVerified] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +62,7 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       setAlertType('error');
-      setAlertMessage('새 비밀번호가 일치하지 않습니다.');
+      setAlertMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -130,23 +135,33 @@ const ForgotPasswordPage = () => {
           ) : (
             <Form onSubmit={handleResetPassword}>
               <Label htmlFor="newPassword">새 비밀번호</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                placeholder="새 비밀번호"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
+              <PasswordField>
+                <Input
+                  id="newPassword"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="새 비밀번호"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <ShowPassword type="button" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </ShowPassword>
+              </PasswordField>
               <Label htmlFor="confirmPassword" style={{marginTop:"15px"}}>새 비밀번호 확인</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="새 비밀번호 확인인"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+                <PasswordField>
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="새 비밀번호 확인"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <ShowPassword type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </ShowPassword>
+                </PasswordField>
               <SubmitButton type="submit" style={{marginTop:"10px"}}>
                 비밀번호 변경
               </SubmitButton>

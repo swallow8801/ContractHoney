@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Container,
   Main,
-  ProfileCard,
+  ChangePWCard,
   Form,
   FormGroup,
   Label,
@@ -17,8 +17,11 @@ import {
   NotificationBox,
   NotificationMessage,
   ConfirmButton,
-  Title, // 추가된 스타일
+  Title,
+  ShowPassword,
+  PasswordField, // 추가된 스타일
 } from './change-password.styled';
+import { Eye, EyeOff } from 'lucide-react';
 
 const ChangePassword = () => {
   const router = useRouter();
@@ -29,6 +32,8 @@ const ChangePassword = () => {
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +94,7 @@ const ChangePassword = () => {
         </NotificationOverlay>
       )}
       <Main>
-        <ProfileCard>
+        <ChangePWCard>
           <Title>비밀번호 변경</Title> {/* 추가된 부분 */}
           <FormDescription>
             비밀번호 변경을 위해 현재 비밀번호를 입력한 뒤, 새 비밀번호를 설정해주세요.
@@ -107,35 +112,49 @@ const ChangePassword = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label>새 비밀번호</Label>
-              <Input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
+              <Label style={{marginTop:"15px"}}>새 비밀번호</Label>
+              <PasswordField>
+                <Input
+                  id="newPassword"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="새 비밀번호"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <ShowPassword type="button" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </ShowPassword>
+              </PasswordField>
             </FormGroup>
 
             <FormGroup>
-              <Label>새 비밀번호 확인</Label>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+              <Label style={{marginTop:"15px"}}>새 비밀번호 확인</Label>
+              <PasswordField>
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="새 비밀번호 확인"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <ShowPassword type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </ShowPassword>
+              </PasswordField>
               {newPassword !== confirmPassword && confirmPassword !== '' && (
-                <ErrorText>새 비밀번호와 확인 비밀번호가 일치하지 않습니다.</ErrorText>
-              )}
+                  <ErrorText>새 비밀번호가 일치하지 않습니다.</ErrorText>
+                )}
             </FormGroup>
 
             {error && <ErrorText>{error}</ErrorText>}
 
-            <SaveButton type="submit" disabled={isSubmitting}>
+            <SaveButton type="submit" disabled={isSubmitting} style={{marginTop:"10px"}}>
               {isSubmitting ? '변경 중...' : '비밀번호 변경'}
             </SaveButton>
           </Form>
-        </ProfileCard>
+        </ChangePWCard>
       </Main>
     </Container>
   );

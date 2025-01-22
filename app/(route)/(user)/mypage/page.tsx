@@ -211,13 +211,13 @@ export default function MyPage() {
             </FormGroup>
 
             <FormGroup>
-              <Label>이메일</Label>
+              <Label style={{marginTop:'8px'}}>이메일</Label>
               <InputWithCheck>
                 <Input
                   type="email"
                   value={profile.user_email}
                   disabled={true}
-                  style={{ backgroundColor: '#f0f0f0', color: '#666' }}
+                  style={{ backgroundColor: '#f0f0f0', color: '#666'}}
                 />
                 <VerifiedCheck>
                   <CheckCircle size={16} />
@@ -226,7 +226,7 @@ export default function MyPage() {
             </FormGroup>
 
             <FormGroup>
-              <Label>전화번호</Label>
+              <Label style={{marginTop:'8px'}}>전화번호</Label>
               <Input
                 type="tel"
                 value={isEditing ? editedPhone : profile.user_phone.replace(/-/g, '')}
