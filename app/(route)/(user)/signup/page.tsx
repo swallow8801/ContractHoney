@@ -43,6 +43,7 @@ const SignupPage = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [emailSuccess, setEmailSuccess] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [modalError, setModalError] = useState('');
 
 
   const isValidEmail = (email: string) => {
@@ -125,6 +126,33 @@ const SignupPage = () => {
     } catch (error) {
       console.error('회원가입 오류:', error);
       setError('서버 오류가 발생했습니다.');
+    }
+  };
+
+  const handleVerifyModal = async () => {
+    setModalError('');
+    try {
+      const response = await fetch('/api/check-verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: user_email }),
+      });
+
+      const data = await response.json();
+
+      if (data.is_verified === 1) {
+        router.push('/login');
+      } else {
+        setModalError('이메일 인증 후 확인 버튼을 눌러주세요.');
+        setTimeout(() =>{
+          setModalError('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('인증 확인 오류:', error);
+      setModalError('서버 오류가 발생했습니다.');
     }
   };
 
@@ -234,10 +262,11 @@ const SignupPage = () => {
       {showModal && (
         <ModalOverlay>
           <ModalContent>
-            <ModalMessage>회원가입이 완료되었습니다.</ModalMessage>
-            <ModalButton onClick={() => router.push('/login')}>
-              로그인 페이지로 이동
-            </ModalButton>
+            <ModalMessage>
+              회원가입이 완료되었습니다.<br /> 입력하신 이메일로 전송된 이메일 인증을 완료 후 확인을 눌러주세요.
+            </ModalMessage>
+            {modalError && <Alert type="error" style={{marginBottom:"10px"}}>{modalError}</Alert>}
+            <ModalButton onClick={handleVerifyModal}>확인</ModalButton>
           </ModalContent>
         </ModalOverlay>
       )}
