@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
@@ -30,15 +30,7 @@ const LoginPage = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"success" | "error" | "">("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        router.push(redirectPath); // 토큰이 있으면 원래 경로로 리다이렉트
-      }
-    }
-  }, [router, redirectPath]);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -83,6 +75,10 @@ const LoginPage = () => {
     }
   };
 
+  const handlePasswordKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    setIsCapsLockOn(e.getModifierState('CapsLock'));
+  };
+
   return (
     <Container>
       <Main>
@@ -99,7 +95,7 @@ const LoginPage = () => {
               required
             />
 
-            <Label htmlFor="password" style={{marginTop:"15px"}}>비밀번호</Label>
+            <Label htmlFor="password" style={{ marginTop: "15px" }}>비밀번호</Label>
             <PasswordField>
               <Input
                 id="password"
@@ -107,6 +103,7 @@ const LoginPage = () => {
                 placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyUp={handlePasswordKeyPress}
                 required
               />
               <ShowPassword type="button" onClick={togglePasswordVisibility}>
@@ -114,7 +111,13 @@ const LoginPage = () => {
               </ShowPassword>
             </PasswordField>
 
-            <SubmitButton type="submit" style={{marginTop:"10px"}}>
+            {isCapsLockOn && (
+                <div style={{marginTop: '5px'}}>
+                  Caps Lock이 켜져 있습니다.
+                </div>
+              )}
+
+            <SubmitButton type="submit" style={{ marginTop: "10px" }}>
               로그인
             </SubmitButton>
           </Form>
@@ -123,13 +126,17 @@ const LoginPage = () => {
             <Alert type={alertType}>{alertMessage}</Alert>
           )}
 
-          <ForgotPassword onClick={() => router.push('/forgot-password')}>비밀번호를 잊으셨나요?</ForgotPassword>
+          <ForgotPassword onClick={() => router.push('/forgot-password')}>
+            비밀번호를 잊으셨나요?
+          </ForgotPassword>
           <Divider>
             <Line />
             <span>OR</span>
             <Line />
           </Divider>
-          <SignUpButton onClick={() => router.push('/signup')}>회원가입</SignUpButton>
+          <SignUpButton onClick={() => router.push('/signup')}>
+            회원가입
+          </SignUpButton>
         </LoginCard>
       </Main>
     </Container>

@@ -33,11 +33,20 @@ const ChangePassword = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAlertMessage('');
     setAlertType('');
+
+    // 새 비밀번호와 확인 비밀번호가 다르면 제출을 막음
+    if (newPassword !== confirmPassword) {
+      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -58,42 +67,16 @@ const ChangePassword = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // 현재 비밀번호는 유효하지만 새 비밀번호와 확인 비밀번호가 일치하지 않을 경우
-        if (newPassword !== confirmPassword) {
-          setAlertType('error');
-          setAlertMessage(
-            '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.'
-          );
-          setTimeout(() =>{
-            setAlertMessage('');
-          }, 4000);
-        } else {
-          setAlertType('success');
-          setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
-          setTimeout(() => {
-            router.push('/mypage');
-          }, 2000);
-        }
+        setAlertType('success');
+        setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setTimeout(() => {
+          router.push('/mypage');
+        }, 2000);
       } else {
-        // 서버에서 반환한 현재 비밀번호 오류 메시지 처리
-        setAlertType('error');
-        setAlertMessage(data.error || '현재 비밀번호가 올바르지 않습니다.');
-        setTimeout(() =>{
-          setAlertMessage('');
-        }, 4000);
-        if (newPassword !== confirmPassword) {
-          setAlertType('error');
-          setAlertMessage(
-            '현재 비밀번호가 올바르지 않고,\n 새 비밀번호와 확인 비밀번호가 일치하지 않습니다.'
-          );
-          setTimeout(() =>{
-            setAlertMessage('');
-          }, 4000);
-        }
+        setPasswordError(data.error || '현재 비밀번호가 일치하지 않습니다.');
       }
     } catch (err) {
-      setAlertType('error');
-      setAlertMessage('서버 오류가 발생했습니다. 다시 시도해주세요.');
+      setPasswordError('서버 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,6 +84,45 @@ const ChangePassword = () => {
 
   const handleCancel = () => {
     router.push('/mypage');
+  };
+
+  const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewPassword(e.target.value);
+    if (isConfirmPasswordFocused && e.target.value !== confirmPassword) {
+      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    if (newPassword !== e.target.value) {
+      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handleConfirmPasswordFocus = () => {
+    setIsConfirmPasswordFocused(true);
+    if (newPassword !== confirmPassword) {
+      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!e.getModifierState('CapsLock')) {
+      setIsCapsLockOn(false);
+    }
   };
 
   return (
@@ -140,7 +162,9 @@ const ChangePassword = () => {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="새 비밀번호"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={handleNewPasswordChange}
+                  onKeyDown={handleKeyDown}
+                  onKeyUp={handleKeyUp}
                   required
                 />
                 <ShowPassword
@@ -160,7 +184,10 @@ const ChangePassword = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="새 비밀번호 확인"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={handleConfirmPasswordChange}
+                  onFocus={handleConfirmPasswordFocus}
+                  onKeyDown={handleKeyDown}
+                  onKeyUp={handleKeyUp}
                   required
                 />
                 <ShowPassword
@@ -170,7 +197,22 @@ const ChangePassword = () => {
                   {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </ShowPassword>
               </PasswordField>
+              {isCapsLockOn && (
+                <div style={{marginTop: '5px'}}>
+                  Caps Lock이 켜져 있습니다.
+                </div>
+              )}
             </FormGroup>
+
+            {passwordError && (
+              <Alert
+                type="error"
+                style={{ whiteSpace: 'pre-line', marginTop: '10px' }}
+              >
+                {passwordError}
+              </Alert>
+            )}
+
             <ButtonContainer>
               <SaveButton
                 type="submit"
