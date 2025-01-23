@@ -261,7 +261,7 @@ export default function MyPage() {
                   <StatGroupLabel>판별된 조항</StatGroupLabel>
                   <StatGroup>
                     <StatGroupItem>
-                      <StatLabel>불공정 조항</StatLabel>
+                      <StatLabel>위법 조항</StatLabel>
                       <StatValue>{stats.unfair_count}</StatValue>
                     </StatGroupItem>
                     <StatGroupItem>

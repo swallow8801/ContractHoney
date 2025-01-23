@@ -297,11 +297,11 @@ export default function ManageContracts() {
               <SummaryTd>{selectedDoc?.con_type || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>불공정조항</SummaryTh>
+              <SummaryTh>위법 조항</SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.unfair_count || 0}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>독소조항</SummaryTh>
+              <SummaryTh>독소 조항</SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.toxic_count || 0}</SummaryTd>
             </tr>
           </tbody>
@@ -324,8 +324,8 @@ export default function ManageContracts() {
                 )}
               </Th>
               <Th>버전</Th>
-              <Th>불공정조항</Th>
-              <Th>독소조항</Th>
+              <Th>위법 조항</Th>
+              <Th>독소 조항</Th>
               <Th>결과창</Th>
             </tr>
           </thead>

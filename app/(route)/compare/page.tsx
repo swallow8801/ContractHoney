@@ -224,7 +224,7 @@ export default function ComparePage() {
             요약
           </Tab>
           <Tab $active={activeTab === "unfair"} onClick={() => setActiveTab("unfair")}>
-            불공정 조항
+            위법 조항
           </Tab>
           <Tab $active={activeTab === "toxic"} onClick={() => setActiveTab("toxic")}>
             독소 조항
@@ -259,7 +259,7 @@ export default function ComparePage() {
             <Section>
               {activeTab !== "summary" && (
                 <SectionTitle>
-                  {activeTab === "unfair" ? "불공정 조항" : "독소 조항"}
+                  {activeTab === "unfair" ? "위법 조항" : "독소 조항"}
                   <ClauseCount>
                     <span>{countClauses(getVersionData(selectedVersions[index])!, activeTab)}</span>
                   </ClauseCount>

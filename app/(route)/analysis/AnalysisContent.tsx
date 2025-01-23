@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Share, Download, ChevronLeft, ChevronRight, FileText, Check, GitCompare } from "lucide-react"
+import { Share, Download, ChevronLeft, ChevronRight, FileText, Check, GitCompare, InfoIcon } from "lucide-react"
 import {
   Container,
   PreviewSection,
@@ -22,6 +22,7 @@ import {
   HancomPlaceholder,
   ClauseContainer,
   ClauseHeader,
+  ClauseEx,
   ClauseContent,
   ClauseExplanation,
   PaginationContainer,
@@ -208,6 +209,12 @@ export function AnalysisPage() {
 
     return (
       <>
+      <ClauseEx>
+        <InfoIcon>i</InfoIcon>
+          {activeTab === "unfair"
+            ? "위법 조항 - 법률에 명백하게 위배된 조항"
+            : "독소 조항 - 위법이 아닌 경우라도 추후에 해석이나 상황에 따라 불리하게 작용할 가능성이 있는 조항"}
+      </ClauseEx>
         <ClauseContainer $checked={currentClause.checked}>
           <ClauseHeader $checked={currentClause.checked}>
             <span>
@@ -226,7 +233,7 @@ export function AnalysisPage() {
         <ClauseExplanation $checked={currentClause.checked}>
           <ProbabilitySection>
             <ExplanationTitle $checked={currentClause.checked}>
-              {activeTab === "unfair" ? "불공정조항 위험도" : "독소조항 위험도"}
+              {activeTab === "unfair" ? "위법 조항 위험도" : "독소 조항 위험도"}
             </ExplanationTitle>
             <ProbabilityContainer>
               <ProbabilityBar>
@@ -252,7 +259,7 @@ export function AnalysisPage() {
           )}
           {activeTab === "toxic" && (
             <>
-              <ExplanationTitle $checked={currentClause.checked}>독소조항 설명</ExplanationTitle>
+              <ExplanationTitle $checked={currentClause.checked}>독소 조항 설명</ExplanationTitle>
               <p>이 조항은 계약 당사자 중 한쪽에게 불리한 조건을 포함하고 있습니다.</p>
             </>
           )}
@@ -266,7 +273,7 @@ export function AnalysisPage() {
 
     return (
       <SummaryContent>
-        <h3>계약 종류: {contract.con_type}</h3>
+        {/* <h3>계약 종류: {contract.con_type}</h3> */}
         <h3>계약 요약:</h3>
         {contractSummaries.map((summary) => (
           <div key={summary.sum_id}>
@@ -315,11 +322,11 @@ export function AnalysisPage() {
             요약
           </Tab>
           <Tab $active={activeTab === "unfair"} onClick={() => setActiveTab("unfair")}>
-            불공정조항
+            위법 조항
             {getUnfairCount() > 0 && <Badge>{getUnfairCount()}</Badge>}
           </Tab>
           <Tab $active={activeTab === "toxic"} onClick={() => setActiveTab("toxic")}>
-            독소조항
+            독소 조항
             {getToxicCount() > 0 && <Badge>{getToxicCount()}</Badge>}
           </Tab>
         </TabContainer>

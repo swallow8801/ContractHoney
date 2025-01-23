@@ -9,6 +9,31 @@ export const Container = styled.div`
   gap: 20px;
 `
 
+export const ClauseEx = styled.div`
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333; /* 텍스트 색상 */
+  margin-bottom: 12px; /* 여백 */
+  display: flex;
+  align-items: center; /* 아이콘과 텍스트 정렬 */
+  gap: 10px; /* 아이콘과 텍스트 간격 */
+`;
+
+export const InfoIcon = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #4a90e2; /* 아이콘 배경색 */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
+
 export const PreviewSection = styled.div`
   flex: 1;
   height: 100%;
