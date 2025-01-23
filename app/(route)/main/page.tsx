@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import SwiperGroup from "../../component/Swiper/Swiper";
 import {
   Container,
   Group,
@@ -36,7 +37,7 @@ import {
   CustomSelect,
   SelectTrigger,
   WarningMessage,
-} from "./main.styled"
+} from "./main.styled";
 import { Plus, ChevronDown } from "lucide-react"
 
 interface NoticeType {
@@ -273,80 +274,103 @@ const MainPage = () => {
           <LoadingText>계약서를 분석 중입니다...</LoadingText>
         </LoadingOverlay>
       )}
-      <Group $backgroundImage="/images/메인.png">
+      {!isLoggedIn ? (<Group
+        $backgroundImage=""
+        style={{
+          flexDirection: "row",
+          "--before-display": "none",}}>
+        <Group $backgroundImage=""
+          style={{
+            width: "35%",
+            padding: "0 30px",
+            marginTop: "15%",
+            justifyContent: "start",
+            backgroundColor: "#FFF",}}>
+          <Title style={{color:"#3F3F3F", 
+              fontSize: "34px"}}>계꿀</Title>
+          <Title
+            style={{
+              marginTop: "40px",
+              color:"#3F3F3F",
+              fontSize: "28px",
+              textAlign:"start"}}>
+            계약서 분석을 보다 쉽게 하세요.<br />
+            계꿀이 위법조항과 독소조항에 대한 판단을 도와줄거에요.
+          </Title>
+        </Group>
+        <SwiperGroup />
+      </Group>) : (<Group $backgroundImage="/images/메인.png">
         <Title>계약서 검토 AI 어시스턴트</Title>
         <InputContainer>
-          {isLoggedIn && (
-            <CustomSelect>
-              <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
-                <span>
-                  {selectedContract
-                    ? selectedContract.id === "new"
-                      ? `${selectedContract.title} (New)`
-                      : `${selectedContract.title} (ver.${selectedContract.version})`
-                    : "계약서 선택"}
-                </span>
-                <ChevronDown size={20} />
-              </SelectTrigger>
+          <CustomSelect>
+            <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
+              <span>
+                {selectedContract
+                  ? selectedContract.id === "new"
+                    ? `${selectedContract.title} (New)`
+                    : `${selectedContract.title} (ver.${selectedContract.version})`
+                  : "계약서 선택"}
+              </span>
+              <ChevronDown size={20} />
+            </SelectTrigger>
 
-              {isDropdownOpen && (
-                <DropdownContainer ref={dropdownRef}>
-                  <DropdownSearch
-                    placeholder="기존 계약서 검색..."
-                    value={contractSearch}
-                    onChange={(e) => setContractSearch(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
+            {isDropdownOpen && (
+              <DropdownContainer ref={dropdownRef}>
+                <DropdownSearch
+                  placeholder="기존 계약서 검색..."
+                  value={contractSearch}
+                  onChange={(e) => setContractSearch(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                />
 
-                  {isCreatingNew && (
-                    <form onSubmit={handleNewContractSubmit}>
-                      <NewContractInput
-                        placeholder="새 계약서 이름 입력"
-                        value={newContractName}
-                        onChange={(e) => setNewContractName(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        autoFocus
-                        $hasWarning={!!duplicateNameWarning}
-                      />
-                      {duplicateNameWarning && <WarningMessage>{duplicateNameWarning}</WarningMessage>}
-                    </form>
-                  )}
-                  {!isCreatingNew && (
-                    <NewContractButton
+                {isCreatingNew && (
+                  <form onSubmit={handleNewContractSubmit}>
+                    <NewContractInput
+                      placeholder="새 계약서 이름 입력"
+                      value={newContractName}
+                      onChange={(e) => setNewContractName(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                      autoFocus
+                      $hasWarning={!!duplicateNameWarning}
+                    />
+                    {duplicateNameWarning && <WarningMessage>{duplicateNameWarning}</WarningMessage>}
+                  </form>
+                )}
+                {!isCreatingNew && (
+                  <NewContractButton
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setIsCreatingNew(true)
+                    }}
+                  >
+                    <Plus size={16} />
+                    새로 만들기
+                  </NewContractButton>
+                )}
+
+                <ContractList>
+                  {filteredContracts.map((contract) => (
+                    <ContractItem
+                      key={contract.id}
                       onClick={(e) => {
                         e.stopPropagation()
-                        setIsCreatingNew(true)
+                        setSelectedContract(contract)
+                        setIsContractSelected(true)
+                        setSelectedFile(null)
+                        setIsDropdownOpen(false)
                       }}
+                      className={contract.id === "new" ? "new" : ""}
                     >
-                      <Plus size={16} />
-                      새로 만들기
-                    </NewContractButton>
-                  )}
-
-                  <ContractList>
-                    {filteredContracts.map((contract) => (
-                      <ContractItem
-                        key={contract.id}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setSelectedContract(contract)
-                          setIsContractSelected(true)
-                          setSelectedFile(null)
-                          setIsDropdownOpen(false)
-                        }}
-                        className={contract.id === "new" ? "new" : ""}
-                      >
-                        <ContractTitle>{contract.title}</ContractTitle>
-                        <ContractVersion className={contract.id === "new" ? "new" : ""}>
-                          {contract.id === "new" ? "New" : `ver.${contract.version}`}
-                        </ContractVersion>
-                      </ContractItem>
-                    ))}
-                  </ContractList>
-                </DropdownContainer>
-              )}
-            </CustomSelect>
-          )}
+                      <ContractTitle>{contract.title}</ContractTitle>
+                      <ContractVersion className={contract.id === "new" ? "new" : ""}>
+                        {contract.id === "new" ? "New" : `ver.${contract.version}`}
+                      </ContractVersion>
+                    </ContractItem>
+                  ))}
+                </ContractList>
+              </DropdownContainer>
+            )}
+          </CustomSelect>
           <FileUploadContainer>
             <FileUploadArea
               $isDragging={isDragging}
@@ -356,8 +380,7 @@ const MainPage = () => {
               onDrop={handleDrop}
               $disabled={!isContractSelected}
             >
-              {isLoggedIn ? (
-                isContractSelected ? (
+              {isContractSelected ? (
                   selectedFile ? (
                     <FileName>{selectedFile.name}</FileName>
                   ) : (
@@ -365,25 +388,23 @@ const MainPage = () => {
                   )
                 ) : (
                   "계약서를 선택해주세요"
-                )
-              ) : (
-                "로그인 후 이용 가능합니다"
-              )}
+                )}
             </FileUploadArea>
             <FileInput
               type="file"
               ref={fileInputRef}
               onChange={handleFileSelect}
               accept=".pdf,.doc,.docx,.hwp,.txt"
-              disabled={!isLoggedIn}
             />
           </FileUploadContainer>
-          <Button onClick={handleReview} disabled={!isLoggedIn || !isContractSelected || !selectedFile || isLoading}>
+          <Button onClick={handleReview} disabled={!isContractSelected || !selectedFile || isLoading}>
             검토하기
           </Button>
-          {!isLoggedIn && <LoginMessage>로그인 후 이용 가능한 서비스입니다.</LoginMessage>}
         </InputContainer>
-      </Group>
+      </Group>)}
+      
+
+      
 
       <Group $backgroundImage="/images/자료실.png">
         <Title>법령 & 표준계약서 조회</Title>

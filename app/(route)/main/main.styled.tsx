@@ -48,6 +48,7 @@ export const Group = styled.div<{ $backgroundImage: string }>`
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1;
+        display: var(--before-display, block);
     }
 `
 
