@@ -1,14 +1,16 @@
 import styled from "styled-components"
-import { Swiper} from "swiper/react";
+import { Swiper } from "swiper/react"
 
 export const SwiperStyled = styled(Swiper)`
   .swiper-pagination {
-    bottom: 30px;
+    bottom: 20px;
   }
 
   .swiper-pagination-bullet {
-    background: gray;
+    background: #CBD5E0;
     opacity: 0.6;
+    width: 10px;
+    height: 10px;
   }
 
   .swiper-pagination-bullet-active {
@@ -25,21 +27,17 @@ export const Group = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: calc(100vh - 90px);
-    padding: 20px;
-    background: #DDD;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    height: 100%;
+    padding: 40px;
+    background: #FFFFFF;
     overflow: hidden;
     transition: all 0.5s ease-in-out;
 `
 
-export const ContentImg =  styled.img`
-    width: 80%;
-    border-radius: 10px;
+export const ContentImg = styled.img`
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     z-index: 2;
     opacity: 0;
     transform: translateY(20px);
@@ -53,17 +51,17 @@ export const ContentImg =  styled.img`
     }
 `
 
-export const ContentTxt = styled.h1`
-    margin-top: 50px;
-    text-align: start;
-    font-size: 28px;
-    font-weight: bold;
-    color: #151515;
-    line-height: 1.7;
+export const ContentTxt = styled.h2`
+    margin-top: 30px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2C3E50;
+    line-height: 1.6;
     z-index: 2;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 0.8s forwards;
+    animation: fadeInUp 0.8s forwards 0.2s;
 
     @keyframes fadeInUp {
         to {
@@ -72,3 +70,24 @@ export const ContentTxt = styled.h1`
         }
     }
 `
+
+export const ContentSubtitle = styled.p`
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: normal;
+    color: #34495E;
+    line-height: 1.5;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards 0.3s;
+`
+
+export const SwiperContainer = styled.div`
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    overflow: hidden;
+    padding-right: 20px;
+`
+

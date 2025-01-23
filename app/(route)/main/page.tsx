@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import SwiperGroup from "../../component/Swiper/Swiper";
+import SwiperGroup from "../../component/Swiper/Swiper"
 import {
   Container,
   Group,
@@ -37,7 +37,7 @@ import {
   CustomSelect,
   SelectTrigger,
   WarningMessage,
-} from "./main.styled";
+} from "./main.styled"
 import { Plus, ChevronDown } from "lucide-react"
 
 interface NoticeType {
@@ -274,113 +274,164 @@ const MainPage = () => {
           <LoadingText>계약서를 분석 중입니다...</LoadingText>
         </LoadingOverlay>
       )}
-      {!isLoggedIn ? (<Group
-        $backgroundImage=""
-        style={{
-          flexDirection: "row",
-          "--before-display": "none",}}>
-        <Group $backgroundImage=""
+      {!isLoggedIn ? (
+        <Group
+          $backgroundImage=""
           style={{
-            width: "35%",
-            padding: "0 30px",
-            marginTop: "15%",
-            justifyContent: "start",
-            backgroundColor: "#FFF",}}>
-          <Title style={{color:"#3F3F3F", 
-              fontSize: "34px"}}>계꿀</Title>
-          <Title
+            flexDirection: "row",
+            "--before-display": "none",
+            background: "#FFF9E5", // Light yellow background
+          }}
+        >
+          <Group
+            $backgroundImage=""
             style={{
-              marginTop: "40px",
-              color:"#3F3F3F",
-              fontSize: "28px",
-              textAlign:"start"}}>
-            계약서 분석을 보다 쉽게 하세요.<br />
-            계꿀이 위법조항과 독소조항에 대한 판단을 도와줄거에요.
-          </Title>
+              width: "40%",
+              padding: "0 50px",
+              marginTop: "10%",
+              justifyContent: "start",
+              alignItems: "flex-start",
+              backgroundColor: "transparent",
+            }}
+          >
+            <Title
+              style={{
+                color: "#F2B024", // Yellow color
+                fontSize: "48px",
+                fontWeight: "bold",
+                textAlign: "left",
+                marginBottom: "30px",
+                textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+              }}
+            >
+              계꿀
+            </Title>
+            <Title
+              style={{
+                color: "#34495E",
+                fontSize: "24px",
+                lineHeight: "1.6",
+                textAlign: "left",
+                fontWeight: "normal",
+                marginBottom: "40px",
+              }}
+            >
+              계약서 분석을 보다 쉽게 하세요.
+              <br />
+              계꿀이 위법조항과 독소조항에 대한
+              <br />
+              판단을 도와줄 거예요.
+            </Title>
+            <Button
+              style={{
+                backgroundColor: "#F2B024", // Yellow color
+                padding: "15px 30px",
+                fontSize: "18px",
+                borderRadius: "30px",
+                boxShadow: "0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08)",
+                transition: "all 0.3s",
+                color: "#FFFFFF",
+              }}
+              onClick={() => router.push("/login")}
+            >
+              시작하기
+            </Button>
+          </Group>
+          <div
+            style={{
+              width: "60%",
+              overflow: "hidden",
+              borderRadius: "20px",
+              boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+              marginRight: "20px", // Add right margin
+            }}
+          >
+            <SwiperGroup />
+          </div>
         </Group>
-        <SwiperGroup />
-      </Group>) : (<Group $backgroundImage="/images/메인.png">
-        <Title>계약서 검토 AI 어시스턴트</Title>
-        <InputContainer>
-          <CustomSelect>
-            <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
-              <span>
-                {selectedContract
-                  ? selectedContract.id === "new"
-                    ? `${selectedContract.title} (New)`
-                    : `${selectedContract.title} (ver.${selectedContract.version})`
-                  : "계약서 선택"}
-              </span>
-              <ChevronDown size={20} />
-            </SelectTrigger>
+      ) : (
+        <Group $backgroundImage="/images/메인.png">
+          <Title>계약서 검토 AI 어시스턴트</Title>
+          <InputContainer>
+            <CustomSelect>
+              <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
+                <span>
+                  {selectedContract
+                    ? selectedContract.id === "new"
+                      ? `${selectedContract.title} (New)`
+                      : `${selectedContract.title} (ver.${selectedContract.version})`
+                    : "계약서 선택"}
+                </span>
+                <ChevronDown size={20} />
+              </SelectTrigger>
 
-            {isDropdownOpen && (
-              <DropdownContainer ref={dropdownRef}>
-                <DropdownSearch
-                  placeholder="기존 계약서 검색..."
-                  value={contractSearch}
-                  onChange={(e) => setContractSearch(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                />
+              {isDropdownOpen && (
+                <DropdownContainer ref={dropdownRef}>
+                  <DropdownSearch
+                    placeholder="기존 계약서 검색..."
+                    value={contractSearch}
+                    onChange={(e) => setContractSearch(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
 
-                {isCreatingNew && (
-                  <form onSubmit={handleNewContractSubmit}>
-                    <NewContractInput
-                      placeholder="새 계약서 이름 입력"
-                      value={newContractName}
-                      onChange={(e) => setNewContractName(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      autoFocus
-                      $hasWarning={!!duplicateNameWarning}
-                    />
-                    {duplicateNameWarning && <WarningMessage>{duplicateNameWarning}</WarningMessage>}
-                  </form>
-                )}
-                {!isCreatingNew && (
-                  <NewContractButton
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setIsCreatingNew(true)
-                    }}
-                  >
-                    <Plus size={16} />
-                    새로 만들기
-                  </NewContractButton>
-                )}
-
-                <ContractList>
-                  {filteredContracts.map((contract) => (
-                    <ContractItem
-                      key={contract.id}
+                  {isCreatingNew && (
+                    <form onSubmit={handleNewContractSubmit}>
+                      <NewContractInput
+                        placeholder="새 계약서 이름 입력"
+                        value={newContractName}
+                        onChange={(e) => setNewContractName(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                        $hasWarning={!!duplicateNameWarning}
+                      />
+                      {duplicateNameWarning && <WarningMessage>{duplicateNameWarning}</WarningMessage>}
+                    </form>
+                  )}
+                  {!isCreatingNew && (
+                    <NewContractButton
                       onClick={(e) => {
                         e.stopPropagation()
-                        setSelectedContract(contract)
-                        setIsContractSelected(true)
-                        setSelectedFile(null)
-                        setIsDropdownOpen(false)
+                        setIsCreatingNew(true)
                       }}
-                      className={contract.id === "new" ? "new" : ""}
                     >
-                      <ContractTitle>{contract.title}</ContractTitle>
-                      <ContractVersion className={contract.id === "new" ? "new" : ""}>
-                        {contract.id === "new" ? "New" : `ver.${contract.version}`}
-                      </ContractVersion>
-                    </ContractItem>
-                  ))}
-                </ContractList>
-              </DropdownContainer>
-            )}
-          </CustomSelect>
-          <FileUploadContainer>
-            <FileUploadArea
-              $isDragging={isDragging}
-              onClick={handleUploadClick}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              $disabled={!isContractSelected}
-            >
-              {isContractSelected ? (
+                      <Plus size={16} />
+                      새로 만들기
+                    </NewContractButton>
+                  )}
+
+                  <ContractList>
+                    {filteredContracts.map((contract) => (
+                      <ContractItem
+                        key={contract.id}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedContract(contract)
+                          setIsContractSelected(true)
+                          setSelectedFile(null)
+                          setIsDropdownOpen(false)
+                        }}
+                        className={contract.id === "new" ? "new" : ""}
+                      >
+                        <ContractTitle>{contract.title}</ContractTitle>
+                        <ContractVersion className={contract.id === "new" ? "new" : ""}>
+                          {contract.id === "new" ? "New" : `ver.${contract.version}`}
+                        </ContractVersion>
+                      </ContractItem>
+                    ))}
+                  </ContractList>
+                </DropdownContainer>
+              )}
+            </CustomSelect>
+            <FileUploadContainer>
+              <FileUploadArea
+                $isDragging={isDragging}
+                onClick={handleUploadClick}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                $disabled={!isContractSelected}
+              >
+                {isContractSelected ? (
                   selectedFile ? (
                     <FileName>{selectedFile.name}</FileName>
                   ) : (
@@ -389,22 +440,20 @@ const MainPage = () => {
                 ) : (
                   "계약서를 선택해주세요"
                 )}
-            </FileUploadArea>
-            <FileInput
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              accept=".pdf,.doc,.docx,.hwp,.txt"
-            />
-          </FileUploadContainer>
-          <Button onClick={handleReview} disabled={!isContractSelected || !selectedFile || isLoading}>
-            검토하기
-          </Button>
-        </InputContainer>
-      </Group>)}
-      
-
-      
+              </FileUploadArea>
+              <FileInput
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept=".pdf,.doc,.docx,.hwp,.txt"
+              />
+            </FileUploadContainer>
+            <Button onClick={handleReview} disabled={!isContractSelected || !selectedFile || isLoading}>
+              검토하기
+            </Button>
+          </InputContainer>
+        </Group>
+      )}
 
       <Group $backgroundImage="/images/자료실.png">
         <Title>법령 & 표준계약서 조회</Title>

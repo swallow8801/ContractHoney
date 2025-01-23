@@ -248,7 +248,7 @@ export const Button = styled.button`
     }
 
     &:disabled {
-        background-color: #888;
+        background-color: #888; // Light gray when disabled
         cursor: not-allowed;
         transform: none;
     }
@@ -461,5 +461,12 @@ export const WarningMessage = styled.div`
   font-size: 12px;
   margin-top: 5px;
   padding: 0 12px;
+`
+
+export const GradientText = styled.span`
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
 `
 
