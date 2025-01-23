@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,8 @@ import {
   PasswordField,
   CancelButton,
   ButtonContainer,
-  Alert
+  Alert,
+  CapsLockMessage,
 } from './change-password.styled';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -44,7 +45,7 @@ const ChangePassword = () => {
 
     // 새 비밀번호와 확인 비밀번호가 다르면 제출을 막음
     if (newPassword !== confirmPassword) {
-      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      setPasswordError('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -89,7 +90,7 @@ const ChangePassword = () => {
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
     if (isConfirmPasswordFocused && e.target.value !== confirmPassword) {
-      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      setPasswordError('비밀번호가 일치하지 않습니다.');
     } else {
       setPasswordError('');
     }
@@ -98,7 +99,7 @@ const ChangePassword = () => {
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
     if (newPassword !== e.target.value) {
-      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      setPasswordError('비밀번호가 일치하지 않습니다.');
     } else {
       setPasswordError('');
     }
@@ -107,7 +108,7 @@ const ChangePassword = () => {
   const handleConfirmPasswordFocus = () => {
     setIsConfirmPasswordFocused(true);
     if (newPassword !== confirmPassword) {
-      setPasswordError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      setPasswordError('비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -143,6 +144,8 @@ const ChangePassword = () => {
                   placeholder="현재 비밀번호"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onKeyUp={handleKeyUp}
                   required
                 />
                 <ShowPassword
@@ -198,9 +201,9 @@ const ChangePassword = () => {
                 </ShowPassword>
               </PasswordField>
               {isCapsLockOn && (
-                <div style={{marginTop: '5px'}}>
+                <CapsLockMessage>
                   Caps Lock이 켜져 있습니다.
-                </div>
+                </CapsLockMessage>
               )}
             </FormGroup>
 

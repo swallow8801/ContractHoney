@@ -18,6 +18,7 @@ import {
   Line,
   SignUpButton,
   Alert,
+  CapsLockMessage,
 } from './login.styled';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -75,7 +76,11 @@ const LoginPage = () => {
     }
   };
 
-  const handlePasswordKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDownEmail = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    setIsCapsLockOn(e.getModifierState('CapsLock'));
+  };
+
+  const handleKeyDownPassword = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setIsCapsLockOn(e.getModifierState('CapsLock'));
   };
 
@@ -92,6 +97,7 @@ const LoginPage = () => {
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyDownEmail}
               required
             />
 
@@ -103,19 +109,18 @@ const LoginPage = () => {
                 placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onKeyUp={handlePasswordKeyPress}
+                onKeyDown={handleKeyDownPassword}
                 required
               />
               <ShowPassword type="button" onClick={togglePasswordVisibility}>
                 {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
               </ShowPassword>
             </PasswordField>
-
             {isCapsLockOn && (
-                <div style={{marginTop: '5px'}}>
-                  Caps Lock이 켜져 있습니다.
-                </div>
-              )}
+              <CapsLockMessage>
+                Caps Lock이 켜져 있습니다.
+              </CapsLockMessage>
+            )}
 
             <SubmitButton type="submit" style={{ marginTop: "10px" }}>
               로그인

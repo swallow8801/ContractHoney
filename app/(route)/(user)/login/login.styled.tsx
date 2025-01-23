@@ -154,3 +154,7 @@ export const Alert = styled.div<{ type: 'success' | 'error' | '' }>`
       props.type === 'success' ? '#c3e6cb' : props.type === 'error' ? '#f5c6cb' : '#d6d8db'};
 `;
 
+export const CapsLockMessage = styled.a`
+  color: #666;
+  font-size: 14px;
+`;
