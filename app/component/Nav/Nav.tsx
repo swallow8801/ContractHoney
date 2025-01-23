@@ -14,20 +14,27 @@ const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
 
-  // 로그아웃 기능
   const handleLogout = () => {
+    if (sessionStorage.getItem('isReloaded')) {
+      sessionStorage.removeItem('isReloaded'); // 새로고침 상태 초기화
+      return;
+    }
+
     setIsLoggedIn(false);
     setUserName('');
     localStorage.removeItem('authToken');
     localStorage.removeItem('admin');
     window.dispatchEvent(new Event('authChange'));
+
+    // 새로고침 플래그 설정
+    sessionStorage.setItem('isReloaded', 'true');
+    window.location.reload(); // 창 새로고침
   };
 
-  // 토큰 유효성 확인
   const checkTokenValidity = async () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      handleLogout();
+      if (isLoggedIn) handleLogout();
       return;
     }
 
@@ -43,8 +50,10 @@ const Nav = () => {
         }
       } else {
         const data = await response.json();
-        setUserName(data.userName);
-        setIsLoggedIn(true);
+        if (!isLoggedIn) {
+          setUserName(data.userName);
+          setIsLoggedIn(true);
+        }
       }
     } catch (error) {
       console.error('토큰 확인 중 오류 발생:', error);
@@ -53,14 +62,12 @@ const Nav = () => {
   };
 
   useEffect(() => {
-    checkTokenValidity(); // 초기 확인
+    checkTokenValidity();
 
-    // 주기적으로 토큰 확인
     const intervalId = setInterval(() => {
       checkTokenValidity();
     }, 5 * 60 * 1000);
 
-    // 상태 변경 즉시 확인
     const handleAuthChange = () => {
       checkTokenValidity();
     };
@@ -68,21 +75,19 @@ const Nav = () => {
     window.addEventListener('authChange', handleAuthChange);
 
     return () => {
-      clearInterval(intervalId); // interval 제거
-      window.removeEventListener('authChange', handleAuthChange); // 이벤트 제거
+      clearInterval(intervalId);
+      window.removeEventListener('authChange', handleAuthChange);
     };
-  }, [isLoggedIn, userName]); // 상태 변경 감시 추가
+  }, []);
 
   return (
     <NavContainer>
-      {/* 로고 */}
       <Logo>
         <Link href="/">
           <Image src="/logo.png" alt="로고" width={50} height={50} priority />
         </Link>
       </Logo>
 
-      {/* 네비게이션 아이템 */}
       <NavItemsContainer>
         <NavItem $active={pathname === '/'}>
           <Link href="/">홈</Link>
@@ -101,7 +106,6 @@ const Nav = () => {
         </NavItem>
       </NavItemsContainer>
 
-      {/* 로그인 / 유저 정보 */}
       <LoginContainer>
         {!isLoggedIn ? (
           <LoginButton onClick={() => router.push('/login')}>로그인</LoginButton>
