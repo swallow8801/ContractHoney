@@ -155,7 +155,7 @@ export const HancomPlaceholder = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 750px;  /* PDFViewer의 크기와 맞춰줍니다 */
   text-align: center;
   color: #666;
 
@@ -170,7 +170,8 @@ export const HancomPlaceholder = styled.div`
   button {
     margin-top: 16px;
   }
-`
+`;
+
 
 export const ClauseContainer = styled.div<{ $checked?: boolean }>`
   background-color: ${(props) => (props.$checked ? "#f0f0f0" : "#f8f8f8")};

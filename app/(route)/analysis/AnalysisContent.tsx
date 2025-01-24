@@ -40,6 +40,7 @@ import {
   CheckboxContainer,
   Divider,
 } from "./analysis.styled"
+import PDFViewer from "../../component/PDFViewer/PDFViewer";
 
 interface Contract {
   con_id: number
@@ -185,20 +186,12 @@ export function AnalysisPage() {
   }
 
   const renderPreview = () => {
-    if (!contract) return null
-
+    if (!contract) return null;
+  
     return (
-      <HancomPlaceholder>
-        <FileText size={48} />
-        <p>{contract.con_title}</p>
-        <p>계약서 미리보기는 현재 지원되지 않습니다.</p>
-        <ActionButton className="download" onClick={handleDownload}>
-          <Download size={16} />
-          파일 다운로드
-        </ActionButton>
-      </HancomPlaceholder>
-    )
-  }
+        <PDFViewer pdfUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}.pdf`} />
+    );
+  };
 
   const renderClauseContent = () => {
     if (!currentClause) return null
@@ -291,17 +284,10 @@ export function AnalysisPage() {
       <PreviewSection>
         <NavigationBar>
           <DocumentTitle>{contract.con_title}</DocumentTitle>
-          <PageNavigation>
-            <NavButton onClick={handlePrevPage} disabled={currentPage === 1}>
-              <ChevronLeft size={20} />
-            </NavButton>
-            <PageInfo>
-              {currentPage} / {totalPages}
-            </PageInfo>
-            <NavButton onClick={handleNextPage} disabled={currentPage === totalPages}>
-              <ChevronRight size={20} />
-            </NavButton>
-          </PageNavigation>
+          <ActionButton className="download" onClick={handleDownload}>
+          <Download size={16} />
+          파일 다운로드
+        </ActionButton>
         </NavigationBar>
         <PreviewContent>{renderPreview()}</PreviewContent>
       </PreviewSection>
