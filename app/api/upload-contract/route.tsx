@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
               iden.law_article_number
                 ? iden.law_article_number.replace(/Article\s*/i, "").trim() || null
                 : null, // ✅ "Article" 제거 후 저장
-              iden.law_clause_number_law || null,
+                iden.law_clause_number_law || null,
               iden.law_subclause_numbe_lawr || null,
               iden.explain,
             ],
