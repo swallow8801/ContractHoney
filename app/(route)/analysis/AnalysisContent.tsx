@@ -260,7 +260,7 @@ export function AnalysisPage() {
           {activeTab === "toxic" && (
             <>
               <ExplanationTitle $checked={currentClause.checked}>독소 조항 설명</ExplanationTitle>
-              <p>이 조항은 계약 당사자 중 한쪽에게 불리한 조건을 포함하고 있습니다.</p>
+              <p>{currentClause.law_explain}</p>
             </>
           )}
         </ClauseExplanation>

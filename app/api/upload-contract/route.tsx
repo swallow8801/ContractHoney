@@ -79,8 +79,7 @@ export async function POST(request: NextRequest) {
       [newContractId, fileType, newFileName],
     );
 
-    // ✅ FastAPI 호출
-    const fastApiResponse = await fetch("http://localhost:8000/api/upload/", {
+    const fastApiResponse = await fetch("http://20.39.191.235/api/upload/", {
       method: "POST",
       body: formData,
     });
@@ -94,7 +93,7 @@ export async function POST(request: NextRequest) {
 
     if (analysisData) {
       try {
-        // ✅ `contract_summary` 저장
+        // ✅ `contract_summary` 저장 (sum_article_number를 문자열로 저장)
         for (const summary of analysisData.summary_results) {
           await db.execute(
             "INSERT INTO contract_summary (con_id, sum_article_number, sum_article_title, sum_summary) VALUES (?, ?, ?, ?)",
@@ -102,7 +101,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        // ✅ `contract_iden` 저장 (🚀 100을 곱한 후 소수점 2자리 반올림)
+        // ✅ `contract_iden` 저장 (`VARCHAR(20)` 컬럼 반영 & law_article_number에서 "Article" 제거)
         for (const iden of analysisData.indentification_results) {
           await db.execute(
             `INSERT INTO contract_iden 
@@ -110,19 +109,22 @@ export async function POST(request: NextRequest) {
               iden_unfair, iden_unfair_percent, iden_toxic, iden_toxic_percent, 
               law_article_number, law_clause_number, law_subclause_number, law_explain) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+
             [
               newContractId,
-              parseInt(iden.contract_article_number) || null, // 🚨 정수 변환 추가
-              parseInt(iden.contract_clause_number) || null,
-              parseInt(iden.contract_subclause_number) || null,
+              iden.contract_article_number || null,  // ✅ `VARCHAR(20)` 반영
+              iden.contract_clause_number || null,
+              iden.contract_subclause_number || null,
               iden.Sentence,
               iden.Unfair,
-              parseFloat((iden.Unfair_percent * 100).toFixed(2)), // ✅ 100 곱한 후 소수점 2자리 반올림
+              parseFloat((iden.Unfair_percent * 100).toFixed(2)),  // ✅ 소수점 2자리 반올림
               iden.Toxic,
-              parseFloat((iden.Toxic_percent * 100).toFixed(2)), // ✅ 100 곱한 후 소수점 2자리 반올림
-              parseInt(iden.law_article_number) || null,
-              parseInt(iden.law_clause_number_law) || null,
-              parseInt(iden.law_subclause_numbe_lawr) || null,
+              parseFloat((iden.Toxic_percent * 100).toFixed(2)),  // ✅ 소수점 2자리 반올림
+              iden.law_article_number
+                ? iden.law_article_number.replace(/Article\s*/i, "").trim() || null
+                : null, // ✅ "Article" 제거 후 저장
+              iden.law_clause_number_law || null,
+              iden.law_subclause_numbe_lawr || null,
               iden.explain,
             ],
           );
