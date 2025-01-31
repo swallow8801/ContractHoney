@@ -264,7 +264,7 @@ const SignupPage = () => {
         <ModalOverlay>
           <ModalContent>
             <ModalMessage>
-              회원가입이 완료되었습니다.<br /> 입력하신 이메일로 전송된 이메일 인증을 완료 후 확인을 눌러주세요.
+              회원가입이 완료되었습니다.<br />입력하신 이메일로 전송된 이메일 인증 후<br />확인을 눌러주세요.
             </ModalMessage>
             {modalError && <Alert type="error" style={{marginBottom:"10px"}}>{modalError}</Alert>}
             <ModalButton onClick={handleVerifyModal}>확인</ModalButton>
