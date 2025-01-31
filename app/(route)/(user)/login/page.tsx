@@ -139,7 +139,7 @@ const LoginPage = () => {
             <span>OR</span>
             <Line />
           </Divider>
-          <SignUpButton onClick={() => router.push('/signup')}>
+          <SignUpButton onClick={() => router.push('/agree')}>
             회원가입
           </SignUpButton>
         </LoginCard>
