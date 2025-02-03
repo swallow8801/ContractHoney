@@ -67,12 +67,44 @@ const StandardContractsPage = () => {
     fetchContracts();
   }, [searchParams]);
 
+  const handleDownload = async (e: React.MouseEvent, ar_id: number) => {
+    e.stopPropagation();
+  
+    const contract = contracts.find((c) => c.ar_id === ar_id);
+    if (!contract) {
+      console.error("Contract not found.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/download?fileId=${contract.ar_id}`);
+  
+      if (!response.ok) {
+        throw new Error(`Failed to download file: ${response.statusText}`);
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      const fileName = contract.ar_filename.split("/").pop() || "downloaded_file";
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+  
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("파일 다운로드에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   return (
     <Container>
-      {/* 모바일용 사이드바 토글 버튼 */}
       <SidebarToggle onClick={() => setSidebarOpen(!isSidebarOpen)}>메뉴</SidebarToggle>
 
-      {/* 오버레이 사이드바 */}
       <Sidebar $isOpen={isSidebarOpen}>
         <SidebarTitle>자료실</SidebarTitle>
         <MenuList>
@@ -95,8 +127,6 @@ const StandardContractsPage = () => {
             법령
           </MenuItem>
         </MenuList>
-
-        {/* 닫기 버튼을 아래로 이동 */}
         <CloseButton onClick={() => setSidebarOpen(false)}>닫기</CloseButton>
       </Sidebar>
 
@@ -146,7 +176,7 @@ const StandardContractsPage = () => {
                 <td>{contract.ar_part}</td>
                 <td>{contract.ar_date}</td>
                 <td>
-                  <AttachmentIcon>
+                  <AttachmentIcon onClick={(e) => handleDownload(e, contract.ar_id)}>
                     <Download size={16} />
                   </AttachmentIcon>
                 </td>

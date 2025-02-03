@@ -97,7 +97,7 @@ export const Main = styled.main`
 
   @media (min-width: 768px) {
     width: 75%;
-    margin-left: 25%;
+    margin-left: 22.5%;
   }
 `;
 
