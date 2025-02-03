@@ -15,6 +15,7 @@ export const FooterText = styled.p`
 `;
 
 export const FooterLink = styled.span`
+  font-weight: 600;
   color: #0073e6;
   cursor: pointer;
   &:hover {

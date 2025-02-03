@@ -18,15 +18,15 @@ const Footer: React.FC = () => {
           <FooterLink onClick={() => openNewWindow("/privacy", "개인정보 처리방침")}>
             개인정보 처리방침
           </FooterLink>
-          {" | "}
+          {"\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0"}
           <FooterLink onClick={() => openNewWindow("/terms", "이용약관")}>
             이용약관
           </FooterLink>
-      </FooterText>
-      <FooterText>
-        (주)케이티 경기도 성남시 분당구 불정로 90 (정자동) | AIVLE School 6기 27조
-      </FooterText>
-      <FooterText>© 2025 계꿀. All rights reserved.</FooterText>
+        </FooterText>
+        <FooterText>
+            (주)케이티 경기도 성남시 분당구 불정로 90 (정자동) | AIVLE School 6기 27조
+        </FooterText>
+        <FooterText>© 2025 계꿀. All rights reserved.</FooterText>
     </FooterContainer>
   );
 };
