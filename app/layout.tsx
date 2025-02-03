@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Nav from "./component/Nav/Nav";
-import Footer from "./component/Footer/Footer";
+import ClientLayout from "./ClientLayout"; // 클라이언트 전용 레이아웃 불러오기
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,15 +20,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-      <html lang="ko" suppressHydrationWarning>
-          <body>
-              <Nav style={{ height: "90px", width: "100%", position: "fixed", top: 0, left: 0 }} />
-              <div className="layout-container">
-                  <main className="content">{children}</main>
-                  <Footer />
-              </div>
-          </body>
-      </html>
+    <html lang="ko" suppressHydrationWarning>
+      <body>
+        <ClientLayout>{children}</ClientLayout>
+      </body>
+    </html>
   );
 }
-
