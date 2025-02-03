@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
           </FooterLink>
         </FooterText>
         <FooterText>
-            (주)케이티 경기도 성남시 분당구 불정로 90 (정자동) | AIVLE School 6기 27조
+            (주)계꿀 부산 동구 초량중로 29 한국방송통신전파진흥원 부산본부 3층 | AIVLE School 6기 27조
         </FooterText>
         <FooterText>© 2025 계꿀. All rights reserved.</FooterText>
     </FooterContainer>
