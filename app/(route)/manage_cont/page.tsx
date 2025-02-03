@@ -23,9 +23,8 @@ import {
   SearchContainer,
   SearchInput,
   SortIcon,
-  PaginationContainer,
-  PaginationButton,
-  PaginationInfo,
+  Pagination,
+  PageButton,
   EmptyStateContainer,
   EmptyStateIcon,
   EmptyStateTitle,
@@ -101,7 +100,6 @@ export default function ManageContracts() {
   const [windowWidth, setWindowWidth] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [filteredAndSortedContracts, setFilteredAndSortedContracts] = useState<GroupedContract[]>([])
-  const itemsPerPage = 5
 
   useEffect(() => {
     setWindowWidth(window.innerWidth)
@@ -159,23 +157,31 @@ export default function ManageContracts() {
     setFilteredAndSortedContracts(grouped)
   }, [contracts])
 
-  const currentItems = useMemo(() => {
-    return filteredAndSortedContracts
-      .filter((contract) => contract.con_title.toLowerCase().includes(searchTerm.toLowerCase()))
-      .sort((a, b) => {
-        if (sortField === "con_title") {
-          return sortOrder === "asc" ? a.con_title.localeCompare(b.con_title) : b.con_title.localeCompare(a.con_title)
-        } else if (sortField === "con_updatetime") {
-          return sortOrder === "asc"
-            ? new Date(a.versions[0].con_updatetime).getTime() - new Date(b.versions[0].con_updatetime).getTime()
-            : new Date(b.versions[0].con_updatetime).getTime() - new Date(a.versions[0].con_updatetime).getTime()
-        }
-        return 0
-      })
-      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-  }, [filteredAndSortedContracts, searchTerm, sortField, sortOrder, currentPage, itemsPerPage])
+  const itemsPerPage = 10;
+  const pageCount = Math.ceil(filteredAndSortedContracts.length / itemsPerPage);
 
-  const pageCount = Math.ceil(filteredAndSortedContracts.length / itemsPerPage)
+const currentItems = useMemo(() => {
+  // 검색 필터링
+  const filteredItems = filteredAndSortedContracts.filter((contract) =>
+    contract.con_title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 정렬 적용
+  const sortedItems = filteredItems.sort((a, b) => {
+    if (sortField === "con_title") {
+      return sortOrder === "asc" ? a.con_title.localeCompare(b.con_title) : b.con_title.localeCompare(a.con_title);
+    } else if (sortField === "con_updatetime") {
+      return sortOrder === "asc"
+        ? new Date(a.versions[0].con_updatetime).getTime() - new Date(b.versions[0].con_updatetime).getTime()
+        : new Date(b.versions[0].con_updatetime).getTime() - new Date(a.versions[0].con_updatetime).getTime();
+    }
+    return 0;
+  });
+
+  // 페이지네이션 적용
+  return sortedItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+}, [filteredAndSortedContracts, searchTerm, sortField, sortOrder, currentPage, itemsPerPage]);
+
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
@@ -200,25 +206,28 @@ export default function ManageContracts() {
     setFilteredAndSortedContracts((prevContracts) => {
       return prevContracts.map((contract) => {
         if (contract.con_title === contractTitle) {
-          return { ...contract, selectedVersion: version }
+          return { ...contract, selectedVersion: version };
         }
-        return contract
-      })
-    })
-
-    // Update selectedDoc when version changes
+        return contract;
+      });
+    });
+  
+    // SummaryBox에도 선택된 버전 정보 업데이트
     setSelectedDoc((prevDoc) => {
-      if (prevDoc && prevDoc.con_title === contractTitle) {
-        const selectedVersionData = prevDoc.versions.find((v) => v.con_version === version)
-        return {
-          ...prevDoc,
-          selectedVersion: version,
-          versions: [selectedVersionData!, ...prevDoc.versions.filter((v) => v.con_version !== version)],
-        }
+      const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle);
+      if (contract) {
+        const selectedVersionData = contract.versions.find((v) => v.con_version === version);
+        return selectedVersionData
+          ? {
+              ...contract,
+              selectedVersion: version,
+              versions: [selectedVersionData, ...contract.versions.filter((v) => v.con_version !== version)],
+            }
+          : prevDoc;
       }
-      return prevDoc
-    })
-  }
+      return prevDoc;
+    });
+  };
 
   const handleViewResults = (contractTitle: string) => {
     const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle)
@@ -291,6 +300,10 @@ export default function ManageContracts() {
             <tr>
               <SummaryTh>계약서 이름</SummaryTh>
               <SummaryTd>{selectedDoc?.con_title || "-"}</SummaryTd>
+            </tr>
+            <tr>
+              <SummaryTh>버전</SummaryTh>
+              <SummaryTd>{selectedDoc?.selectedVersion ? `ver.${selectedDoc.selectedVersion}` : "-"}</SummaryTd>
             </tr>
             <tr>
               <SummaryTh>확장자명</SummaryTh>
@@ -371,17 +384,55 @@ export default function ManageContracts() {
           </tbody>
         </Table>
 
-        <PaginationContainer>
-          <PaginationButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-            이전
-          </PaginationButton>
-          <PaginationInfo>
-            {currentPage} / {pageCount}
-          </PaginationInfo>
-          <PaginationButton onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pageCount}>
-            다음
-          </PaginationButton>
-        </PaginationContainer>
+        <Pagination>
+          {/* 이전 그룹으로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 10, 1))}
+            disabled={currentPage <= 10}
+          >
+            {"<<"}
+          </PageButton>
+
+          {/* 이전 페이지로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </PageButton>
+
+          {/* 페이지 번호 표시 */}
+          {[...Array(10)].map((_, i) => {
+            const pageNumber = Math.floor((currentPage - 1) / 10) * 10 + i + 1;
+            if (pageNumber > pageCount) return null; // 페이지 번호가 최대 페이지 수를 초과하면 렌더링 안 함
+            return (
+              <PageButton
+                key={pageNumber}
+                onClick={() => setCurrentPage(pageNumber)}
+                $active={currentPage === pageNumber}
+              >
+                {pageNumber}
+              </PageButton>
+            );
+          })}
+
+          {/* 다음 페이지로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
+            disabled={currentPage === pageCount}
+          >
+            {">"}
+          </PageButton>
+
+          {/* 다음 그룹으로 이동 */}
+          <PageButton
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 10, pageCount))}
+            disabled={currentPage > pageCount - 10}
+          >
+            {">>"}
+          </PageButton>
+        </Pagination>
+
       </MainContent>
     </Container>
   )
