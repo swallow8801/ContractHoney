@@ -206,25 +206,28 @@ const currentItems = useMemo(() => {
     setFilteredAndSortedContracts((prevContracts) => {
       return prevContracts.map((contract) => {
         if (contract.con_title === contractTitle) {
-          return { ...contract, selectedVersion: version }
+          return { ...contract, selectedVersion: version };
         }
-        return contract
-      })
-    })
-
-    // Update selectedDoc when version changes
+        return contract;
+      });
+    });
+  
+    // SummaryBox에도 선택된 버전 정보 업데이트
     setSelectedDoc((prevDoc) => {
-      if (prevDoc && prevDoc.con_title === contractTitle) {
-        const selectedVersionData = prevDoc.versions.find((v) => v.con_version === version)
-        return {
-          ...prevDoc,
-          selectedVersion: version,
-          versions: [selectedVersionData!, ...prevDoc.versions.filter((v) => v.con_version !== version)],
-        }
+      const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle);
+      if (contract) {
+        const selectedVersionData = contract.versions.find((v) => v.con_version === version);
+        return selectedVersionData
+          ? {
+              ...contract,
+              selectedVersion: version,
+              versions: [selectedVersionData, ...contract.versions.filter((v) => v.con_version !== version)],
+            }
+          : prevDoc;
       }
-      return prevDoc
-    })
-  }
+      return prevDoc;
+    });
+  };
 
   const handleViewResults = (contractTitle: string) => {
     const contract = filteredAndSortedContracts.find((c) => c.con_title === contractTitle)
@@ -297,6 +300,10 @@ const currentItems = useMemo(() => {
             <tr>
               <SummaryTh>계약서 이름</SummaryTh>
               <SummaryTd>{selectedDoc?.con_title || "-"}</SummaryTd>
+            </tr>
+            <tr>
+              <SummaryTh>버전</SummaryTh>
+              <SummaryTd>{selectedDoc?.selectedVersion ? `ver.${selectedDoc.selectedVersion}` : "-"}</SummaryTd>
             </tr>
             <tr>
               <SummaryTh>확장자명</SummaryTh>
