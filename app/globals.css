@@ -17,17 +17,6 @@
     }
 }
 
-/* 전역 글꼴 설정 */
-body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: 'Pretendard', Arial, Helvetica, sans-serif; /* Pretendard 기본 설정 */
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-}
-
 ::-webkit-scrollbar {
     width: 0; /* 스크롤바 너비를 없앰 */
 }
@@ -39,4 +28,41 @@ body {
 /* 모든 텍스트 요소에 상속 */
 *, *::before, *::after {
     font-family: inherit; /* body의 폰트 상속 */
+}
+
+/* 전역 글꼴 설정 */
+body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: 'Pretendard', Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    
+    /* 네비게이션 바 제외한 높이 설정 */
+    min-height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 푸터가 항상 아래에 고정되도록 설정 */
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 90px); /* 네비게이션 바 높이를 제외한 전체 영역 */
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* 내용이 많아지면 스크롤 가능 */
+}
+
+/* 푸터 */
+footer {
+    width: 100%;
+    background: #f8f8f8;
+    text-align: center;
+    padding: 10px;
 }
