@@ -5,12 +5,11 @@ import styled from "styled-components"
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
   padding: 0.5rem;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  overflow-x: hidden;
+  overflow-x: visible;
   overflow-y: auto;
 
   @media (max-width: 768px) {
@@ -22,7 +21,10 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.25rem;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #F2B024;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -38,7 +40,7 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled.h2`
-  font-size: 1.1rem;
+  font-size: 28px;
   font-weight: 600;
   color: #333;
   margin: 0.3rem 0;
@@ -56,12 +58,10 @@ export const Table = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #f9f9f9;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  table-layout: fixed;
-  font-size: 0.8rem;
 
   th, td {
     &:nth-child(1) { width: 25%; }
@@ -90,7 +90,7 @@ export const Table = styled.table`
 
 export const Th = styled.th<{ $sortable?: boolean }>`
   text-align: center;
-  padding: 0.3rem 0.5rem;
+  padding: 0.7rem 0.5rem;
   color: #666;
   font-weight: normal;
   border-bottom: 1px solid #eee;
@@ -99,18 +99,17 @@ export const Th = styled.th<{ $sortable?: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
 
   &:hover {
     background-color: ${(props) => (props.$sortable ? "#e0e0e0" : "#f0f0f0")};
   }
-  &:first-child {
-    text-align: left;
-  }
 `
 
 export const Td = styled.td`
-  padding: 0.3rem 0.5rem;
+  padding: 0.4rem 0.5rem;
   border-bottom: 1px solid #eee;
   vertical-align: middle;
   white-space: nowrap;
@@ -124,6 +123,7 @@ export const Td = styled.td`
   &.title {
     max-width: 200px;
     text-align: left;
+    padding-left: 20px;
   }
 
   &.type {
@@ -192,22 +192,31 @@ export const FileDate = styled.span`
 `
 
 export const SummaryBox = styled(Table)`
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-
+  margin-bottom: 1rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   th, td {
-    &:nth-child(1) { width: 30%; }
-    &:nth-child(2) { width: 70%; }
+    &:nth-child(1) { width: 25%; }
+    &:nth-child(2) { width: 75%; }
   }
 `
 
 export const SummaryTh = styled(Th)`
-  width: 30%;
-  padding: 0.75rem 0.5rem;
+  background: #f8f8f8;
+  color: #444;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
 `
 
 export const SummaryTd = styled(Td)`
-  padding: 0.75rem 0.5rem;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
   text-align: left;
 `
 
@@ -225,38 +234,34 @@ export const DocumentName = styled.button`
     text-decoration: underline;
   }
 `
-
-export const PaginationContainer = styled.div`
+export const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
-`
+  margin-top: 30px;
+  margin-bottom: 70px;
+  gap: 5px;
+`;
 
-export const PaginationButton = styled.button`
-  background: white;
+export const PageButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 12px;
   border: 1px solid #ddd;
-  padding: 0.3rem 0.5rem;
-  margin: 0 0.25rem;
-  border-radius: 4px;
+  background: ${props => props.$active ? '#F2B024' : 'white'};
+  color: ${props => props.$active ? 'white' : '#666'};
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 
-  &:hover {
-    background: #f0f0f0;
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? '#e0a00f' : '#f0f0f0'};
   }
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.2;
   }
-`
-
-export const PaginationInfo = styled.span`
-  margin: 0 1rem;
-  color: #666;
-  font-size: 0.8rem;
-`
+`;
 
 export const SearchContainer = styled.div`
   flex: 0 0 auto;
@@ -266,7 +271,7 @@ export const SearchInput = styled.input`
   padding: 0.3rem 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   width: 200px;
 `
 
