@@ -20,7 +20,6 @@ export const Sidebar = styled.aside<{ $isOpen: boolean }>`
   overflow-y: auto;
   transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
   display: ${(props) => (props.$isOpen ? 'block' : 'none')};
-  z-index: 1000;
 
   @media (min-width: 768px) {
     width: 20%;
