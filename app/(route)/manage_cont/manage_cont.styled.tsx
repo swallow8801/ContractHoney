@@ -8,6 +8,7 @@ export const Container = styled.div`
   padding: 0.5rem;
   max-width: 1200px;
   width: 100%;
+  min-height: calc(100vh - 90px);
   margin: 0 auto;
   overflow-x: visible;
   overflow-y: auto;
