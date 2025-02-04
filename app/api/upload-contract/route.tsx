@@ -8,7 +8,7 @@ async function checkCloudConvertJobStatus(jobId: string): Promise<any> {
   const response = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYzYyNzY1M2VlMGFjYjM4Y2RlOTRjN2NiN2E5ODg2YTIxMTM5MzE3YTgwNjk2ZWY1NDNhOGU5ZTEwYTg5ODdiODQ0ODRmNDEyNjk4MGEwY2QiLCJpYXQiOjE3Mzg2Mjg1NTIuNjQwNzAxLCJuYmYiOjE3Mzg2Mjg1NTIuNjQwNzAzLCJleHAiOjQ4OTQzMDIxNTIuNjM2MTA0LCJzdWIiOiI3MDk0Mzk3NCIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.BknlrLkVg-7YEATdGRd212v0QU5_pdsOzD170JY7NDGZfvXoeFbtxP9obRiLNPUGlqAp_jojIzH2QuZ84t6cyNeCj6nstneFJFKTkGDBeyx8e4mSRYpL7Sakkeu4wj2Cfhmvbbu8Plcsu4_xCRarQtgt8LfL2BPyL39P-s_c6Zvtz8akO2DQp_ZrvrVqcKT_jgpFtAVbSV-J3Nv51rmJAJAo2KthZuhLtgmllADwOpVem_NM5z53GUTOvWPBK0TQZhzIhZNItjqty0tcfsVc8MgvWY_nRglrEfAvzaZ9BriE6mfW-Noo91fwKS81isgN1wVbhN_sFm1l21hyDVYkh2UdnYdjDOoHdcxteOSJoCMnTgWtbAKN-55ZUII3vrmPjJVlFP5884iduyeKtXrnXphm6S_Hm3Ti5MZCb4o89B3JSSrOTJ5XJhHWWznj1brkkqsGDG8iTIRl4YZQsByqRhuw4CPG50q-EIYiOWa7axbqPHvoT24vc058LyOuHwWhlWJ1KjsJL5HqD1Ro0hdlVcwHRiLzyaQ8MRdI8xN_Fa2Kz8pwg_v9rq5fSOx5T9elmQ2tcaJCJiC0KXko4BKUp2Yz6U1DgkzO82ck9vQizsUxkzH5W509bPjngtNUQR7vbUUqxehxOUdj8Z8o3VkdpFg0DXpAlk73GzLBPpTUFM0`,
+      'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjYyZDc0NjZmMTAyMDIxZmQzNjZmNzc1ZWE3Nzc4YmM2OWU4YmMzN2FmMmU5YjliNThiNzQ3YmFiNGVjM2VhMTk0MDRlYThlNjBiOGVmOTMiLCJpYXQiOjE3Mzg2NDUyMjMuODMyNTY2LCJuYmYiOjE3Mzg2NDUyMjMuODMyNTY3LCJleHAiOjQ4OTQzMTg4MjMuODI4MDUyLCJzdWIiOiI3MDkzNDIxMSIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.kpL6WjjS_V2n4K54NN5dd9xOSaMV5pQRscQ7lZHVozwynq4gYY20qZVnNBsLlb3BBOOR-RyAjIZOlNxvPQEi4UtPchdpchTWte3zrDk5PmXHCyPrzW5gJj-5EUXqheID5dnLvnHqOp8-w4w0zVO-MjWTF1Fyy-fIaiZpZ1UmHehQw3WXbXR12bfN3DlHcE5CN-17Z3tE0kn1nWnSI1QdbW5Fb9SGNp-CoAIcU1q4ct22DtV9bJU2g1lIEyly4kezXFls9ehi-w48GIKaYKFjg953i8uQQw1MOn5aD8M6MtdEbNjY8oo5L2a6zEdajnf9a5rPeCr4DywRsvbrD_BKrZxqE95zznp0ZvgTJzSr0yDdPO3Zs62Vdkj5UvuOPSWf4LsyV2pWsC16tElORuH1HoTW0z8brJY072zWLTGFZ601KQex-eEQHOttqbE3CrLCvfyrl90aI3Tyv_H60cDnzKwoxm0TN0IcpnnbYGHynWXnFa5sOPTKEK0MZPmWGIDSLr--yqKOF0JrqP2yANg_vzsm672vLzSMn2dVWcCotiniMXGpElshG0_KLkdQPw9xN4hY5nlsS1uYHvP7mflMVGZLUCQMqUoBsckKHG5kx4Y8qR4BXYNiY5oprp9LpOiKnIAYxoUfR6Od5jmByIg49Ob6YSZdq4OKGcY2zw2CG4E`,
     },
   });
 
@@ -59,7 +59,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get("file") as File;
     const fileName = formData.get("fileName") as string;
-    const fileType = formData.get("fileType") as string;
+    const fileTypeRaw = formData.get("fileType") as string;
+    const fileType = fileTypeRaw === "application/pdf" ? "pdf" : fileTypeRaw;
     const contractId = formData.get("contractId") as string | null;
     const version = formData.get("version") as string | null;
     const newContractTitle = formData.get("newContractTitle") as string | null;
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
     const cloudConvertResponse = await fetch("https://api.cloudconvert.com/v2/jobs", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYzYyNzY1M2VlMGFjYjM4Y2RlOTRjN2NiN2E5ODg2YTIxMTM5MzE3YTgwNjk2ZWY1NDNhOGU5ZTEwYTg5ODdiODQ0ODRmNDEyNjk4MGEwY2QiLCJpYXQiOjE3Mzg2Mjg1NTIuNjQwNzAxLCJuYmYiOjE3Mzg2Mjg1NTIuNjQwNzAzLCJleHAiOjQ4OTQzMDIxNTIuNjM2MTA0LCJzdWIiOiI3MDk0Mzk3NCIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.BknlrLkVg-7YEATdGRd212v0QU5_pdsOzD170JY7NDGZfvXoeFbtxP9obRiLNPUGlqAp_jojIzH2QuZ84t6cyNeCj6nstneFJFKTkGDBeyx8e4mSRYpL7Sakkeu4wj2Cfhmvbbu8Plcsu4_xCRarQtgt8LfL2BPyL39P-s_c6Zvtz8akO2DQp_ZrvrVqcKT_jgpFtAVbSV-J3Nv51rmJAJAo2KthZuhLtgmllADwOpVem_NM5z53GUTOvWPBK0TQZhzIhZNItjqty0tcfsVc8MgvWY_nRglrEfAvzaZ9BriE6mfW-Noo91fwKS81isgN1wVbhN_sFm1l21hyDVYkh2UdnYdjDOoHdcxteOSJoCMnTgWtbAKN-55ZUII3vrmPjJVlFP5884iduyeKtXrnXphm6S_Hm3Ti5MZCb4o89B3JSSrOTJ5XJhHWWznj1brkkqsGDG8iTIRl4YZQsByqRhuw4CPG50q-EIYiOWa7axbqPHvoT24vc058LyOuHwWhlWJ1KjsJL5HqD1Ro0hdlVcwHRiLzyaQ8MRdI8xN_Fa2Kz8pwg_v9rq5fSOx5T9elmQ2tcaJCJiC0KXko4BKUp2Yz6U1DgkzO82ck9vQizsUxkzH5W509bPjngtNUQR7vbUUqxehxOUdj8Z8o3VkdpFg0DXpAlk73GzLBPpTUFM0`,
+        "Authorization": `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjYyZDc0NjZmMTAyMDIxZmQzNjZmNzc1ZWE3Nzc4YmM2OWU4YmMzN2FmMmU5YjliNThiNzQ3YmFiNGVjM2VhMTk0MDRlYThlNjBiOGVmOTMiLCJpYXQiOjE3Mzg2NDUyMjMuODMyNTY2LCJuYmYiOjE3Mzg2NDUyMjMuODMyNTY3LCJleHAiOjQ4OTQzMTg4MjMuODI4MDUyLCJzdWIiOiI3MDkzNDIxMSIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.kpL6WjjS_V2n4K54NN5dd9xOSaMV5pQRscQ7lZHVozwynq4gYY20qZVnNBsLlb3BBOOR-RyAjIZOlNxvPQEi4UtPchdpchTWte3zrDk5PmXHCyPrzW5gJj-5EUXqheID5dnLvnHqOp8-w4w0zVO-MjWTF1Fyy-fIaiZpZ1UmHehQw3WXbXR12bfN3DlHcE5CN-17Z3tE0kn1nWnSI1QdbW5Fb9SGNp-CoAIcU1q4ct22DtV9bJU2g1lIEyly4kezXFls9ehi-w48GIKaYKFjg953i8uQQw1MOn5aD8M6MtdEbNjY8oo5L2a6zEdajnf9a5rPeCr4DywRsvbrD_BKrZxqE95zznp0ZvgTJzSr0yDdPO3Zs62Vdkj5UvuOPSWf4LsyV2pWsC16tElORuH1HoTW0z8brJY072zWLTGFZ601KQex-eEQHOttqbE3CrLCvfyrl90aI3Tyv_H60cDnzKwoxm0TN0IcpnnbYGHynWXnFa5sOPTKEK0MZPmWGIDSLr--yqKOF0JrqP2yANg_vzsm672vLzSMn2dVWcCotiniMXGpElshG0_KLkdQPw9xN4hY5nlsS1uYHvP7mflMVGZLUCQMqUoBsckKHG5kx4Y8qR4BXYNiY5oprp9LpOiKnIAYxoUfR6Od5jmByIg49Ob6YSZdq4OKGcY2zw2CG4E`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -195,11 +196,6 @@ export async function POST(request: NextRequest) {
 
     // Blob 업로드 완료 후 응답 처리
     console.log(`🚀 Blob Storage에 ${newFileName} 업로드 완료`);
-
-    await db.execute(
-      "INSERT INTO contract_postfile (con_id, con_filetype, con_datetype, con_filename) VALUES (?, ?, NOW(), ?)",
-      [newContractId, "application/pdf", newFileName],
-    );
 
     const fastApiResponse = await fetch("http://20.39.191.235/api/upload/", {
       method: "POST",

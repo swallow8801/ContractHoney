@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
-import { Share, Download, ChevronLeft, ChevronRight, FileText, Check, GitCompare, InfoIcon } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { Share, Download, ChevronLeft, ChevronRight, FileText, Check } from "lucide-react"
 import {
   Container,
   PreviewSection,
@@ -22,7 +22,6 @@ import {
   HancomPlaceholder,
   ClauseContainer,
   ClauseHeader,
-  ClauseEx,
   ClauseContent,
   ClauseExplanation,
   PaginationContainer,
@@ -41,9 +40,13 @@ import {
   CheckboxContainer,
   Divider,
 } from "./analysis.styled"
+import PDFViewer from "../../component/PDFViewer/PDFViewer";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+
 
 interface Contract {
   con_id: number
+  user_id: number
   con_title: string
   con_type: string
   con_updatetime: string
@@ -76,9 +79,27 @@ interface ContractIden {
   checked: boolean
 }
 
+interface MyPdfViewerProps {
+  contract: Contract | null;
+}
+
+function MyPdfViewer({ contract }: MyPdfViewerProps) {
+  if (!contract) return null;
+
+  return (
+    <div style={{ height: '750px' }}>
+      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`}>
+        <Viewer
+          fileUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.pdf`}
+        />
+      </Worker>
+    </div>
+  );
+}
+
+
 export function AnalysisPage() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const [contract, setContract] = useState<Contract | null>(null)
   const [contractSummaries, setContractSummaries] = useState<ContractSummary[]>([])
   const [contractIdens, setContractIdens] = useState<ContractIden[]>([])
@@ -115,41 +136,6 @@ export function AnalysisPage() {
     }
   }
 
-  const handleDownload = async () => {
-    try {
-      const token = localStorage.getItem("authToken")
-
-      if (!contract) {
-        console.error("No contract to download")
-        return
-      }
-
-      const response = await fetch(
-        `/api/download-contract?contractId=${contract.con_id}&fileName=${contract.con_title}_ver${contract.con_version}.${contract.con_type}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-
-      if (!response.ok) {
-        throw new Error("Failed to download file")
-      }
-
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-
-      link.href = url
-      link.download = `${contract.con_title}_ver${contract.con_version}.${contract.con_type}`
-      link.click()
-      window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error("Error downloading file:", error)
-    }
-  }
-
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1))
   }
@@ -157,6 +143,41 @@ export function AnalysisPage() {
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
   }
+
+  const handleDownload = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+  
+      if (!contract) {
+        console.error("No contract to download");
+        return;
+      }
+  
+      const response = await fetch(
+        `/api/download-contract?contractId=${contract.con_id}&fileName=${contract.con_title}_ver${contract.con_version}.${contract.con_type}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+  
+      link.href = url;
+      link.download = `${contract.con_title}_ver${contract.con_version}.${contract.con_type}`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
+  };
 
   const filteredUnfairClauses = contractIdens.filter((clause) => clause.iden_unfair)
   const filteredToxicClauses = contractIdens.filter((clause) => clause.iden_toxic)
@@ -186,21 +207,6 @@ export function AnalysisPage() {
     )
   }
 
-  const renderPreview = () => {
-    if (!contract) return null
-
-    return (
-      <HancomPlaceholder>
-        <FileText size={48} />
-        <p>{contract.con_title}</p>
-        <p>계약서 미리보기는 현재 지원되지 않습니다.</p>
-        <ActionButton className="download" onClick={handleDownload}>
-          <Download size={16} />
-          파일 다운로드
-        </ActionButton>
-      </HancomPlaceholder>
-    )
-  }
 
   const renderClauseContent = () => {
     if (!currentClause) return null
@@ -209,12 +215,6 @@ export function AnalysisPage() {
 
     return (
       <>
-      <ClauseEx>
-        <InfoIcon>i</InfoIcon>
-          {activeTab === "unfair"
-            ? "위법 조항 - 법률에 명백하게 위배된 조항"
-            : "독소 조항 - 위법이 아닌 경우라도 추후에 해석이나 상황에 따라 불리하게 작용할 가능성이 있는 조항"}
-      </ClauseEx>
         <ClauseContainer $checked={currentClause.checked}>
           <ClauseHeader $checked={currentClause.checked}>
             <span>
@@ -233,7 +233,7 @@ export function AnalysisPage() {
         <ClauseExplanation $checked={currentClause.checked}>
           <ProbabilitySection>
             <ExplanationTitle $checked={currentClause.checked}>
-              {activeTab === "unfair" ? "위법 조항 위험도" : "독소 조항 위험도"}
+              {activeTab === "unfair" ? "불공정조항 위험도" : "독소조항 위험도"}
             </ExplanationTitle>
             <ProbabilityContainer>
               <ProbabilityBar>
@@ -259,8 +259,8 @@ export function AnalysisPage() {
           )}
           {activeTab === "toxic" && (
             <>
-              <ExplanationTitle $checked={currentClause.checked}>독소 조항 설명</ExplanationTitle>
-              <p>{currentClause.law_explain}</p>
+              <ExplanationTitle $checked={currentClause.checked}>독소조항 설명</ExplanationTitle>
+              <p>이 조항은 계약 당사자 중 한쪽에게 불리한 조건을 포함하고 있습니다.</p>
             </>
           )}
         </ClauseExplanation>
@@ -273,7 +273,7 @@ export function AnalysisPage() {
 
     return (
       <SummaryContent>
-        {/* <h3>계약 종류: {contract.con_type}</h3> */}
+        <h3>계약 종류: {contract.con_type}</h3>
         <h3>계약 요약:</h3>
         {contractSummaries.map((summary) => (
           <div key={summary.sum_id}>
@@ -298,22 +298,15 @@ export function AnalysisPage() {
     <Container>
       <PreviewSection>
         <NavigationBar>
-          <DocumentTitle>
-            {contract.con_title} (ver.{contract.con_version})
-          </DocumentTitle>
-          <PageNavigation>
-            <NavButton onClick={handlePrevPage} disabled={currentPage === 1}>
-              <ChevronLeft size={20} />
-            </NavButton>
-            <PageInfo>
-              {currentPage} / {totalPages}
-            </PageInfo>
-            <NavButton onClick={handleNextPage} disabled={currentPage === totalPages}>
-              <ChevronRight size={20} />
-            </NavButton>
-          </PageNavigation>
+          <DocumentTitle>{contract.con_title}</DocumentTitle>
+          <ActionButton className="download" onClick={handleDownload}>
+          <Download size={16} />
+          파일 다운로드
+        </ActionButton>
         </NavigationBar>
-        <PreviewContent>{renderPreview()}</PreviewContent>
+        <PreviewContent>
+        <MyPdfViewer contract={contract} />
+        </PreviewContent>
       </PreviewSection>
 
       <AnalysisSection>
@@ -322,11 +315,11 @@ export function AnalysisPage() {
             요약
           </Tab>
           <Tab $active={activeTab === "unfair"} onClick={() => setActiveTab("unfair")}>
-            위법 조항
+            불공정조항
             {getUnfairCount() > 0 && <Badge>{getUnfairCount()}</Badge>}
           </Tab>
           <Tab $active={activeTab === "toxic"} onClick={() => setActiveTab("toxic")}>
-            독소 조항
+            독소조항
             {getToxicCount() > 0 && <Badge>{getToxicCount()}</Badge>}
           </Tab>
         </TabContainer>
@@ -364,13 +357,9 @@ export function AnalysisPage() {
             <Share size={16} />
             결과 공유하기
           </ActionButton>
-          <ActionButton className="download" onClick={handleDownload}>
+          <ActionButton className="download">
             <Download size={16} />
             결과 다운로드
-          </ActionButton>
-          <ActionButton className="compare" onClick={() => router.push(`/compare?contractId=${contract.con_id}`)}>
-            <GitCompare size={16} />
-            버전 비교하기
           </ActionButton>
         </ActionButtons>
       </AnalysisSection>
