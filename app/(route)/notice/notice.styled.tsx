@@ -36,6 +36,7 @@ export const Main = styled.main`
   flex-direction: column;
   margin-top: 3vh;
   margin-left: 25%;
+  margin-bottom: 5vh;
 `;
 
 export const MainTitle = styled.h2`
