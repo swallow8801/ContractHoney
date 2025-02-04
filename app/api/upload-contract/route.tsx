@@ -8,7 +8,7 @@ async function checkCloudConvertJobStatus(jobId: string): Promise<any> {
   const response = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${process.env.CLOUDCONVERT_API_KEY}`,
+      'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYzYyNzY1M2VlMGFjYjM4Y2RlOTRjN2NiN2E5ODg2YTIxMTM5MzE3YTgwNjk2ZWY1NDNhOGU5ZTEwYTg5ODdiODQ0ODRmNDEyNjk4MGEwY2QiLCJpYXQiOjE3Mzg2Mjg1NTIuNjQwNzAxLCJuYmYiOjE3Mzg2Mjg1NTIuNjQwNzAzLCJleHAiOjQ4OTQzMDIxNTIuNjM2MTA0LCJzdWIiOiI3MDk0Mzk3NCIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.BknlrLkVg-7YEATdGRd212v0QU5_pdsOzD170JY7NDGZfvXoeFbtxP9obRiLNPUGlqAp_jojIzH2QuZ84t6cyNeCj6nstneFJFKTkGDBeyx8e4mSRYpL7Sakkeu4wj2Cfhmvbbu8Plcsu4_xCRarQtgt8LfL2BPyL39P-s_c6Zvtz8akO2DQp_ZrvrVqcKT_jgpFtAVbSV-J3Nv51rmJAJAo2KthZuhLtgmllADwOpVem_NM5z53GUTOvWPBK0TQZhzIhZNItjqty0tcfsVc8MgvWY_nRglrEfAvzaZ9BriE6mfW-Noo91fwKS81isgN1wVbhN_sFm1l21hyDVYkh2UdnYdjDOoHdcxteOSJoCMnTgWtbAKN-55ZUII3vrmPjJVlFP5884iduyeKtXrnXphm6S_Hm3Ti5MZCb4o89B3JSSrOTJ5XJhHWWznj1brkkqsGDG8iTIRl4YZQsByqRhuw4CPG50q-EIYiOWa7axbqPHvoT24vc058LyOuHwWhlWJ1KjsJL5HqD1Ro0hdlVcwHRiLzyaQ8MRdI8xN_Fa2Kz8pwg_v9rq5fSOx5T9elmQ2tcaJCJiC0KXko4BKUp2Yz6U1DgkzO82ck9vQizsUxkzH5W509bPjngtNUQR7vbUUqxehxOUdj8Z8o3VkdpFg0DXpAlk73GzLBPpTUFM0`,
     },
   });
 
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     const cloudConvertResponse = await fetch("https://api.cloudconvert.com/v2/jobs", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.CLOUDCONVERT_API_KEY}`,
+        "Authorization": `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYzYyNzY1M2VlMGFjYjM4Y2RlOTRjN2NiN2E5ODg2YTIxMTM5MzE3YTgwNjk2ZWY1NDNhOGU5ZTEwYTg5ODdiODQ0ODRmNDEyNjk4MGEwY2QiLCJpYXQiOjE3Mzg2Mjg1NTIuNjQwNzAxLCJuYmYiOjE3Mzg2Mjg1NTIuNjQwNzAzLCJleHAiOjQ4OTQzMDIxNTIuNjM2MTA0LCJzdWIiOiI3MDk0Mzk3NCIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSJdfQ.BknlrLkVg-7YEATdGRd212v0QU5_pdsOzD170JY7NDGZfvXoeFbtxP9obRiLNPUGlqAp_jojIzH2QuZ84t6cyNeCj6nstneFJFKTkGDBeyx8e4mSRYpL7Sakkeu4wj2Cfhmvbbu8Plcsu4_xCRarQtgt8LfL2BPyL39P-s_c6Zvtz8akO2DQp_ZrvrVqcKT_jgpFtAVbSV-J3Nv51rmJAJAo2KthZuhLtgmllADwOpVem_NM5z53GUTOvWPBK0TQZhzIhZNItjqty0tcfsVc8MgvWY_nRglrEfAvzaZ9BriE6mfW-Noo91fwKS81isgN1wVbhN_sFm1l21hyDVYkh2UdnYdjDOoHdcxteOSJoCMnTgWtbAKN-55ZUII3vrmPjJVlFP5884iduyeKtXrnXphm6S_Hm3Ti5MZCb4o89B3JSSrOTJ5XJhHWWznj1brkkqsGDG8iTIRl4YZQsByqRhuw4CPG50q-EIYiOWa7axbqPHvoT24vc058LyOuHwWhlWJ1KjsJL5HqD1Ro0hdlVcwHRiLzyaQ8MRdI8xN_Fa2Kz8pwg_v9rq5fSOx5T9elmQ2tcaJCJiC0KXko4BKUp2Yz6U1DgkzO82ck9vQizsUxkzH5W509bPjngtNUQR7vbUUqxehxOUdj8Z8o3VkdpFg0DXpAlk73GzLBPpTUFM0`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
