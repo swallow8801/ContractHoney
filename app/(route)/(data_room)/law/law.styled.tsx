@@ -3,7 +3,9 @@ import styled, { css } from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background: #ffffff;
 `;
 
@@ -34,6 +36,7 @@ export const Main = styled.main`
   flex-direction: column;
   margin-top: 3vh;
   margin-left: 25%;
+  margin-bottom: 5vh;
 `;
 
 export const Title = styled.h1`
@@ -258,3 +261,34 @@ export const StyledIcon = styled.span`
   display: inline-flex;
   align-items: center;
 `;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  min-height: 400px;
+  width: 100%;
+  margin-top: 20px;
+`
+
+export const LoadingSpinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`
+
+export const LoadingText = styled.p`
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+`

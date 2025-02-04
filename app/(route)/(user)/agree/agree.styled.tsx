@@ -30,26 +30,38 @@ export const AgreementSection = styled.div`
   text-align: center;
 `
 
-export const SectionTitle = styled.h2`
+export const SectionTitle = styled.h2<{ $expanded: boolean }>`
   font-size: 1.6rem;
-  color: #333;
+  color: ${(props) => (props.$expanded ? "#F2B024" : "#333")};
   margin-bottom: 1rem;
   font-weight: bold;
   text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s ease-in-out;
+
+  &:hover {
+    color: #F2B024;
+  }
 `
 
-export const TermsContainer = styled.div`
+export const TermsContainer = styled.div<{ $expanded: boolean }>`
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 1rem;
+  padding: ${(props) => (props.$expanded ? "1rem" : "0")};
   margin-bottom: 1rem;
-  height: 400px;
-  overflow-y: auto;
-  padding-right: 1rem;
+  height: ${(props) => (props.$expanded ? "400px" : "0")};
+  overflow-y: ${(props) => (props.$expanded ? "auto" : "hidden")};
+  opacity: ${(props) => (props.$expanded ? 1 : 0)};
+  visibility: ${(props) => (props.$expanded ? "visible" : "hidden")};
   background-color: #fff;
   font-size: 0.9rem;
   line-height: 1.6;
   text-align: left;
+  transition: all 0.3s ease-in-out;
 
   &::-webkit-scrollbar {
     width: 8px;

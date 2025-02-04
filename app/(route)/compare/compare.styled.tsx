@@ -4,8 +4,10 @@ export const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background-color: #f9f9f9;
-  min-height: 100vh;
 `
 
 export const Header = styled.div`
