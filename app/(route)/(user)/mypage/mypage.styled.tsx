@@ -5,9 +5,10 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background: #f5f5f5;
-  overflow: hidden;
 `
 
 export const Main = styled.main`
