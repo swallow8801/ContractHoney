@@ -356,8 +356,8 @@ const MainPage = () => {
           alt="계약서"
           style={{
             position: "absolute",
-            top: "40px",
-            left: "50px",
+            top: "5vh",
+            left: "7vw",
             width: "400px",
             height: "400px",
             transform: "rotate(10deg)",
@@ -479,8 +479,8 @@ const MainPage = () => {
           alt="법"
           style={{
             position: "absolute",
-            top: "10px",
-            right: "50px",
+            top: "5vh",
+            right: "7vw",
             width: "400px",
             height: "400px",
             zIndex: 10,
@@ -513,8 +513,8 @@ const MainPage = () => {
           alt="공지사항"
           style={{
             position: "absolute",
-            top: "40px",
-            left: "50px",
+            top: "5vh",
+            left: "7vw",
             width: "400px",
             height: "400px",
             transform: "rotate(-10deg) scaleX(-1)",

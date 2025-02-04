@@ -43,7 +43,7 @@ export const Title = styled.h1`
     font-weight: bold;
     color: white;
     margin-bottom: 20px;
-    z-index: 2;
+    z-index: 20;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards;
@@ -61,7 +61,7 @@ export const InputContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    z-index: 2;
+    z-index: 20;
     width: 100%;
     max-width: 400px;
     opacity: 0;
@@ -247,7 +247,7 @@ export const Notice = styled.div`
     gap: 10px;
     width: 80%;
     max-width: 600px;
-    z-index: 2;
+    z-index: 20;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards 0.2s;
