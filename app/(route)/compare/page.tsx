@@ -20,10 +20,7 @@ import {
   DiffHighlight,
   VersionDropdown,
   DropdownItem,
-  ClauseCount,
-  ClauseBar,
-  ClauseBarFill,
-  ClauseLabel,
+  ClauseCount
 } from "./compare.styled"
 
 interface ContractVersion {
@@ -59,19 +56,23 @@ interface GroupedClause {
 }
 
 export default function ComparePage() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
   const [versions, setVersions] = useState<ContractVersion[]>([])
   const [selectedVersions, setSelectedVersions] = useState<[number, number]>([0, 0])
   const [activeTab, setActiveTab] = useState<"summary" | "unfair" | "toxic">("summary")
   const [dropdownOpen, setDropdownOpen] = useState<[boolean, boolean]>([false, false])
+  const [contractId, setContractId] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    const contractId = searchParams.get("contractId")
-    if (contractId) {
-      fetchContractVersions(contractId)
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search)
+      const contractId = params.get("contractId")
+      if (contractId) {
+        setContractId(contractId)
+        fetchContractVersions(contractId)
+      }
     }
-  }, [searchParams])
+  }, [])
 
   const fetchContractVersions = async (contractId: string) => {
     try {
@@ -117,7 +118,7 @@ export default function ComparePage() {
   const highlightDifferences = (text1: string, text2: string) => {
     const words1 = text1.split(" ")
     const words2 = text2.split(" ")
-    const result: JSX.Element[] = []
+    const result: React.ReactElement[] = [];
 
     words1.forEach((word, index) => {
       if (word !== words2[index]) {
@@ -201,6 +202,9 @@ export default function ComparePage() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+  if (!contractId) {
+    return <NoDataMessage>계약 ID를 찾을 수 없습니다.</NoDataMessage>
+  }
 
   if (versions.length === 0) {
     return <NoDataMessage>비교할 수 있는 버전이 없습니다.</NoDataMessage>
@@ -312,4 +316,3 @@ export default function ComparePage() {
     </Container>
   )
 }
-
