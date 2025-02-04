@@ -24,16 +24,16 @@ export default function TermsOfService() {
 
         <SectionTitle>제 1 조 (목적)</SectionTitle>
         <Text>
-          본 약관은 <strong>계꿀</strong>이 제공하는 계약서 분석 서비스(이하 "서비스")의 이용과 관련하여 
+          본 약관은 <strong>계꿀</strong>이 제공하는 계약서 분석 서비스(이하 &quot;서비스&#34;)의 이용과 관련하여 
           회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
         </Text>
 
         <SectionTitle>제 2 조 (용어의 정의)</SectionTitle>
         <List>
-          <ListItem><strong>"서비스"</strong>: 회사가 제공하는 계약서 분석 및 관련 기능을 포함한 웹사이트 및 응용 프로그램</ListItem>
-          <ListItem><strong>"회원"</strong>: 본 약관에 동의하고 회사가 제공하는 서비스를 이용하는 자</ListItem>
-          <ListItem><strong>"콘텐츠"</strong>: 회원이 업로드하는 계약서 및 기타 문서, 입력한 정보</ListItem>
-          <ListItem><strong>"유료 서비스"</strong>: 회원이 일정 금액을 지불하고 이용하는 서비스 기능</ListItem>
+          <ListItem><strong>&quot;서비스&#34;</strong>: 회사가 제공하는 계약서 분석 및 관련 기능을 포함한 웹사이트 및 응용 프로그램</ListItem>
+          <ListItem><strong>&quot;회원&#34;</strong>: 본 약관에 동의하고 회사가 제공하는 서비스를 이용하는 자</ListItem>
+          <ListItem><strong>&quot;콘텐츠&#34;</strong>: 회원이 업로드하는 계약서 및 기타 문서, 입력한 정보</ListItem>
+          <ListItem><strong>&quot;유료 서비스&#34;</strong>: 회원이 일정 금액을 지불하고 이용하는 서비스 기능</ListItem>
         </List>
 
         <SectionTitle>제 3 조 (약관의 효력 및 변경)</SectionTitle>

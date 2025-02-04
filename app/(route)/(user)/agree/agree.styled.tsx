@@ -5,9 +5,10 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background-color: #f7f7f7;
-  padding: 3rem 1rem;
 `
 
 export const Title = styled.h1`
@@ -79,31 +80,12 @@ export const TermsContainer = styled.div<{ $expanded: boolean }>`
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-
-  h3 {
-    font-size: 1.1rem;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-
-  p, ul, ol {
-    margin-bottom: 1rem;
-  }
-
-  ul, ol {
-    padding-left: 1.5rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-  }
 `
 
 export const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   justify-content: flex-start;
 `
 
@@ -116,9 +98,7 @@ export const Label = styled.label`
 `
 
 export const AllAgreeContainer = styled(CheckboxContainer)`
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background-color: #f8f9fa;
+  margin: 1.5rem 0 0.5rem 0;
   border-radius: 8px;
 
   ${Label} {
@@ -174,3 +154,65 @@ export const Button = styled.button`
   }
 `
 
+export const SectionSubTitle = styled.h3`
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+`;
+
+export const Text = styled.p`
+  font-size: 14px;
+  margin-bottom: 1rem;
+  color: #666;
+  line-height: 1.6;
+`;
+
+/* 리스트 스타일 */
+export const List = styled.ol`
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  line-height: 1.6;
+`;
+
+export const UnorderedList = styled.ul`
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  line-height: 1.6;
+`;
+
+/* - 모양 리스트 */
+export const ListItem = styled.li`
+  margin-bottom: 0.5rem;
+  list-style-type: none;
+  position: relative;
+  padding-left: 1.5rem;
+
+  &::before {
+    content: "-";
+    position: absolute;
+    left: 0;
+    color: #666;
+  }
+`;
+
+/* ● 모양 리스트 */
+export const UnorderedListItem = styled.li`
+  margin-bottom: 0.5rem;
+  list-style-type: none;
+  position: relative;
+  padding-left: 1.5rem;
+
+  &::before {
+    content: "●";
+    position: absolute;
+    left: 0;
+    color: #666;
+    font-size: 10px;
+  }
+`;
