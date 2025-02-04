@@ -37,8 +37,8 @@ export const Group = styled.div`
 `
 
 export const ContentImg = styled.img`
-  width: 100%;
-  max-width: 400px;
+  width: 90%;
+  max-width: 800px;
   height: auto;
   border-radius: 15px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -60,7 +60,7 @@ export const ContentImg = styled.img`
 `
 
 export const ContentTxt = styled.h2`
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
   font-size: 24px;
   font-weight: 600;
@@ -77,7 +77,7 @@ export const ContentTxt = styled.h2`
 `
 
 export const ContentSubtitle = styled.p`
-  margin-top: 10px;
+  margin-top: 5px;
   text-align: center;
   font-size: 18px;
   font-weight: normal;
