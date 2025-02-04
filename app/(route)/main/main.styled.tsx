@@ -20,7 +20,7 @@ export const Container = styled.div`
     -webkit-overflow-scrolling: touch;
 `
 
-export const Group = styled.div<{ $backgroundImage: string }>`
+export const Group = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -36,20 +36,6 @@ export const Group = styled.div<{ $backgroundImage: string }>`
     background-attachment: fixed;
     overflow: hidden;
     transition: all 0.5s ease-in-out;
-
-    background-image: ${({ $backgroundImage }) => `url(${$backgroundImage})`};
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1;
-        display: var(--before-display, block);
-    }
 `
 
 export const Title = styled.h1`
@@ -57,10 +43,11 @@ export const Title = styled.h1`
     font-weight: bold;
     color: white;
     margin-bottom: 20px;
-    z-index: 2;
+    z-index: 20;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 
     @keyframes fadeInUp {
         to {
@@ -74,7 +61,7 @@ export const InputContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    z-index: 2;
+    z-index: 20;
     width: 100%;
     max-width: 400px;
     opacity: 0;
@@ -234,7 +221,7 @@ export const ContractVersion = styled.span`
 
 export const Button = styled.button`
     padding: 15px 30px;
-    background-color: #2c2c2c;
+    background-color:#F2B024;
     color: white;
     border: none;
     border-radius: 8px;
@@ -243,12 +230,12 @@ export const Button = styled.button`
     transition: all 0.3s ease;
 
     &:hover {
-        background-color: #444;
+        background-color: #e0a00f;
         transform: translateY(-2px);
     }
 
     &:disabled {
-        background-color: #888; // Light gray when disabled
+        background-color:rgb(95, 84, 57);
         cursor: not-allowed;
         transform: none;
     }
@@ -260,7 +247,7 @@ export const Notice = styled.div`
     gap: 10px;
     width: 80%;
     max-width: 600px;
-    z-index: 2;
+    z-index: 20;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s forwards 0.2s;
@@ -299,11 +286,10 @@ export const ViewAll = styled.button`
     align-self: flex-end;
     margin-top: 10px;
     padding: 10px;
-    font-size: 16px;
+    font-size: 18px;
     background: none;
     border: none;
     cursor: pointer;
-    text-decoration: underline;
     color: white;
     transition: all 0.3s ease;
 
@@ -315,24 +301,22 @@ export const ViewAll = styled.button`
 export const FileUploadContainer = styled.div`
     width: 100%;
     max-width: 400px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 `
 
 export const FileUploadArea = styled.div<{ $isDragging?: boolean; $disabled?: boolean }>`
-    padding: 20px;
-    border: 2px dashed ${(props) => (props.$isDragging ? "#ffffff" : "rgba(255, 255, 255, 0.3)")};
+    padding: 15px;
+    border: 2px dashed ${(props) => (props.$isDragging ? "#ffffff" : "rgba(87, 87, 87, 0.3)")};
     border-radius: 8px;
-    background: ${(props) => (props.$isDragging ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)")};
-    color: white;
+    background: ${(props) => (props.$isDragging ? "rgba(87, 87, 87, 0.1)" : "rgba(87, 87, 87, 0.05)")};
+    color:rgb(119, 119, 119);
     text-align: center;
     cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
     transition: all 0.3s ease;
     opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
 
     &:hover {
-        border-color: ${(props) => (props.$disabled ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.5)")};
-        background: ${(props) => (props.$disabled ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.1)")};
+        border-color: ${(props) => (props.$disabled ? "rgba(87, 87, 87, 0.3)" : "rgba(87, 87, 87, 0.35)")};
+        background: ${(props) => (props.$disabled ? "rgba(87, 87, 87, 0.05)" : "rgba(87, 87, 87, 0.1)")};
     }
 `
 
@@ -341,9 +325,8 @@ export const FileInput = styled.input`
 `
 
 export const FileName = styled.div`
-    color: white;
-    margin-top: 10px;
-    font-size: 14px;
+    color: rgb(66, 66, 66);
+    font-size: 15px;
     word-break: break-all;
 `
 

@@ -172,14 +172,12 @@ const MainPage = () => {
   }
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      if (searchType === "법령") {
-        router.push(`/law?search=${searchQuery}`)
-      } else if (searchType === "표준계약서") {
-        router.push(`/archive?search=${searchQuery}`)
-      }
+    if (searchType === "법령") {
+      router.push(searchQuery.trim() ? `/law?search=${searchQuery}` : "/law"); // 검색어 없으면 전체 목록
+    } else if (searchType === "표준계약서") {
+      router.push(searchQuery.trim() ? `/archive?search=${searchQuery}` : "/archive"); // 검색어 없으면 전체 목록
     }
-  }
+  };
 
   const handleReview = async () => {
     if (isLoggedIn && selectedFile && isContractSelected) {
@@ -276,15 +274,12 @@ const MainPage = () => {
       )}
       {!isLoggedIn ? (
         <Group
-          $backgroundImage=""
           style={{
             flexDirection: "row",
-            "--before-display": "none",
-            background: "#FFF9E5", // Light yellow background
+            background: "linear-gradient(#FFF9E5,rgb(250, 231, 172))", // Light yellow background
           }}
         >
           <Group
-            $backgroundImage=""
             style={{
               width: "40%",
               padding: "0 50px",
@@ -350,8 +345,26 @@ const MainPage = () => {
           </div>
         </Group>
       ) : (
-        <Group $backgroundImage="/images/메인.png">
-          <Title>계약서 검토 AI 어시스턴트</Title>
+        <Group
+          style={{
+            background: "linear-gradient(#FFF9E5, rgb(250, 231, 172))",
+            position: "relative"
+          }}
+        >
+        <img
+          src="/images/계약서.png"
+          alt="계약서"
+          style={{
+            position: "absolute",
+            top: "5vh",
+            left: "7vw",
+            width: "400px",
+            height: "400px",
+            transform: "rotate(10deg)",
+            zIndex: 10,
+          }}
+        />
+          <Title style={{color:"#F2B024"}}>계약서 분석 AI 어시스턴트</Title>
           <InputContainer>
             <CustomSelect>
               <SelectTrigger onClick={() => setIsDropdownOpen((prev) => !prev)}>
@@ -455,7 +468,24 @@ const MainPage = () => {
         </Group>
       )}
 
-      <Group $backgroundImage="/images/자료실.png">
+      <Group
+        style={{
+          background: "linear-gradient(rgb(250, 231, 172),rgb(253, 214, 130))",
+          position: "relative"
+        }}
+      >
+        <img
+          src="/images/법.png"
+          alt="법"
+          style={{
+            position: "absolute",
+            top: "5vh",
+            right: "7vw",
+            width: "400px",
+            height: "400px",
+            zIndex: 10,
+          }}
+        />
         <Title>법령 & 표준계약서 조회</Title>
         <InputContainer>
           <Select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
@@ -472,7 +502,25 @@ const MainPage = () => {
         </InputContainer>
       </Group>
 
-      <Group $backgroundImage="/images/공지사항.png">
+      <Group
+        style={{
+          background: "linear-gradient(rgb(253, 214, 130),rgb(243, 191, 79))",
+          position: "relative"
+        }}
+      >
+        <img
+          src="/images/공지.png"
+          alt="공지사항"
+          style={{
+            position: "absolute",
+            top: "5vh",
+            left: "7vw",
+            width: "400px",
+            height: "400px",
+            transform: "rotate(-10deg) scaleX(-1)",
+            zIndex: 10,
+          }}
+        />
         <Title>공지사항</Title>
         <Notice>
           {isLoading ? (
@@ -487,7 +535,7 @@ const MainPage = () => {
               </NoticeItem>
             ))
           )}
-          <ViewAll onClick={() => router.push("/notice")}>전체보기</ViewAll>
+          <ViewAll onClick={() => router.push("/notice")}>{"전체보기\u00A0\u00A0\u00A0>"}</ViewAll>
         </Notice>
       </Group>
     </Container>
