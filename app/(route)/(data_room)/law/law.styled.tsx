@@ -80,6 +80,11 @@ export const SearchInput = styled.input`
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+
+  &:focus{
+    outline: none;
+    border-color: #F2B024;
+  }
 `;
 
 export const SearchButton = styled.button`

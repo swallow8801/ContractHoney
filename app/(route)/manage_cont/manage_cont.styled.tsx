@@ -274,6 +274,11 @@ export const SearchInput = styled.input`
   border-radius: 4px;
   font-size: 0.95rem;
   width: 200px;
+
+  &:focus{
+    outline: none;
+    border-color: #F2B024;
+  }
 `
 
 export const FilterContainer = styled.div`

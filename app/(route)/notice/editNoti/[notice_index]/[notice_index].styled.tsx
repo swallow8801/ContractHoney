@@ -83,7 +83,7 @@ export const FormInput = styled.input`
 
 export const FormTextarea = styled.textarea`
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
