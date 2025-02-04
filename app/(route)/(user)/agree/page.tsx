@@ -4,11 +4,13 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import * as S from "./agree.styled"
+import { ChevronDown, ChevronUp } from "lucide-react"
 
 export default function AgreePage() {
   const [agreeAll, setAgreeAll] = useState(false)
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [agreePrivacy, setAgreePrivacy] = useState(false)
+  const [expandedSection, setExpandedSection] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -35,14 +37,20 @@ export default function AgreePage() {
     }
   }
 
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? null : section)
+  }
+
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit}>
         <S.AgreementSection>
-          <S.SectionTitle>이용약관</S.SectionTitle>
-          <S.TermsContainer>
-            {/* 이용약관 내용 */}
-            <h3>제 1 조 (목적)</h3>
+          <S.SectionTitle onClick={() => toggleSection("terms")} $expanded={expandedSection === "terms"}>
+            이용약관
+            {expandedSection === "terms" ? <ChevronUp /> : <ChevronDown />}
+          </S.SectionTitle>
+          <S.TermsContainer $expanded={expandedSection === "terms"}>
+          <h3>제 1 조 (목적)</h3>
             <p>
               본 약관은 [계꿀] 가 제공하는 계약서 분석 서비스(이하 "서비스")의 이용과 관련하여 회사와 회원 간의 권리,
               의무 및 책임사항을 규정함을 목적으로 합니다.
@@ -151,10 +159,12 @@ export default function AgreePage() {
         </S.AgreementSection>
 
         <S.AgreementSection>
-          <S.SectionTitle>개인정보 수집 및 이용 동의</S.SectionTitle>
-          <S.TermsContainer>
-            {/* 개인정보 수집 및 이용 동의 내용 */}
-            <h3>제 1 조 (수집하는 개인정보 항목)</h3>
+          <S.SectionTitle onClick={() => toggleSection("privacy")} $expanded={expandedSection === "privacy"}>
+            개인정보 수집 및 이용 동의
+            {expandedSection === "privacy" ? <ChevronUp /> : <ChevronDown />}
+          </S.SectionTitle>
+          <S.TermsContainer $expanded={expandedSection === "privacy"}>
+          <h3>제 1 조 (수집하는 개인정보 항목)</h3>
             <p>회사는 회원 가입 및 서비스 제공을 위해 다음과 같은 개인정보를 수집할 수 있습니다.</p>
             <ul>
               <li>필수 정보: 이름, 이메일 주소, 비밀번호, 연락처</li>
