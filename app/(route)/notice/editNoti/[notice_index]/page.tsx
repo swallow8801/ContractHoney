@@ -19,6 +19,9 @@ import {
   NotificationBox,
   NotificationMessage,
   ConfirmButton,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./[notice_index].styled";
 
 const EditNoti = () => {
@@ -99,8 +102,20 @@ const EditNoti = () => {
   };
 
   if (loading) {
-    return <p>로딩 중...</p>;
-  }
+    return (
+          <Container>
+            <Sidebar>
+              <Title>공지사항</Title>
+            </Sidebar>
+            <Main>
+              <LoadingContainer>
+                <LoadingSpinner />
+                <LoadingText>로딩중입니다...</LoadingText>
+              </LoadingContainer>
+            </Main>
+          </Container>
+          )
+        }
 
   return (
     <Container>

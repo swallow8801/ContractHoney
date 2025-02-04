@@ -20,6 +20,9 @@ import {
   ConfirmButton,
   NotificationOverlay,
   SidebarTitle,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from './[notice_index].styled';
 
 interface Notice {
@@ -125,8 +128,20 @@ const NoticeDetailPage = () => {
   };
 
   if (!currentNotice) {
-    return <p>Loading...</p>;
-  }
+    return (
+      <Container>
+        <Sidebar>
+          <SidebarTitle>공지사항</SidebarTitle>
+        </Sidebar>
+        <Main>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingText>로딩중입니다...</LoadingText>
+          </LoadingContainer>
+        </Main>
+      </Container>
+      )
+    }
 
   return (
     <Container>

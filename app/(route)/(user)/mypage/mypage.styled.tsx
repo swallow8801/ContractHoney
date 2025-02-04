@@ -32,8 +32,8 @@ export const ProfileCard = styled.div`
   justify-content: center;
   height: calc(100% - 40px);
   padding: 20px;
-  background: #f8f8f8;
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 
@@ -162,7 +162,7 @@ export const StatsContainer = styled.div`
   margin-top: 15px;
   padding: 15px;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -175,7 +175,7 @@ export const StatItem = styled.div`
   align-items: center;
   padding: 10px;
   background: #f8f8f8;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   color: #333;
 
@@ -225,7 +225,7 @@ export const StatValue = styled.div`
 `
 
 export const StatIcon = styled.div`
-  width: 50px;
+  width: 55px;
   height: 50px;
   display: flex;
   align-items: center;
