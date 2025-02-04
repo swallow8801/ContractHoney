@@ -8,7 +8,6 @@ import {
   Container,
   Sidebar,
   Main,
-  Title,
   SearchSection,
   SearchInput,
   SearchButton,
@@ -25,6 +24,9 @@ import {
   PhoneNumber,
   SidebarTitle,
   ExplanationTextContainer,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./archive.styled";
 
 interface Archive {
@@ -44,6 +46,7 @@ const StandardContractsPage = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [contracts, setContracts] = useState<Archive[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const searchQuery = searchParams.get('search');
@@ -54,11 +57,14 @@ const StandardContractsPage = () => {
 
     const fetchContracts = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/archive");
         const data = await response.json();
         setContracts(data);
       } catch (error) {
         console.error("Failed to fetch contracts:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -146,6 +152,70 @@ const StandardContractsPage = () => {
       alert("파일 다운로드에 실패했습니다. 다시 시도해주세요.");
     }
   };
+
+  if (isLoading) {
+        return (
+          <Container>
+            <Sidebar>
+              <SidebarTitle>자료실</SidebarTitle>
+              <MenuList>
+                <MenuItem
+                  $active={pathname === "/archive"}
+                  onClick={() => router.push("/archive")}
+                >
+                  표준계약서
+                </MenuItem>
+                <MenuItem
+                  $active={pathname === "/law"}
+                  onClick={() => router.push("/law")}
+                >
+                  법령
+                </MenuItem>
+              </MenuList>
+            </Sidebar>
+            <Main>
+              <MainTitle>표준계약서</MainTitle>
+              <ExplanationSection>
+                <LogoImage
+                  src="/images/공정거래위원회.png"
+                  alt="공정거래위원회"
+                />
+                <ExplanationTextContainer>
+                  <ExplanationText>
+                    표준약품거래계약서는 대규모유통업법 및 업계 현실 등을 반영하여 법위반을
+                    최소화하고 거래당사자 사이의 분쟁소지를 예방할 목적으로 보급하는
+                    것이며, 공정위는 이 표준약품거래계약서의 사용을 권장하고 있습니다.
+                    이와 관련하여 문의사항이 있으시면{' '}
+                    <a
+                      href="https://www.ftc.go.kr"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      유통거래정책과
+                    </a>{' '}
+                    로 문의하시기 바랍니다.
+                    <PhoneNumber>(044)200-4966</PhoneNumber>
+                  </ExplanationText>
+                </ExplanationTextContainer>
+              </ExplanationSection>
+              <SearchSection>
+                <SearchInput
+                  type="text"
+                  placeholder="검색어를 입력하세요"
+                  value={searchTerm}
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                />
+                <SearchButton onClick={handleSearch}>검색</SearchButton>
+              </SearchSection>
+              <LoadingContainer>
+                <LoadingSpinner />
+                <LoadingText>표준계약서 목록을 불러오는 중입니다...</LoadingText>
+              </LoadingContainer>
+            </Main>
+          </Container>
+        )
+      }
   
   return (
     <Container>

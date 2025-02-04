@@ -17,6 +17,9 @@ import {
   WriteButton,
   ExplanationSection,
   ExplanationText,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from './notice.styled';
 
 interface Notice {
@@ -32,6 +35,7 @@ const NoticeListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const userAdmin = localStorage.getItem('admin');
@@ -43,11 +47,14 @@ const NoticeListPage = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch('/api/notice');
         const data = await response.json();
         setNotices(data.notices);
       } catch (error) {
         console.error('Error fetching notices:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -91,6 +98,39 @@ const NoticeListPage = () => {
   const handleRowClick = (id: number) => {
     router.push(`/notice/${id}`);
   };
+
+  if (isLoading) {
+      return (
+        <Container>
+          <Sidebar>
+            <SidebarTitle>공지사항</SidebarTitle>
+          </Sidebar>
+          <Main>
+            <MainTitle>공지사항</MainTitle>
+            <ExplanationSection>
+              <ExplanationText>
+                이 페이지는 계약서 AI 분석 서비스와 관련된 최신 소식, 업데이트 사항, 서비스 개선 내용 등을 안내하는 공간입니다.
+                항상 더 나은 서비스를 제공하기 위해 노력하고 있으니 중요한 공지사항을 확인해 주세요.
+              </ExplanationText>
+            </ExplanationSection>
+            <SearchSection>
+              <SearchInput
+                type="text"
+                placeholder="검색어를 입력하세요"
+                value={searchTerm}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+              />
+              <SearchButton onClick={handleSearch}>검색</SearchButton>
+            </SearchSection>
+            <LoadingContainer>
+              <LoadingSpinner />
+              <LoadingText>공지사항 목록을 불러오는 중입니다...</LoadingText>
+            </LoadingContainer>
+          </Main>
+        </Container>
+      )
+    }
 
   return (
     <Container>
