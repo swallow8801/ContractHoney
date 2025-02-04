@@ -35,6 +35,9 @@ import {
   StatGroupLabel,
   StatGroupItem,
   Main,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./mypage.styled"
 
 interface UserProfile {
@@ -183,7 +186,16 @@ export default function MyPage() {
   }
 
   if (!profile) {
-    return <Container>Loading...</Container>
+    return (
+      <Container>
+        <Main>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingText>로딩중입니다...</LoadingText>
+          </LoadingContainer>
+        </Main>
+      </Container>
+    )
   }
 
   return (
