@@ -7,18 +7,25 @@ export const Container = styled.div`
     scroll-behavior: smooth;
     position: relative;
     
-    /* Hide scrollbar for Chrome, Safari and Opera */
+    /* Hide scrollbar */
     &::-webkit-scrollbar {
         display: none;
     }
-    
-    /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;
     scrollbar-width: none;
-
-    /* Smooth scroll on iOS */
     -webkit-overflow-scrolling: touch;
-`
+
+    /* 모든 섹션에 스냅 적용 */
+    & > * {
+        scroll-snap-align: start;
+    }
+
+    /* 마지막 요소(Footer)에는 스냅 적용 X */
+    & > *:last-child {
+        scroll-snap-type: y proximity;
+    }
+`;
+
 
 export const Group = styled.div`
     position: relative;

@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   WarningMessage,
 } from "./main.styled"
+import Footer from "../../component/Footer/Footer"
 import { Plus, ChevronDown } from "lucide-react"
 
 interface NoticeType {
@@ -547,6 +548,7 @@ const MainPage = () => {
           <ViewAll onClick={() => router.push("/notice")}>{"전체보기\u00A0\u00A0\u00A0>"}</ViewAll>
         </Notice>
       </Group>
+      <Footer/>
     </Container>
   )
 }
