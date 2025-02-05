@@ -1,6 +1,6 @@
 "use client"
 
-import { Share, ChevronUp, ChevronDown, FileText } from "lucide-react"
+import { Share, ChevronUp, ChevronDown, FileText, HelpCircle } from "lucide-react"
 import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
@@ -33,6 +33,8 @@ import {
   LoadingContainer,
   LoadingSpinner,
   LoadingText,
+  TooltipWrapper,
+  TooltipContent,
 } from "./manage_cont.styled"
 
 interface Contract {
@@ -100,6 +102,12 @@ export default function ManageContracts() {
   const [windowWidth, setWindowWidth] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [filteredAndSortedContracts, setFilteredAndSortedContracts] = useState<GroupedContract[]>([])
+  const [tooltip, setTooltip] = useState<{ text: string; top: number; left: number; visible: boolean }>({
+    text: "",
+    top: 0,
+    left: 0,
+    visible: false,
+  })
 
   useEffect(() => {
     setWindowWidth(window.innerWidth)
@@ -240,6 +248,20 @@ const currentItems = useMemo(() => {
     }
   }
 
+  const showTooltip = (event: React.MouseEvent, text: string) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltip({
+      text,
+      top: rect.top - 30, // 툴팁을 위로 이동
+      left: rect.left + rect.width / 2, // 중앙 정렬
+      visible: true,
+    });
+  };
+
+  const hideTooltip = () => {
+    setTooltip((prev) => ({ ...prev, visible: false }));
+  };
+
   if (isLoading) {
     return (
       <Container>
@@ -310,15 +332,31 @@ const currentItems = useMemo(() => {
               <SummaryTd>{selectedDoc?.con_type || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>위법 조항</SummaryTh>
+              <SummaryTh>위법 조항
+                <TooltipWrapper
+                  onMouseEnter={(e) => showTooltip(e, "법적으로 문제가 될 가능성이 있는 조항")}
+                  onMouseLeave={hideTooltip}>
+                    <HelpCircle size={14} />
+                </TooltipWrapper>
+              </SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.unfair_count || 0}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>독소 조항</SummaryTh>
+              <SummaryTh>독소 조항
+                <TooltipWrapper
+                  onMouseEnter={(e) => showTooltip(e, "계약자에게 불리한 영향을 미칠 수 있는 조항")}
+                  onMouseLeave={hideTooltip}>
+                    <HelpCircle size={14} />
+                </TooltipWrapper>
+              </SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.toxic_count || 0}</SummaryTd>
             </tr>
           </tbody>
         </SummaryBox>
+
+        <TooltipContent $visible={tooltip.visible} $top={tooltip.top} $left={tooltip.left}>
+          {tooltip.text}
+        </TooltipContent>
 
         <Table>
           <thead>
@@ -337,8 +375,20 @@ const currentItems = useMemo(() => {
                 )}
               </Th>
               <Th>버전</Th>
-              <Th>위법 조항</Th>
-              <Th>독소 조항</Th>
+              <Th>위법 조항
+                <TooltipWrapper
+                  onMouseEnter={(e) => showTooltip(e, "법적으로 문제가 될 가능성이 있는 조항")}
+                  onMouseLeave={hideTooltip}>
+                    <HelpCircle size={14} />
+                </TooltipWrapper>
+              </Th>
+              <Th>독소 조항
+                <TooltipWrapper
+                  onMouseEnter={(e) => showTooltip(e, "계약자에게 불리한 영향을 미칠 수 있는 조항")}
+                  onMouseLeave={hideTooltip}>
+                    <HelpCircle size={14} />
+                </TooltipWrapper>
+              </Th>
               <Th>결과창</Th>
             </tr>
           </thead>

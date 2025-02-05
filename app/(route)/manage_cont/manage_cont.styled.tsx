@@ -410,3 +410,27 @@ export const ActionButtonsContainer = styled.div`
   justify-content: center;
 `
 
+export const TooltipWrapper = styled.span`
+  position: relative;
+  display: inline-block;
+  cursor: help;
+  color: #888;
+  margin-left: 5px;
+`;
+
+export const TooltipContent = styled.div<{ $visible: boolean; $top: number; $left: number }>`
+  position: fixed; /* 부모 영향을 받지 않도록 fixed 사용 */
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none; /* 마우스 이벤트 방지 */
+  z-index: 9999;
+  top: ${({ $top }) => $top}px;
+  left: ${({ $left }) => $left}px;
+  transform: translateX(-50%);
+`;
