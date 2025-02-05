@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
-import { Share, Download, ChevronLeft, ChevronRight, FileText, Check } from "lucide-react"
+import { useSearchParams, useRouter } from "next/navigation"
+import { Share, Download, ChevronLeft, ChevronRight, FileText, Check, GitCompare, InfoIcon } from "lucide-react"
 import {
   Container,
   PreviewSection,
@@ -40,7 +40,6 @@ import {
   CheckboxContainer,
   Divider,
 } from "./analysis.styled"
-import PDFViewer from "../../component/PDFViewer/PDFViewer";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 
 
@@ -87,10 +86,16 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;
 
   return (
-    <div style={{ height: '750px' }}>
+    <div style={{ height: '100%' }}>
+            <style>{`
+        .rpv-core__text-layer {
+          display: none !important;
+        }
+      `}</style>
       <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`}>
         <Viewer
           fileUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.pdf`}
+        
         />
       </Worker>
     </div>
@@ -115,6 +120,8 @@ export function AnalysisPage() {
       fetchContractData(contractId)
     }
   }, [searchParams])
+
+  const router = useRouter()
 
   const fetchContractData = async (contractId: string) => {
     try {
@@ -233,7 +240,7 @@ export function AnalysisPage() {
         <ClauseExplanation $checked={currentClause.checked}>
           <ProbabilitySection>
             <ExplanationTitle $checked={currentClause.checked}>
-              {activeTab === "unfair" ? "불공정조항 위험도" : "독소조항 위험도"}
+              {activeTab === "unfair" ? "위법 조항 위험도" : "독소조항 위험도"}
             </ExplanationTitle>
             <ProbabilityContainer>
               <ProbabilityBar>
@@ -260,7 +267,7 @@ export function AnalysisPage() {
           {activeTab === "toxic" && (
             <>
               <ExplanationTitle $checked={currentClause.checked}>독소조항 설명</ExplanationTitle>
-              <p>이 조항은 계약 당사자 중 한쪽에게 불리한 조건을 포함하고 있습니다.</p>
+              <p>{currentClause.law_explain}</p>
             </>
           )}
         </ClauseExplanation>
@@ -273,7 +280,7 @@ export function AnalysisPage() {
 
     return (
       <SummaryContent>
-        <h3>계약 종류: {contract.con_type}</h3>
+        {/* <h3>계약 종류: {contract.con_type}</h3> */}
         <h3>계약 요약:</h3>
         {contractSummaries.map((summary) => (
           <div key={summary.sum_id}>
@@ -315,7 +322,7 @@ export function AnalysisPage() {
             요약
           </Tab>
           <Tab $active={activeTab === "unfair"} onClick={() => setActiveTab("unfair")}>
-            불공정조항
+            위법조항
             {getUnfairCount() > 0 && <Badge>{getUnfairCount()}</Badge>}
           </Tab>
           <Tab $active={activeTab === "toxic"} onClick={() => setActiveTab("toxic")}>
@@ -360,6 +367,10 @@ export function AnalysisPage() {
           <ActionButton className="download">
             <Download size={16} />
             결과 다운로드
+          </ActionButton>
+          <ActionButton className="compare" onClick={() => router.push(`/compare?contractId=${contract.con_id}`)}>
+            <GitCompare size={16} />
+            버전 비교하기
           </ActionButton>
         </ActionButtons>
       </AnalysisSection>
