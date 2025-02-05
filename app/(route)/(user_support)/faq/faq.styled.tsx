@@ -3,7 +3,9 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background: #ffffff;
 `;
 
@@ -55,6 +57,7 @@ export const Main = styled.main`
   flex-direction: column;
   margin-top: 3vh;
   margin-left: 25%;
+  margin-bottom: 5vh;
 `;
 
 export const Title = styled.h1`

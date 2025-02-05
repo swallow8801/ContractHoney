@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image";
 import SwiperGroup from "../../component/Swiper/Swiper"
 import {
   Container,
@@ -19,13 +20,11 @@ import {
   FileUploadArea,
   FileInput,
   FileName,
-  SearchableSelect,
   SearchInput,
   Select,
   LoadingOverlay,
   LoadingSpinner,
   LoadingText,
-  LoginMessage,
   DropdownContainer,
   DropdownSearch,
   NewContractButton,
@@ -38,6 +37,7 @@ import {
   SelectTrigger,
   WarningMessage,
 } from "./main.styled"
+import Footer from "../../component/Footer/Footer"
 import { Plus, ChevronDown } from "lucide-react"
 
 interface NoticeType {
@@ -351,15 +351,18 @@ const MainPage = () => {
             position: "relative"
           }}
         >
-        <img
+        <Image
           src="/images/계약서.png"
           alt="계약서"
+          width={400}
+          height={400} 
           style={{
             position: "absolute",
             top: "5vh",
             left: "7vw",
-            width: "400px",
-            height: "400px",
+            width: "30vw",
+            maxWidth: "500px",
+            height: "auto",
             transform: "rotate(10deg)",
             zIndex: 10,
           }}
@@ -474,15 +477,18 @@ const MainPage = () => {
           position: "relative"
         }}
       >
-        <img
+        <Image
           src="/images/법.png"
           alt="법"
+          width={400}
+          height={400} 
           style={{
             position: "absolute",
             top: "5vh",
             right: "7vw",
-            width: "400px",
-            height: "400px",
+            width: "30vw",
+            maxWidth: "500px",
+            height: "auto",
             zIndex: 10,
           }}
         />
@@ -508,19 +514,23 @@ const MainPage = () => {
           position: "relative"
         }}
       >
-        <img
+        <Image
           src="/images/공지.png"
           alt="공지사항"
+          width={400}
+          height={400}
           style={{
             position: "absolute",
             top: "5vh",
             left: "7vw",
-            width: "400px",
-            height: "400px",
+            width: "30vw",
+            maxWidth: "500px",
+            height: "auto",
             transform: "rotate(-10deg) scaleX(-1)",
             zIndex: 10,
           }}
         />
+
         <Title>공지사항</Title>
         <Notice>
           {isLoading ? (
@@ -538,6 +548,7 @@ const MainPage = () => {
           <ViewAll onClick={() => router.push("/notice")}>{"전체보기\u00A0\u00A0\u00A0>"}</ViewAll>
         </Notice>
       </Group>
+      <Footer/>
     </Container>
   )
 }

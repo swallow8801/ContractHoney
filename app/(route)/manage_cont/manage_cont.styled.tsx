@@ -8,6 +8,7 @@ export const Container = styled.div`
   padding: 0.5rem;
   max-width: 1200px;
   width: 100%;
+  min-height: calc(100vh - 90px);
   margin: 0 auto;
   overflow-x: visible;
   overflow-y: auto;
@@ -273,6 +274,11 @@ export const SearchInput = styled.input`
   border-radius: 4px;
   font-size: 0.95rem;
   width: 200px;
+
+  &:focus{
+    outline: none;
+    border-color: #F2B024;
+  }
 `
 
 export const FilterContainer = styled.div`

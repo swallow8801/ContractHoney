@@ -12,7 +12,6 @@ import {
   MenuItem,
   ArchiveTable,
   ReplySection,
-  ReplyButton,
   BackButton,
   ButtonContainer,
   TextareaContainer,
@@ -22,6 +21,9 @@ import {
   NotificationOverlay,
   MainInfo,
   DeleteButton,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./[qna_id].styled";
 
 interface QnaType {
@@ -182,7 +184,33 @@ const QnaDetailPage = () => {
   };  
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <Container>
+        <Sidebar>
+          <SidebarTitle>Q&A</SidebarTitle>
+          <MenuList>
+            <MenuItem
+              $active={pathname === "/faq"}
+              onClick={() => router.push("/faq")}
+            >
+              자주 묻는 질문
+            </MenuItem>
+            <MenuItem
+              $active={pathname.includes("/qna")}
+              onClick={() => router.push("/qna")}
+            >
+              Q&A
+            </MenuItem>
+          </MenuList>
+        </Sidebar>
+        <Main>
+          <LoadingContainer>
+            <LoadingSpinner />
+            <LoadingText>로딩중입니다...</LoadingText>
+          </LoadingContainer>
+        </Main>
+      </Container>
+    )
   }
 
   return (

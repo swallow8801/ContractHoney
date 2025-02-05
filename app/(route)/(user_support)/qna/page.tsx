@@ -16,6 +16,9 @@ import {
   WriteButton,
   Pagination,
   PageButton,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./qna.styled";
 
 interface QnaType {
@@ -102,7 +105,12 @@ const QnAPage = () => {
       <Main>
         <MainTitle>Q&A</MainTitle>
         {isLoading ? (
-          <p>데이터를 불러오는 중입니다...</p>
+          <Container>
+            <LoadingContainer>
+              <LoadingSpinner />
+              <LoadingText>Q&A 목록을 불러오는 중입니다...</LoadingText>
+            </LoadingContainer>
+          </Container>
         ) : error ? (
           <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
         ) : currentItems.length > 0 ? (

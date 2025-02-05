@@ -43,15 +43,16 @@ export const Title = styled.h1`
 `;
 
 export const SectionTitle = styled.h3`
-  font-size: 18px;
   font-weight: bold;
-  margin-top: 30px;
-  margin-bottom: 5px;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
   color: #222;
 `;
 
 export const Text = styled.p`
   font-size: 14px;
+  margin-bottom: 1rem;
   color: #666;
   line-height: 1.6;
 `;
@@ -60,23 +61,25 @@ export const Text = styled.p`
 export const List = styled.ol`
   font-size: 14px;
   color: #666;
-  padding-left: 20px;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
   line-height: 1.6;
 `;
 
 export const UnorderedList = styled.ul`
   font-size: 14px;
   color: #666;
-  padding-left: 20px;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
   line-height: 1.6;
 `;
 
 /* - 모양 리스트 */
 export const ListItem = styled.li`
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   list-style-type: none;
   position: relative;
-  padding-left: 18px;
+  padding-left: 1.5rem;
 
   &::before {
     content: "-";
@@ -88,10 +91,10 @@ export const ListItem = styled.li`
 
 /* ● 모양 리스트 */
 export const UnorderedListItem = styled.li`
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   list-style-type: none;
   position: relative;
-  padding-left: 18px;
+  padding-left: 1.5rem;
 
   &::before {
     content: "●";

@@ -3,7 +3,9 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
+  overflow-x: visible;
+  overflow-y: auto;
   background: #ffffff;
 `;
 
@@ -102,7 +104,7 @@ export const FormInput = styled.input`
 
 export const FormTextarea = styled.textarea`
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
