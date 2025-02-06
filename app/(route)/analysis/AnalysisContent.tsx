@@ -129,6 +129,7 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
 }
 
 
+
 export function AnalysisPage() {
   const searchParams = useSearchParams()
   const [contract, setContract] = useState<Contract | null>(null)
