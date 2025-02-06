@@ -181,7 +181,7 @@ export function AnalysisPage() {
       const link = document.createElement("a");
   
       link.href = url;
-      link.download = `${contract.con_title}_ver${contract.con_version}.${contract.con_type}`;
+      link.download = `${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.${contract.con_type}`;
       link.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
