@@ -8,7 +8,10 @@ services:
     env_file:
       - .env  # .env 파일을 통해 환경 변수를 가져옵니다
     depends_on:
-      - db  # db 서비스가 준비된 후 app 서비스 시작
+      db:
+        condition: service_healthy  # MySQL이 완전히 준비된 후 실행되도록 설정
+    networks:
+      - contract_network
 
   db:
     image: mysql:8  # MySQL 8.x 버전 사용
@@ -17,3 +20,14 @@ services:
       MYSQL_DATABASE: contract  # 기본 데이터베이스
     ports:
       - "3306:3306"  # MySQL의 기본 포트 3306을 열어줌
+    networks:
+      - contract_network
+    healthcheck:  # MySQL이 준비될 때까지 기다리는 설정
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 3
+      timeout: 5s
+
+networks:
+  contract_network:
+    driver: bridge

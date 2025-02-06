@@ -9,17 +9,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# 환경 파일
-.env
-.env.local
-.env.development
 
 # Next.js 빌드 출력물
 .next
 out
 
 # Docker 관련 파일
-Dockerfile
 .dockerignore
 
 # 테스트 및 코드 커버리지
