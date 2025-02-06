@@ -89,8 +89,14 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;
 
   return (
-    <div style={{ height: '50wh' }}>
-            <style>{`
+    <div style={{ 
+      width: '80%',  /* PDF 뷰어 너비 조정 */
+      height: '80vh', /* 화면 높이의 80% */
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center' 
+    }}>
+      <style>{`
         .rpv-core__text-layer {
           display: none !important;
         }
@@ -98,12 +104,12 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
       <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js`}>
         <Viewer
           fileUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.pdf`}
-        
         />
       </Worker>
     </div>
   );
 }
+
 
 
 export function AnalysisPage() {

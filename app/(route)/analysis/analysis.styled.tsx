@@ -97,9 +97,11 @@ export const DocumentTitle = styled.h1`
   color: #333;
   margin: 0;
 `
-
 export const PreviewContent = styled.div`
   flex: 1;
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
   overflow-y: auto;
   padding: 20px;
 
@@ -118,12 +120,13 @@ export const PreviewContent = styled.div`
     background: #555;
   }
 
-  img, embed {
+  img,
+  embed {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
-`
+`;
 
 export const TabContainer = styled.div`
   display: flex;
