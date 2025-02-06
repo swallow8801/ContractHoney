@@ -11,6 +11,7 @@ import {
   PageInfo,
   DocumentTitle,
   PreviewContent,
+  PdfViewerContainer,
   TabContainer,
   Tab,
   Badge,
@@ -41,9 +42,9 @@ import {
   SummaryContainer,
   CopyButton,
   IconWrapper,
+  PdfErrorContainer,
 } from "./analysis.styled"
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
-import styled from "styled-components";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 
@@ -85,31 +86,6 @@ interface ContractIden {
 interface MyPdfViewerProps {
   contract: Contract | null;
 }
-
-// PDF 뷰어 스타일 컨테이너
-const PdfViewerContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .rpv-core__viewer {
-    width: 100%;
-    height: 100%;
-  }
-
-  .rpv-core__inner-container {
-    width: 100% !important;
-    height: auto !important;
-    padding-bottom: 25px;
-  }
-
-  .rpv-core__canvas-layer {
-    width: 100% !important;
-    height: auto !important;
-  }
-`;
 
 function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;

@@ -174,6 +174,44 @@ export const AnalysisContent = styled.div`
   }
 `
 
+// PDF 뷰어 스타일 컨테이너
+export const PdfViewerContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .rpv-core__viewer {
+    width: 100%;
+    height: 100%;
+  }
+
+  .rpv-core__inner-container {
+    width: 100% !important;
+    height: auto !important;
+    padding-bottom: 25px;
+  }
+
+  .rpv-core__canvas-layer {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .rpv-core__doc-error {
+    width: 100%;
+    text-align: start;
+    color: #d32f2f;
+    margin: 0 auto;
+
+    .rpv-core__doc-error-text {
+      color:rgb(255, 255, 255);
+      word-break: break-word;
+      font-size: 17px;
+    }
+  }
+`;
+
 export const ActionButtons = styled.div`
   display: flex;
   gap: 10px;
