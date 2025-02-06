@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Share, Download, ChevronLeft, ChevronRight, FileText, Check, GitCompare, InfoIcon } from "lucide-react"
+import { Share, Download, Check, GitCompare } from "lucide-react"
 import {
   Container,
   PreviewSection,
   AnalysisSection,
   NavigationBar,
-  PageNavigation,
-  NavButton,
   PageInfo,
   DocumentTitle,
   PreviewContent,
@@ -19,7 +17,6 @@ import {
   AnalysisContent,
   ActionButtons,
   ActionButton,
-  HancomPlaceholder,
   ClauseContainer,
   ClauseHeader,
   ClauseContent,
@@ -35,10 +32,12 @@ import {
   ProbabilityContainer,
   ExplanationTitle,
   LawReference,
-  LawReferenceLabel,
   LawReferenceContent,
   CheckboxContainer,
   Divider,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
 } from "./analysis.styled"
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 
@@ -298,7 +297,14 @@ export function AnalysisPage() {
   const getToxicCount = () => filteredToxicClauses.filter((c) => !c.checked).length
 
   if (!contract) {
-    return <div>Loading...</div>
+    return(
+      <Container>
+        <LoadingContainer>
+          <LoadingSpinner />
+          <LoadingText>로딩 중입니다...</LoadingText>
+        </LoadingContainer>
+      </Container>
+    )
   }
 
   return (
