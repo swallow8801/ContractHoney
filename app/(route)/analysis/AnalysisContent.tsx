@@ -89,21 +89,21 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;
 
   return (
-    <div style={{ height: '100%' }}>
-            <style>{`
+    <div style={{ height: '50wh' }}>
+      <style>{`
         .rpv-core__text-layer {
           display: none !important;
         }
       `}</style>
-      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`}>
+      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js`}>
         <Viewer
           fileUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.pdf`}
-        
         />
       </Worker>
     </div>
   );
 }
+
 
 
 export function AnalysisPage() {
