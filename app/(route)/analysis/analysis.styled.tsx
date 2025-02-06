@@ -103,6 +103,21 @@ export const PreviewContent = styled.div`
   overflow-y: auto;
   padding: 20px;
 
+  /* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
   img, embed {
     width: 100%;
     height: 100%;
@@ -142,6 +157,21 @@ export const Badge = styled.span`
 export const AnalysisContent = styled.div`
   flex: 1;
   overflow-y: auto;
+  
+   /* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 `
 
 export const ActionButtons = styled.div`
@@ -289,27 +319,66 @@ export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
 
 export const SummaryContent = styled.div`
   h3 {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     color: #333;
+    margin-left: 3vh;
     margin-bottom: 15px;
+  }
+`
+
+export const SummaryContainer = styled.div`
+  width: 95%;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #e8e8e8;
   }
 
   h4 {
     font-size: 16px;
     font-weight: 600;
     color: #444;
-    margin-top: 20px;
     margin-bottom: 10px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 14.5px;
     color: #555;
     line-height: 1.5;
-    margin-bottom: 15px;
   }
-`
+`;
+
+export const CopyButton = styled.div`
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+  cursor: pointer;
+  color: #888;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  margin-top: 10px;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+export const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CopyText = styled.span`
+  font-size: 14px;
+`;
 
 export const ProbabilityBar = styled.div`
   width: 100%;
