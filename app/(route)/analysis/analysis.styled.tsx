@@ -99,9 +99,6 @@ export const DocumentTitle = styled.h1`
 `
 export const PreviewContent = styled.div`
   flex: 1;
-  display: flex; /* Flexbox 사용 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
   overflow-y: auto;
   padding: 20px;
 

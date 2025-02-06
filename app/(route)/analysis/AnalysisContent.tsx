@@ -89,13 +89,7 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;
 
   return (
-    <div style={{ 
-      width: '80%',  /* PDF 뷰어 너비 조정 */
-      height: '80vh', /* 화면 높이의 80% */
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center' 
-    }}>
+    <div style={{ height: '50wh' }}>
       <style>{`
         .rpv-core__text-layer {
           display: none !important;
