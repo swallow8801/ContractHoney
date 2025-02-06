@@ -40,7 +40,6 @@ import {
   LoadingText,
   SummaryContainer,
   CopyButton,
-  CopyText,
   IconWrapper,
 } from "./analysis.styled"
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
@@ -333,7 +332,6 @@ export function AnalysisPage() {
               <IconWrapper>
                 {copiedId === summary.sum_id ? <Check size={20} /> : <Copy size={20} />}
               </IconWrapper>
-              <CopyText>{copiedId === summary.sum_id ? "복사됨" : "복사"}</CopyText>
             </CopyButton>
           </SummaryContainer>
         ))}

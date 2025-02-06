@@ -376,10 +376,6 @@ export const IconWrapper = styled.div`
   justify-content: center;
 `;
 
-export const CopyText = styled.span`
-  font-size: 14px;
-`;
-
 export const ProbabilityBar = styled.div`
   width: 100%;
   height: 10px;
