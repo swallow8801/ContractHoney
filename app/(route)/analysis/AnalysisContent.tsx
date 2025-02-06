@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Share, Download, Check, GitCompare } from "lucide-react"
+import { Share, Download, Check, GitCompare, Copy } from "lucide-react"
 import {
   Container,
   PreviewSection,
@@ -38,6 +38,10 @@ import {
   LoadingContainer,
   LoadingSpinner,
   LoadingText,
+  SummaryContainer,
+  CopyButton,
+  CopyText,
+  IconWrapper,
 } from "./analysis.styled"
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 
@@ -274,24 +278,45 @@ export function AnalysisPage() {
     )
   }
 
-  const renderSummaryContent = () => {
-    if (!contract || !contractSummaries.length) return null
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
+  const handleCopy = async (summary: ContractSummary) => {
+    const textToCopy = `${summary.sum_article_number}조: ${summary.sum_article_title}\n\n${summary.sum_summary}`;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopiedId(summary.sum_id);
+
+      // ⏳ 2초 후 원래 상태로 복귀
+      setTimeout(() => setCopiedId(null), 3000);
+    } catch (error) {
+      console.error("클립보드 복사 실패:", error);
+    }
+  };
+
+  const renderSummaryContent = () => {
+    if (!contract || !contractSummaries.length) return null;
+  
     return (
       <SummaryContent>
-        {/* <h3>계약 종류: {contract.con_type}</h3> */}
-        <h3>계약 요약:</h3>
+        <h3>계약 요약</h3>
         {contractSummaries.map((summary) => (
-          <div key={summary.sum_id}>
+          <SummaryContainer key={summary.sum_id}>
             <h4>
               {summary.sum_article_number}조: {summary.sum_article_title}
             </h4>
             <p>{summary.sum_summary}</p>
-          </div>
+            <CopyButton onClick={() => handleCopy(summary)}>
+              <IconWrapper>
+                {copiedId === summary.sum_id ? <Check size={20} /> : <Copy size={20} />}
+              </IconWrapper>
+              <CopyText>{copiedId === summary.sum_id ? "복사됨" : "복사"}</CopyText>
+            </CopyButton>
+          </SummaryContainer>
         ))}
       </SummaryContent>
-    )
-  }
+    );
+  };
+  
 
   const getUnfairCount = () => filteredUnfairClauses.filter((c) => !c.checked).length
   const getToxicCount = () => filteredToxicClauses.filter((c) => !c.checked).length
