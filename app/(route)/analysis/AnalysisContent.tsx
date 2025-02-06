@@ -318,7 +318,7 @@ export function AnalysisPage() {
         </ActionButton>
         </NavigationBar>
         <PreviewContent>
-        <MyPdfViewer contract={contract} />
+          <MyPdfViewer contract={contract}/>
         </PreviewContent>
       </PreviewSection>
 

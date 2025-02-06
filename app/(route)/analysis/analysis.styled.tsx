@@ -103,6 +103,21 @@ export const PreviewContent = styled.div`
   overflow-y: auto;
   padding: 20px;
 
+  /* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
   img, embed {
     width: 100%;
     height: 100%;
