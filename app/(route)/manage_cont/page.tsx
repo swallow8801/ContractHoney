@@ -332,23 +332,11 @@ const currentItems = useMemo(() => {
               <SummaryTd>{selectedDoc?.con_type || "-"}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>위법 조항
-                <TooltipWrapper
-                  onMouseEnter={(e) => showTooltip(e, "법적으로 문제가 될 가능성이 있는 조항")}
-                  onMouseLeave={hideTooltip}>
-                    <HelpCircle size={14} />
-                </TooltipWrapper>
-              </SummaryTh>
+              <SummaryTh>위법 조항</SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.unfair_count || 0}</SummaryTd>
             </tr>
             <tr>
-              <SummaryTh>독소 조항
-                <TooltipWrapper
-                  onMouseEnter={(e) => showTooltip(e, "계약자에게 불리한 영향을 미칠 수 있는 조항")}
-                  onMouseLeave={hideTooltip}>
-                    <HelpCircle size={14} />
-                </TooltipWrapper>
-              </SummaryTh>
+              <SummaryTh>독소 조항</SummaryTh>
               <SummaryTd>{selectedDoc?.versions[0]?.toxic_count || 0}</SummaryTd>
             </tr>
           </tbody>
