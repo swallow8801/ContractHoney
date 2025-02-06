@@ -11,6 +11,7 @@ import {
   PageInfo,
   DocumentTitle,
   PreviewContent,
+  PdfViewerContainer,
   TabContainer,
   Tab,
   Badge,
@@ -40,10 +41,11 @@ import {
   LoadingText,
   SummaryContainer,
   CopyButton,
-  CopyText,
   IconWrapper,
+  PdfErrorContainer,
 } from "./analysis.styled"
-import { Worker, Viewer } from '@react-pdf-viewer/core';
+import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 
 interface Contract {
@@ -89,18 +91,15 @@ function MyPdfViewer({ contract }: MyPdfViewerProps) {
   if (!contract) return null;
 
   return (
-    <div style={{ height: '50wh' }}>
-      <style>{`
-        .rpv-core__text-layer {
-          display: none !important;
-        }
-      `}</style>
-      <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js`}>
+    <PdfViewerContainer>
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js">
         <Viewer
           fileUrl={`https://conhoneystorage.blob.core.windows.net/contract/${contract.con_title}_ver${contract.con_version}_user${contract.user_id}.pdf`}
+          defaultScale={SpecialZoomLevel.PageWidth}
+          withCredentials={false}
         />
       </Worker>
-    </div>
+    </PdfViewerContainer>
   );
 }
 
@@ -309,7 +308,6 @@ export function AnalysisPage() {
               <IconWrapper>
                 {copiedId === summary.sum_id ? <Check size={20} /> : <Copy size={20} />}
               </IconWrapper>
-              <CopyText>{copiedId === summary.sum_id ? "복사됨" : "복사"}</CopyText>
             </CopyButton>
           </SummaryContainer>
         ))}
