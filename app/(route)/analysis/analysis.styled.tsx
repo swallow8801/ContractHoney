@@ -128,6 +128,7 @@ export const PreviewContent = styled.div`
 export const TabContainer = styled.div`
   display: flex;
   gap: 20px;
+  margin: 0 auto;
   margin-bottom: 20px;
 `
 
