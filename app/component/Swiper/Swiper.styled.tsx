@@ -37,8 +37,7 @@ export const Group = styled.div`
 `
 
 export const ContentImg = styled.img`
-  width: 90%;
-  max-width: 800px;
+  width: 80%;
   height: auto;
   border-radius: 15px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
