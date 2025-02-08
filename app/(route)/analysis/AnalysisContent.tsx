@@ -42,7 +42,6 @@ import {
   SummaryContainer,
   CopyButton,
   IconWrapper,
-  PdfErrorContainer,
 } from "./analysis.styled"
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import "@react-pdf-viewer/core/lib/styles/index.css";
