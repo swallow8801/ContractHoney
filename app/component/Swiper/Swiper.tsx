@@ -29,10 +29,10 @@ const SwiperGroup = () => {
               <ContentTxt>위법조항</ContentTxt>
               <ContentSubtitle
               style={{marginBottom: "20px"}}>
-                위법조항은 법률에 명백하게 위배된 조항을 말해요</ContentSubtitle>
+                위법조항은 법률을 위반한 조항을 말해요</ContentSubtitle>
               <ContentImg src="/images/독소조항.png" alt="독소조항" style={{height:"36%"}}/>
               <ContentTxt>독소조항</ContentTxt>
-              <ContentSubtitle>독소조항은 해석에 따라 불리하게 작용할 수 있는 조항을 말해요.</ContentSubtitle>
+              <ContentSubtitle>독소조항은 계약자에게 불리한 영향을 미치는 조항을 말해요.</ContentSubtitle>
             </SlideContent>
           </Group>
         </SwiperSlide>
