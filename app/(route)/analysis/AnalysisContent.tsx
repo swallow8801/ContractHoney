@@ -8,7 +8,6 @@ import {
   PreviewSection,
   AnalysisSection,
   NavigationBar,
-  PageInfo,
   DocumentTitle,
   PreviewContent,
   PdfViewerContainer,
@@ -22,8 +21,6 @@ import {
   ClauseHeader,
   ClauseContent,
   ClauseExplanation,
-  PaginationContainer,
-  PaginationButton,
   ClauseCheckbox,
   SummaryContent,
   ProbabilitySection,
@@ -42,6 +39,8 @@ import {
   SummaryContainer,
   CopyButton,
   IconWrapper,
+  PageButton,
+  Pagination,
 } from "./analysis.styled"
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -362,29 +361,123 @@ export function AnalysisPage() {
         <AnalysisContent>{activeTab === "summary" ? renderSummaryContent() : renderClauseContent()}</AnalysisContent>
 
         {activeTab !== "summary" && (
-          <PaginationContainer>
-            <PaginationButton
-              onClick={handlePrevClause}
-              disabled={activeTab === "unfair" ? currentUnfairIndex === 0 : currentToxicIndex === 0}
+          <Pagination>
+          {/* 이전 그룹으로 이동 (10페이지씩 뒤로) */}
+            <PageButton
+              onClick={() => {
+                if (activeTab === "unfair") {
+                  setCurrentUnfairIndex((prev) => Math.max(prev - 10, 0));
+                } else {
+                  setCurrentToxicIndex((prev) => Math.max(prev - 10, 0));
+                }
+              }}
+              disabled={
+                activeTab === "unfair"
+                  ? currentUnfairIndex < 10
+                  : currentToxicIndex < 10
+              }
             >
-              이전
-            </PaginationButton>
-            <PageInfo>
-              {activeTab === "unfair"
-                ? `${currentUnfairIndex + 1} / ${filteredUnfairClauses.length}`
-                : `${currentToxicIndex + 1} / ${filteredToxicClauses.length}`}
-            </PageInfo>
-            <PaginationButton
-              onClick={handleNextClause}
+              {"<<"}
+            </PageButton>
+          
+            {/* 이전 페이지로 이동 */}
+            <PageButton
+              onClick={() => {
+                if (activeTab === "unfair") {
+                  setCurrentUnfairIndex((prev) => Math.max(prev - 1, 0));
+                } else {
+                  setCurrentToxicIndex((prev) => Math.max(prev - 1, 0));
+                }
+              }}
+              disabled={
+                activeTab === "unfair"
+                  ? currentUnfairIndex === 0
+                  : currentToxicIndex === 0
+              }
+            >
+              {"<"}
+            </PageButton>
+          
+            {/* 페이지 번호 표시 (10개씩) */}
+            {[...Array(10)].map((_, i) => {
+              const pageNumber =
+                Math.floor(
+                  (activeTab === "unfair" ? currentUnfairIndex : currentToxicIndex) / 10
+                ) *
+                  10 +
+                i +
+                1;
+              const maxPage =
+                activeTab === "unfair"
+                  ? filteredUnfairClauses.length
+                  : filteredToxicClauses.length;
+              if (pageNumber > maxPage) return null; // 페이지 번호가 최대 페이지 수를 초과하면 렌더링 안 함
+          
+              return (
+                <PageButton
+                  key={pageNumber}
+                  onClick={() => {
+                    if (activeTab === "unfair") {
+                      setCurrentUnfairIndex(pageNumber - 1);
+                    } else {
+                      setCurrentToxicIndex(pageNumber - 1);
+                    }
+                  }}
+                  $active={
+                    activeTab === "unfair"
+                      ? currentUnfairIndex === pageNumber - 1
+                      : currentToxicIndex === pageNumber - 1
+                  }
+                >
+                  {pageNumber}
+                </PageButton>
+              );
+            })}
+          
+            {/* 다음 페이지로 이동 */}
+            <PageButton
+              onClick={() => {
+                if (activeTab === "unfair") {
+                  setCurrentUnfairIndex((prev) =>
+                    Math.min(prev + 1, filteredUnfairClauses.length - 1)
+                  );
+                } else {
+                  setCurrentToxicIndex((prev) =>
+                    Math.min(prev + 1, filteredToxicClauses.length - 1)
+                  );
+                }
+              }}
               disabled={
                 activeTab === "unfair"
                   ? currentUnfairIndex === filteredUnfairClauses.length - 1
                   : currentToxicIndex === filteredToxicClauses.length - 1
               }
             >
-              다음
-            </PaginationButton>
-          </PaginationContainer>
+              {">"}
+            </PageButton>
+          
+            {/* 다음 그룹으로 이동 (10페이지씩 앞으로) */}
+            <PageButton
+              onClick={() => {
+                if (activeTab === "unfair") {
+                  setCurrentUnfairIndex((prev) =>
+                    Math.min(prev + 10, filteredUnfairClauses.length - 1)
+                  );
+                } else {
+                  setCurrentToxicIndex((prev) =>
+                    Math.min(prev + 10, filteredToxicClauses.length - 1)
+                  );
+                }
+              }}
+              disabled={
+                activeTab === "unfair"
+                  ? currentUnfairIndex >= filteredUnfairClauses.length - 10
+                  : currentToxicIndex >= filteredToxicClauses.length - 10
+              }
+            >
+              {">>"}
+            </PageButton>
+          </Pagination>
         )}
 
         <ActionButtons>

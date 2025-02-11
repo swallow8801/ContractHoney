@@ -87,11 +87,6 @@ export const NavButton = styled.button`
   }
 `
 
-export const PageInfo = styled.span`
-  color: #666;
-  font-size: 14px;
-`
-
 export const DocumentTitle = styled.h1`
   font-size: 18px;
   color: #333;
@@ -128,6 +123,7 @@ export const PreviewContent = styled.div`
 export const TabContainer = styled.div`
   display: flex;
   gap: 20px;
+  margin: 0 auto;
   margin-bottom: 20px;
 `
 
@@ -304,33 +300,35 @@ export const ClauseExplanation = styled.div<{ $checked?: boolean }>`
   opacity: ${(props) => (props.$checked ? 0.7 : 1)};
 `
 
-export const PaginationContainer = styled.div`
+export const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-`
+  margin-top: 30px;
+  margin-bottom: 20px;
+  gap: 5px;
+`;
 
-export const PaginationButton = styled.button`
-  padding: 8px 16px;
+export const PageButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  color: #666;
+  background: ${props => props.$active ? '#F2B024' : 'white'};
+  color: ${props => props.$active ? 'white' : '#666'};
   cursor: pointer;
-  transition: all 0.2s;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 
   &:hover:not(:disabled) {
-    background: #f5f5f5;
-    border-color: #ccc;
+    background: ${props => props.$active ? '#e0a00f' : '#f0f0f0'};
   }
 
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
+    opacity: 0.2;
   }
-`
+`;
+
 
 export const ClauseCheckbox = styled.button<{ $checked: boolean }>`
   display: flex;

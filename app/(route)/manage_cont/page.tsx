@@ -1,6 +1,6 @@
 "use client"
 
-import { Share, ChevronUp, ChevronDown, FileText, HelpCircle } from "lucide-react"
+import { ChevronUp, ChevronDown, FileText, HelpCircle } from "lucide-react"
 import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
@@ -365,14 +365,14 @@ const currentItems = useMemo(() => {
               <Th>버전</Th>
               <Th>위법 조항
                 <TooltipWrapper
-                  onMouseEnter={(e) => showTooltip(e, "법적으로 문제가 될 가능성이 있는 조항")}
+                  onMouseEnter={(e) => showTooltip(e, "법률을 위반한 조항")}
                   onMouseLeave={hideTooltip}>
                     <HelpCircle size={14} />
                 </TooltipWrapper>
               </Th>
               <Th>독소 조항
                 <TooltipWrapper
-                  onMouseEnter={(e) => showTooltip(e, "계약자에게 불리한 영향을 미칠 수 있는 조항")}
+                  onMouseEnter={(e) => showTooltip(e, "계약자에게 불리한 영향을 미치는 조항")}
                   onMouseLeave={hideTooltip}>
                     <HelpCircle size={14} />
                 </TooltipWrapper>
