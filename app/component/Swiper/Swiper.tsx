@@ -39,7 +39,7 @@ const SwiperGroup = () => {
         <SwiperSlide>
           <Group>
             <SlideContent>
-              <ContentImg src="/images/결과창.png" alt="결과창" />
+              <ContentImg src="/images/결과창.png" alt="결과창" style={{height:"70%"}}/>
               <ContentTxt>한눈에 보는 계약서 분석</ContentTxt>
               <ContentSubtitle>
                 계약서 요약부터 위법조항, 독소조항까지 각 조항별로 상세하게 분석해 드려요.
