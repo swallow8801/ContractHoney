@@ -17,6 +17,8 @@ import {
   AnalysisContent,
   ActionButtons,
   ActionButton,
+  ClauseEx,
+  InfoIcon,
   ClauseContainer,
   ClauseHeader,
   ClauseContent,
@@ -222,6 +224,12 @@ export function AnalysisPage() {
 
     return (
       <>
+        <ClauseEx>
+          <InfoIcon>i</InfoIcon>
+            {activeTab === "unfair"
+              ? "위법 조항 - 법률에 명백하게 위배된 조항"
+              : "독소 조항 - 위법이 아닌 경우라도 추후에 해석이나 상황에 따라 불리하게 작용할 가능성이 있는 조항"}
+        </ClauseEx>
         <ClauseContainer $checked={currentClause.checked}>
           <ClauseHeader $checked={currentClause.checked}>
             <span>

@@ -23,7 +23,7 @@ export const InfoIcon = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #4a90e2; /* 아이콘 배경색 */
+  background-color:rgb(52, 52, 52); /* 아이콘 배경색 */
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -31,6 +31,7 @@ export const InfoIcon = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  margin-left: 20px;
 `;
 
 
