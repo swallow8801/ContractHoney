@@ -269,7 +269,7 @@ const MainPage = () => {
       {isLoading && (
         <LoadingOverlay>
           <LoadingSpinner />
-          <LoadingText>계약서를 분석 중입니다...</LoadingText>
+          <LoadingText>계약서를 분석 중입니다.<br/>약 30 ~ 40분 소요될 예정입니다.</LoadingText>
         </LoadingOverlay>
       )}
       {!isLoggedIn ? (

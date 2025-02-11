@@ -436,6 +436,7 @@ export const LoadingText = styled.div`
   color: #333;
   font-size: 16px;
   margin-top: 10px;
+  text-align: center;
 `
 
 export const LoginMessage = styled.div`
