@@ -461,7 +461,7 @@ const MainPage = () => {
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
-                accept=".hwp, .pdf"
+                accept=".pdf"
               />
             </FileUploadContainer>
             <Button onClick={handleReview} disabled={!isContractSelected || !selectedFile || isLoading}>
