@@ -16,8 +16,6 @@ export async function DELETE(request: NextRequest) {
     // Delete related records first
     await db.query('DELETE FROM qna WHERE user_id = ?', [userId]);
     await db.query('DELETE FROM contract WHERE user_id = ?', [userId]);
-    await db.query('DELETE FROM email_authentic WHERE user_id = ?', [userId]);
-    
     // Finally delete the user
     await db.query('DELETE FROM user WHERE user_id = ?', [userId]);
 
