@@ -464,7 +464,7 @@ const MainPage = () => {
                 accept=".pdf"
               />
             </FileUploadContainer>
-            <Button onClick={handleReview} disabled={!isContractSelected || !selectedFile || isLoading}>
+            <Button onClick={handleReview} disabled={true} title="현재 검토하기는 일시적으로 사용할 수 없습니다."/*!isContractSelected || !selectedFile || isLoading}*/>
               검토하기
             </Button>
           </InputContainer>
