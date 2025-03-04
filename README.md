@@ -21,59 +21,59 @@
 
 <table align="center">
   <tr>
-    <th style="text-align:center"> </th>
-    <th style="text-align:center">전재엽</th>
-    <th style="text-align:center">백미소</th>
-    <th style="text-align:center">이종환</th>
-    <th style="text-align:center">박광훈</th>
-    
+    <th style="text-align:center; width:150px;"></th>
+    <th style="text-align:center; width:150px;">전재엽</th>
+    <th style="text-align:center; width:150px;">백미소</th>
+    <th style="text-align:center; width:150px;">이종환</th>
+    <th style="text-align:center; width:150px;">박광훈</th>
   </tr>
   <tr>
-    <td></td>
+    <td align="center"><strong>👤 프로필</strong></td>
     <td align="center"><img src="https://github.com/swallow8801.png" width="100"></td>
     <td align="center"><img src="https://github.com/Myusol.png" width="100"></td>
     <td align="center"><img src="https://github.com/pince3120.png" width="100"></td>
     <td align="center"><img src="https://github.com/ChamChiii7.png" width="100"></td>
   </tr>
   <tr>
-    <td><strong>역할</strong></td>
+    <td align="center"><strong>🛠 역할</strong></td>
     <td align="center"><strong>PM / FS Dev</strong></td>
     <td align="center"><strong>FS Dev</strong></td>
     <td align="center"><strong>FS Dev</strong></td>
     <td align="center"><strong>FS Dev</strong></td>
   </tr>
   <tr>
-    <td><strong>주요 업무</strong></td>
-    <td align="center">
+    <td align="center"><strong>📌 주요 업무</strong></td>
+    <td align="left">
       - WEB팀 일정 및 업무 할당 <br>
-      - 계약서 분석 결과화면 / 버전 관리 페이지 개발 <br>
+      - 계약서 분석 결과 화면 / 버전 관리 페이지 개발 <br>
       - 메인화면 파일 업로드 및 마이페이지 개발 <br>
       - 회원관리 및 약관페이지 구현 
     </td>
-    <td align="center">
+    <td align="left">
       - 웹 전체 디자인 개선 <br>
-      - JWT 토큰 관리 및 Local Storage 관리 <br>
+      - JWT 토큰 및 Local Storage 관리 <br>
       - UI/UX 고려한 사용자 친화적 R&D <br>
       - MySQL Server 데이터 관리
     </td>
-    <td align="center">
+    <td align="left">
       - Docker 활용 Azure 서버 배포 <br>
       - Blob Storage 연동 및 관리 <br>
       - PDF Viewer 구현 <br>
       - Nodemailer 활용 이메일 인증 구현
     </td>
-    <td align="center">
+    <td align="left">
       - FastAPI 및 MySQL Server 연결 및 관리<br>
       - QnA 및 고객지원 페이지 개발 <br>
       - Admin 기능 관리 <br>
-      - 비밀번호 변경 페이지 개발 및 기타 페이지 유지보수
+      - 비밀번호 변경 페이지 개발 및 유지보수
     </td>
   </tr>
   <tr>
-    <td><strong>GitHub</strong></td>
-    <td align="center"><a href="https://github.com/swallow8801">Link</a></td>
-    <td align="center"><a href="https://github.com/Myusol">Link</a></td>
-    <td align="center"><a href="https://github.com/pince3120">Link</a></td>
-    <td align="center"><a href="https://github.com/ChamChiii7">Link</a></td>
+    <td align="center"><strong>🔗 GitHub</strong></td>
+    <td align="center"><a href="https://github.com/swallow8801">[GitHub](https://github.com/swallow8801)</a></td>
+    <td align="center"><a href="https://github.com/Myusol">[GitHub](https://github.com/Myusol)</a></td>
+    <td align="center"><a href="https://github.com/pince3120">[GitHub](https://github.com/pince3120)</a></td>
+    <td align="center"><a href="https://github.com/ChamChiii7">[GitHub](https://github.com/ChamChiii7)</a></td>
   </tr>
 </table>
+
